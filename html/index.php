@@ -12,7 +12,7 @@
 	<div class="panel panel-danger">
 		<div class="panel-heading"><h3 class="panel-title">Notice</h3></div>
 		<div class="panel-body">
-			<p>Until future notice, do not use this interface to change passwords or add classroom users. </p>
+			<p>Until future notice, do not use this interface to change passwords or add classroom users. When adding new users, the new user still needs to be manually added to the mail aliases.</p>
 		</div>
 	</div>
 	

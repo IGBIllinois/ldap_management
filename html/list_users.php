@@ -36,7 +36,7 @@
 	$users_html = "";
 	$user_count = 0;
 	
-	$users_html = html::get_users_rows($all_users);
+	$users_html = html::get_users_rows($adldap,$all_users);
 	
 	?>
 	

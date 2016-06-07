@@ -4,6 +4,9 @@
 .smallwarning {
     color: #f0ac4c;
 }
+.smalldanger {
+	color: #d43f3a;
+}
 
 .nav hr {
 	margin: 0;

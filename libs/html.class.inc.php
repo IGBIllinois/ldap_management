@@ -78,19 +78,30 @@ class html {
 	}
 
 	// Returns trs for the given users list
-	public static function get_users_rows($users) {
+	public static function get_users_rows($adldap,$users) {
 		$i_start = 0;
 		$i_count = count($users);
 		
 		$users_html = "";
 		for ($i=$i_start;$i<$i_count;$i++) {
-		        if (array_key_exists($i,$users)) {
-                		$users_html .= "<tr>";
-	                	$users_html .= "<td><a href='user.php?uid=" . $users[$i]['username'] . "'>";
-						$users_html .= $users[$i]['username'] . "</a></td>";
-		                $users_html .= "<td>" . $users[$i]['name']. "</td>";
-						$users_html .= "<td>" . $users[$i]['email']. "</td>";
-                		$users_html .= "</tr>";
+	        if (array_key_exists($i,$users)) {
+        		$users_html .= "<tr>";
+            	$users_html .= "<td><a href='user.php?uid=" . $users[$i]['username'] . "'>";
+				$users_html .= $users[$i]['username'] . "</a>";
+				if($users[$i]['shadowexpire']!=''){
+					if($users[$i]['shadowexpire'] <= time()){
+						$users_html .= " <span class='glyphicon glyphicon-time smalldanger'></span>";
+					} else {
+						$users_html .= " <span class='glyphicon glyphicon-time smallwarning'></span>";
+					}
+				}
+				if(!user::is_ad_user($adldap,$users[$i]['username'])){
+					$users_html .= " <span class='glyphicon glyphicon-education smallwarning'></span>";
+				}
+				$users_html .= "</td>";
+                $users_html .= "<td>" . $users[$i]['name']. "</td>";
+				$users_html .= "<td>" . $users[$i]['email']. "</td>";
+        		$users_html .= "</tr>";
 			}
         }
 		return $users_html;

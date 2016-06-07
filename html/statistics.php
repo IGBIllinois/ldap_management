@@ -17,6 +17,9 @@
 			<td><?php echo statistics::expired_users($ldap); ?></td>
 		</tr>
 		<tr>
+			<td># of Users not in Campus AD</td>
+			<td><?php //echo statistics::non_ad_users($ldap,$adldap); ?></td>
+		<tr>
 			<td># of Groups</td>
 			<td><?php echo statistics::groups($ldap); ?></td>
 		</tr>

@@ -464,11 +464,11 @@ class user {
 		} else {
 			$filter = "(|(uid=*$search*)(cn=*$search*))";
 		}
-		$attributes = array("uid","cn","mail");
+		$attributes = array("uid","cn","mail","shadowexpire");
 		$result = $ldap->search($filter,__LDAP_PEOPLE_OU__,$attributes);
 		$users = array();
 		for($i=0; $i<$result['count']; $i++){
-			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''));
+			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''));
 			$users[] = $user;
 		}
 		usort($users,self::sorter($sort,$asc));
@@ -492,6 +492,16 @@ class user {
 		$attributes = array('');
 		$result = $ldap->search($filter, "", $attributes);
 		if ($result['count']) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static function is_ad_user($adldap,$username){
+		$filter = "(uid=".$username.")";
+		$results = $adldap->search($filter);
+		if($results && $results['count']>0){
 			return true;
 		} else {
 			return false;

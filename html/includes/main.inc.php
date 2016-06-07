@@ -11,4 +11,5 @@ function my_autoloader($class_name) {
 spl_autoload_register('my_autoloader');
 
 $ldap = new ldap(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__);
+$adldap = new ldap(__AD_LDAP_HOST__,false,__AD_LDAP_PORT__,__AD_LDAP_PEOPLE_OU__);
 ?>

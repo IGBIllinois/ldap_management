@@ -1,0 +1,47 @@
+<?php
+/*********
+ *
+ * settings.inc.php
+ * 
+ * Settings for accounts php scripts
+ * 
+ * Joe Leigh 2015
+ *
+ *********/
+
+define("__TITLE__", "IGB Account Management");
+
+define("__LDAP_HOST__","");
+define("__LDAP_BASE_DN__","");
+define("__LDAP_PEOPLE_OU__","");
+define("__LDAP_GROUP_OU__","");
+define("__LDAP_COMPUTER_OU__","");
+define("__LDAP_ADMIN_GROUP__","");
+define("__LDAP_SSL__",FALSE);
+define("__LDAP_PORT__",389);
+
+define("__AD_LDAP_HOST__","ldap.illinois.edu");
+define("__AD_LDAP_PEOPLE_OU__","dc=uiuc,dc=edu");
+define("__AD_LDAP_PORT__",389);
+
+#LDAP Defaults
+define("__SAMBA_ID__","S-1-5-21-3679620730-2824407525-958489067");
+define("__MAIL_SUFFIX__","@igb.illinois.edu");
+define("__DEFAULT_SHELL__","/usr/libexec/openssh/sftp-server");
+define("__HOME_DIR__","/home");
+
+define("__SHELLS__",implode(",",array(
+	"/usr/libexec/openssh/sftp-server",
+	"/bin/bash",
+	"/usr/local/bin/system-specific"
+)));
+
+define("__PASSWD_HASH__","SSHA");
+
+define("__ADMIN_EMAIL__","do-not-reply@igb.illinois.edu");
+define("__SESSION_NAME__","account_management");
+define("__SESSION_TIMEOUT__",36000);
+define("__RUN_SHELL_SCRIPTS",false);
+ 
+define("__LOG_FILE__","");
+define("__ENABLE_LOG__",true);

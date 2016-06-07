@@ -154,11 +154,11 @@ class host {
 		return $hosts;
 	}
 	
-	public static function is_ldap_computer($ldap, $name){
+	public static function is_ldap_host($ldap, $name){
 		$name = trim(rtrim($name));
-		$filter = "(uid=".$name.")";
+		$filter = "(cn=".$name.")";
 		$attributes = array('');
-		$result = $ldap->search($filter,__LDAP_COMPUTER_OU__,$attributes);
+		$result = $ldap->search($filter,__LDAP_HOST_OU__,$attributes);
 		if($result['count']){
 			return true;
 		} else {

@@ -144,6 +144,7 @@ class user {
 			);
 			$this->ldap->add($dn, $data);
 			$this->load_by_username($username);
+			log::log_message("Added user ".$this->get_username()." (".$this->get_name().")");
 			
 			// Add LDAP group
 			$group = new group($this->ldap);
@@ -156,7 +157,6 @@ class user {
 				exec("sudo ../bin/add_user.pl $safeusername".$options);
 			}
 			
-			log::log_message("Added user ".$this->get_username()." (".$this->get_name().")");
 			return array('RESULT'=>true,
 				'MESSAGE'=>'User successfully added.',
 				'uid'=>$username);

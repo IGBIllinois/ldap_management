@@ -19,6 +19,7 @@
 			}
 		}
 	} else if (isset($_POST['cancel_computer'])) {
+		header('location: index.php');
 		unset($_POST);
 	}
 ?>

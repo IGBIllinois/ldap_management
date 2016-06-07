@@ -25,13 +25,13 @@
 			$result = $user->add_machinerights($_POST['host']);
 		
 			if($result['RESULT'] == true){
-				header("Location: user.php?uid=".$result['uid']);
+				header("Location: ".$_POST['from']);
 			} else if ($result['RESULT'] == false) {
 				$message = $result['MESSAGE'];
 			}
 		}
 	} else if (isset($_POST['cancel_user'])) {
-		header("Location: user.php?uid=".$_POST['username']);
+		header("Location: ".$_POST['from']);
 		unset($_POST);
 	}
 	
@@ -41,6 +41,7 @@
 		$uid = $_GET['uid'];
 		$usertoadd = new user($ldap,$uid);
 		$userrights = $usertoadd->get_machinerights();
+		$from = "user.php?uid=$uid";
 	}
 	
 	$hid = "";
@@ -48,6 +49,7 @@
 	if(isset($_GET['hid'])){
 		$hid = $_GET['hid'];
 		$machineusers = $ldap->search("(host=".$hid.")", __LDAP_PEOPLE_OU__, array('uid'));
+		$from = "host.php?hid=$hid";
 	}
 	
 	$usershtml = "";
@@ -145,6 +147,7 @@
 		</div>
 		<div class="form-group">
 			<div class="col-sm-4 col-sm-offset-2">
+				<input type="hidden" name="from" value="<?php echo $from; ?>"/>
 				<div class="btn-group">
 					<input class="btn btn-primary" type="submit" name="add_user" value="Give Access" /> <input class="btn btn-default" type="submit" name="cancel_user" value="Cancel" />
 				</div>

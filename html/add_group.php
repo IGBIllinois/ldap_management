@@ -18,7 +18,8 @@
 				$message = $result['MESSAGE'];
 			}
 		}
-	} else if (isset($_POST['cancel_user'])) {
+	} else if (isset($_POST['cancel_group'])) {
+		header('location: index.php');
 		unset($_POST);
 	}
 ?>

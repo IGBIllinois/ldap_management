@@ -23,6 +23,7 @@
 			}
 		}
 	} else if (isset($_POST['cancel_user'])) {
+		header('location: index.php');
 		unset($_POST);
 	}
 ?>

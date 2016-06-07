@@ -25,6 +25,7 @@
 			}
 		}
 	} else if (isset($_POST['cancel_host'])) {
+		header('location: index.php');
 		unset($_POST);
 	}
 ?>

@@ -33,6 +33,7 @@
 			}
 		}
 	} else if (isset($_POST['cancel_user'])) {
+		header("Location: ".$_POST['from']);
 		unset($_POST);
 	}
 	

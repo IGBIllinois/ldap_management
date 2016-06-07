@@ -16,7 +16,7 @@
 		
 		if($_POST['host']==""){
 			$message .= html::error_message("Please select a host.");
-		} elseif (!$ldap->is_ldap_host($_POST['host'])) {
+		} elseif (!host::is_ldap_host($ldap,$_POST['host'])) {
 			$message .= html::error_message("Invalid host name. Please stop trying to break my web interface.");
 		}
 		
@@ -51,7 +51,7 @@
 	}
 	
 	$usershtml = "";
-	$users = $ldap->get_all_users();
+	$users = user::get_all_users($ldap);
 	if($uid != ""){
 		$usershtml = "<input type='hidden' name='username' value='$uid'/><label class='control-label'>$uid</label>";
 	} else {

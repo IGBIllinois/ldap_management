@@ -34,7 +34,7 @@ class host {
 		$error = false;
 		$message = "";
 		//Verify Name
-		if ($this->ldap->is_ldap_host($name)) {
+		if (self::is_ldap_host($this->ldap,$name)) {
 			$error = true;
 			$message = html::error_message("A group with that name already exists.");
 		}
@@ -104,7 +104,14 @@ class host {
 
 	public function get_users() {
 		if ($this->users == null) {
-			$this->users = $this->ldap->get_host_users($this->name);
+			$filter = "(host=".$this->get_name().")";
+			$attributes = array('uid');
+			$result = $this->ldap->search($filter,__LDAP_PEOPLE_OU__,$attributes);
+			unset($result['count']);
+			$this->users = array();
+			foreach($result as $row){
+				array_push($this->users,$row['uid'][0]);
+			}
 		}
 		return $this->users;
 	}
@@ -145,6 +152,18 @@ class host {
 			$hosts[] = $host;
 		}
 		return $hosts;
+	}
+	
+	public static function is_ldap_computer($ldap, $name){
+		$name = trim(rtrim($name));
+		$filter = "(uid=".$name.")";
+		$attributes = array('');
+		$result = $ldap->search($filter,__LDAP_COMPUTER_OU__,$attributes);
+		if($result['count']){
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	//////////////////Private Functions//////////

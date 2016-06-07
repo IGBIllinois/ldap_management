@@ -37,7 +37,7 @@ class group {
 		$error = false;
 		$message = "";
 		//Verify Name
-		if ($this->ldap->is_ldap_group($name)) {
+		if (self::is_ldap_group($this->ldap,$name)) {
 			$error = true;
 			$message = html::error_message("A group with that name already exists.");
 		}
@@ -82,7 +82,7 @@ class group {
 		$error = false;
 		$message = "";
 		//Verify Name
-		if ($this->ldap->is_ldap_group($name)) {
+		if (self::is_ldap_group($this->ldap,$name)) {
 			$error = true;
 			$message = html::error_message("A group with that name already exists.");
 		}
@@ -138,7 +138,17 @@ class group {
 
 	public function get_users() {
 		if ($this->users == null) {
-			$this->users = $this->ldap->get_group_members($this->name);
+			$filter = "(cn=" . $this->get_name() . ")";
+			$attributes = array('memberUid');
+			$result = $this->ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
+			if($result['count']==0){
+				return array();
+			}
+			unset($result[0]['memberuid']['count']);
+			$this->users = array();
+			foreach ($result[0]['memberuid'] as $row) {
+				array_push($this->users, $row);
+			}
 		}
 		return $this->users;
 	}
@@ -214,7 +224,7 @@ class group {
 			$filter = "(cn=*$search*)";
 		}
 		if($filterusers){
-			$users = $ldap->get_all_users();
+			$users = user::get_all_users($this->ldap);
 		}
 		
 		$attributes = array("cn","description","memberUid");
@@ -245,7 +255,7 @@ class group {
 			$filter = "(cn=*$search*)";
 		}
 		if($filterusers){
-			$users = $ldap->get_all_users();
+			$users = user::get_all_users($this->ldap);
 		}
 		$attributes = array("cn","description","memberUid");
 		$result = $ldap->search($filter,__LDAP_GROUP_OU__,$attributes);
@@ -262,6 +272,30 @@ class group {
 		return $count;
 	}
 
+	public static function get_all_groups() {
+		$groups_array = array();
+		if ($this->get_connection()) {
+			$filter = "(cn=*)";
+			$attributes = array('cn');
+			$result = $this->search($filter, __LDAP_GROUP_OU__, $attributes);
+			for ($i=0; $i<$result['count']; $i++) {
+				array_push($groups_array, $result[$i]['cn'][0]);
+			}
+		}
+		return $groups_array;
+	}
+	
+	public static function is_ldap_group($ldap, $name) {
+		$name = trim(rtrim($name));
+		$filter = "(cn=" . $name . ")";
+		$attributes = array('');
+		$result = $ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
+		if ($result['count']) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	//////////////////Private Functions//////////
 	public function load_by_name($name) {

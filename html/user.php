@@ -16,7 +16,7 @@
 		sort($machinerights);
 		for($i=0; $i<count($machinerights);$i++){
 			$machinerightshtml .= "<tr><td><a href='host.php?hid=".$machinerights[$i]."'>".$machinerights[$i]."</a>";
-			if(!$ldap->is_ldap_host($machinerights[$i])){
+			if(!host::is_ldap_host($ldap,$machinerights[$i])){
 				$machinerightshtml .= " <span class='glyphicon glyphicon-alert smallwarning' title='Host does not exist'></span>";
 			}
 			$machinerightshtml .= " <a class='btn btn-danger btn-xs pull-right' href='remove_machinerights.php?uid=$username&hid=".$machinerights[$i]."'><span class='glyphicon glyphicon-remove'> </span> Remove host</a></td></tr>";

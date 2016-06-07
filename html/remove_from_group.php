@@ -10,7 +10,7 @@
 		
 		if($_POST['group']==""){
 			$message .= html::error_message("Please select a group.");
-		} elseif (!$ldap->is_ldap_group($_POST['group'])) {
+		} elseif (!group::is_ldap_group($ldap,$_POST['group'])) {
 			$message .= html::error_message("Invalid group name. Please stop trying to break my web interface.");
 		}
 		$group = new group($ldap,$_POST['group']);
@@ -39,7 +39,7 @@
 	
 	$gid = "";
 	$groupusers = array();
-	if(isset($_GET['gid']) && $ldap->is_ldap_group($_GET['gid'])){
+	if(isset($_GET['gid']) && group::is_ldap_group($ldap,$_GET['gid'])){
 		$gid = $_GET['gid'];
 		$grouptoadd = new group($ldap,$gid);
 		$groupusers = $grouptoadd->get_users();
@@ -55,7 +55,7 @@
 	
 	$usershtml = "";
 	if($gid == ""){
-		$users = $ldap->get_all_users();
+		$users = user::get_all_users($ldap);
 	} else {
 		$users = $groupusers;
 	}
@@ -75,7 +75,7 @@
 	
 	$groupshtml = "";
 	if($uid == ""){
-		$groups = $ldap->get_all_groups($ldap);
+		$groups = group::get_all_groups($ldap);
 	} else {
 		$groups = $usergroups;
 	}

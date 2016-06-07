@@ -42,7 +42,7 @@
 	if($uid != ""){
 		$usershtml = "<input type='hidden' name='username' value='$uid'/><label class='control-label'>$uid</label>";
 	} else {
-		$users = $ldap->get_all_users();
+		$users = user::get_all_users($ldap);
 		$usershtml .= "<select name='username' class='form-control username-select'><option></option>";
 		foreach($users as $user){
 			$usershtml .= "<option value='".$user."'";

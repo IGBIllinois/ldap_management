@@ -50,7 +50,7 @@ class user {
 		} elseif (user::is_ldap_user($this->ldap,$username)) {
 			$error = true;
 			$message = html::error_message("User already exists.");
-		} elseif ($this->ldap->is_ldap_group($username)) {
+		} elseif (group::is_ldap_group($this->ldap,$username)) {
 			$error = true;
 			$message = html::error_message("Username already exists as group");
 		} elseif ($name == "") {
@@ -247,8 +247,15 @@ class user {
 
 	public function get_machinerights() {
 		if ($this->machinerights == null) {
-			$this->machinerights = $this->ldap->get_machinerights($this->username);
-			unset($this->machinerights['count']);
+			$filter = "(uid=".$this->get_username().")";
+			$attributes = array('host');
+			$result = $this->ldap->search($filter, "", $attributes);
+			if ($result['count'] && $result[0]["count"]) {
+				$this->machinerights = $result[0]["host"];
+				unset($this->machinerights['count']);
+			} else {
+				$this->machinerights = false;
+			}
 		}
 		return $this->machinerights;
 	}
@@ -256,13 +263,20 @@ class user {
 
 	public function get_groups() {
 		if ($this->groups == null) {
-			$this->groups = $this->ldap->get_user_groups($this->username);
+			$filter = "(&(cn=*)(memberUid=" . $this->get_username() . "))";
+			$attributes = array('cn');
+			$result = $this->ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
+			unset($result['count']);
+			$this->groups = array();
+			foreach ($result as $row) {
+				array_push($this->groups, $row['cn'][0]);
+			}
 		}
 		return $this->groups;
 	}
 
 	public function add_machinerights($host) {
-		if($this->ldap->is_ldap_host($host) && ($this->get_machinerights() || !in_array($host, $this->get_machinerights()))){
+		if(host::is_ldap_host($this->ldap,$host) && ($this->get_machinerights() || !in_array($host, $this->get_machinerights()))){
 			$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
 			$data = array("host"=>$host);
 			if($this->ldap->mod_add($dn,$data)){
@@ -275,7 +289,7 @@ class user {
 	}
 	
 	public function remove_machinerights($host) {
-		if($this->ldap->is_ldap_host($host) || ($this->get_machinerights() && in_array($host, $this->get_machinerights()))){
+		if(host::is_ldap_host($this->ldap,$host) || ($this->get_machinerights() && in_array($host, $this->get_machinerights()))){
 			$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
 			$data = array("host"=>$host);
 			if($this->ldap->mod_del($dn,$data)){
@@ -366,7 +380,7 @@ class user {
 				'uid'=>$this->get_username());
 		} else {
 			return array('RESULT'=>false,
-			'MESSAGE'=>'Set Password Failed: '.ldap_error($this->ldap->get_resource()));
+			'MESSAGE'=>'Set Password Failed: '.$this->ldap->get_error());
 		}
 	}
 	
@@ -418,7 +432,7 @@ class user {
 				return 2;
 			}
 		} else {
-			echo ldap_error($this->ldap->get_resource());
+			echo $this->ldap->get_error();
 			return 1;
 		}
 	}
@@ -430,6 +444,18 @@ class user {
 			$password .= $passwordchars{self::devurandom_rand(0, strlen($passwordchars)-1)};
 		}
 		return $password;
+	}
+
+	public static function get_all_users($ldap){
+		$users_array = array();
+		$filter = "(uid=*)";
+		$attributes = array('uid');
+		$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
+		for ($i=0; $i<$result['count']; $i++) {
+			array_push($users_array, $result[$i]['uid'][0]);
+		}
+		sort($users_array);
+		return $users_array;
 	}
 
 	public static function get_search_users($ldap,$search,$start,$count,$sort="username",$asc="true"){

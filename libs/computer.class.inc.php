@@ -36,7 +36,7 @@ class computer {
 		if ($name == "") {
 			$error = true;
 			$message = html::error_message("Please enter a name.");
-		} elseif ($this->ldap->is_ldap_computer($name)) {
+		} elseif (self::is_ldap_computer($this->ldap,$name)) {
 			$error = true;
 			$message = html::error_message("Computer already exists.");
 		}
@@ -145,6 +145,18 @@ class computer {
 		}
 		usort($users,self::sorter($sort,$asc));
 		return $users;
+	}
+	
+	public static function is_ldap_computer($ldap,$name){
+		$name = trim(rtrim($name));
+		$filter = "(uid=".$name.")";
+		$attributes = array('');
+		$result = $ldap->search($filter,__LDAP_COMPUTER_OU__,$attributes);
+		if($result['count']){
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 //////////////////Private Functions//////////

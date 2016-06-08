@@ -129,7 +129,7 @@ class ldap {
 	public function mod_add($dn, $data) {
 		if ($this->get_connection() && $this->get_bind_user()) {
 			if ($this->bind($this->get_bind_user(), $this->get_bind_pass())) {
-				$result = ldap_mod_add($this->get_resource(), $dn, $data);
+				$result = @ldap_mod_add($this->get_resource(), $dn, $data);
 				return $result;
 			}
 		}

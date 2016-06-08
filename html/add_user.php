@@ -81,13 +81,17 @@
 				<p id="passworderror3" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Password must contain at least 1 lowercase letter</p>
 				<p id="passworderror4" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Password must contain at least 1 number or special character (no spaces)</p>
 				<p id="passworderror5" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Password and confirm password must match</p>
+				<p><button class="btn btn-default" id="password-button" type="button">Generate Password</button> <span id="password-text"></span></p>
 			</div>
 		</div>
 	</fieldset>
 </form>
 	
 <script type="text/javascript">
-	$(document).ready(function(){add_user_errors();});
+	$(document).ready(function(){
+		add_user_errors();
+		$('#password-button').on('click',function(){generate_password();add_user_errors();});
+	});
 </script>
 <?php
 	if(isset($message))echo $message;

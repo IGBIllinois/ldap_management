@@ -243,6 +243,26 @@ function check_groupname(){
 	return rule1==0 && rule2 && rule3;
 }
 
+function random_password(length){
+	var randomchars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@$%&';
+	var password = '';
+	var array = new Uint8Array(length);
+	window.crypto.getRandomValues(array);
+	for(var i=0; i<length; i++){
+		password += randomchars.charAt(array[i]%randomchars.length);
+	}
+	return password;
+}
+
+function generate_password(){
+	do {
+		var password = random_password(8);
+		$('#password-text').html(password);
+		$('#passworda_input').val(password);
+		$('#passwordb_input').val(password);
+	} while(!check_passwords());
+}
+
 $(document).ready(function(){
 	$('.copy-button').click(copy_panel);
 });

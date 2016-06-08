@@ -40,7 +40,7 @@
 					$user->set_password($password);
 				} else {
 					// Create user with random password
-					$user->create($username,$username,$password);
+					$user->create($username,$username,$username,$password);
 				}
 				// Give user biocluster access
 				$user->give_biocluster_access();

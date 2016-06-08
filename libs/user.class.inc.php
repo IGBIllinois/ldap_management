@@ -276,7 +276,7 @@ class user {
 	}
 
 	public function add_machinerights($host) {
-		if(host::is_ldap_host($this->ldap,$host) && ($this->get_machinerights() || !in_array($host, $this->get_machinerights()))){
+		if(host::is_ldap_host($this->ldap,$host) && (!$this->get_machinerights() || !in_array($host, $this->get_machinerights()))){
 			$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
 			$data = array("host"=>$host);
 			if($this->ldap->mod_add($dn,$data)){
@@ -439,10 +439,12 @@ class user {
 	
 	public static function random_password($length=8){
 		$passwordchars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@$%&';
-		$password = "";
-		for($i=0; $i<$length; $i++){
-			$password .= $passwordchars{self::devurandom_rand(0, strlen($passwordchars)-1)};
-		}
+		do {
+			$password = "";
+			for($i=0; $i<$length; $i++){
+				$password .= $passwordchars{self::devurandom_rand(0, strlen($passwordchars)-1)};
+			}
+		} while ( !(preg_match("/[A-Z]/u", $password)&&preg_match("/[a-z]/u", $password)&&preg_match("/[^A-Za-z]/u", $password)) );
 		return $password;
 	}
 

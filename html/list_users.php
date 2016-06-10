@@ -43,7 +43,7 @@
 	<h3>List of Users</h3>
 	<div class="row" style="margin-bottom:15px;">
 		<form method="get" action='<?php echo $_SERVER['PHP_SELF']; ?>' class="form-inline">
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<div class="form-group">
 					<input type="text" name="search" class="form-control" value="<?php if (isset($search)){echo $search; } ?>" placeholder="Search" />
 				</div>
@@ -51,6 +51,7 @@
 				<input type="hidden" name="sort" value="<?php echo $sort; ?>" />
 				<input type="hidden" name="asc" value="<?php echo $asc; ?>" />
 				<input type="submit" class="btn btn-primary" value="Go" />
+				
 			</div>
 		</form>
 	</div>
@@ -67,7 +68,11 @@
 			<?php echo $users_html; ?>
 		</tbody>
 	</table>
-	
+	<p>
+		<span class="glyphicon glyphicon-time smallwarning"> </span>=expiration set &nbsp;
+		<span class="glyphicon glyphicon-time smalldanger"> </span>=expired &nbsp;
+		<span class="glyphicon glyphicon-education smallwarning"> </span>=not in campus AD 
+	</p>
 	<?php echo $pages_html; ?>
 <?php
 	require_once 'includes/footer.inc.php';

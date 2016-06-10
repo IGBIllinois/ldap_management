@@ -90,13 +90,13 @@ class html {
 				$users_html .= $users[$i]['username'] . "</a>";
 				if($users[$i]['shadowexpire']!=''){
 					if($users[$i]['shadowexpire'] <= time()){
-						$users_html .= " <span class='glyphicon glyphicon-time smalldanger'></span>";
+						$users_html .= " <span class='glyphicon glyphicon-time smalldanger' title='User expired'></span>";
 					} else {
-						$users_html .= " <span class='glyphicon glyphicon-time smallwarning'></span>";
+						$users_html .= " <span class='glyphicon glyphicon-time smallwarning' title='User set to expire'></span>";
 					}
 				}
 				if(!user::is_ad_user($adldap,$users[$i]['username'])){
-					$users_html .= " <span class='glyphicon glyphicon-education smallwarning'></span>";
+					$users_html .= " <span class='glyphicon glyphicon-education smallwarning' title='User not in campus AD'></span>";
 				}
 				$users_html .= "</td>";
                 $users_html .= "<td>" . $users[$i]['name']. "</td>";

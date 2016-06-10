@@ -272,7 +272,7 @@ class group {
 			$filter = "(cn=*$search*)";
 		}
 		if ($filterusers) {
-			$users = user::get_all_users($this->ldap);
+			$users = user::get_all_users($ldap);
 		}
 		$attributes = array("cn", "description", "memberUid");
 		$result = $ldap->search($filter, __LDAP_GROUP_OU__, $attributes);

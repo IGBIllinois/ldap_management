@@ -115,12 +115,23 @@ class html {
 		$groups_html = "";
 		for ($i=$i_start;$i<$i_count;$i++) {
 		        if (array_key_exists($i,$groups)) {
-                		$groups_html .= "<tr>";
-	                	$groups_html .= "<td><a href='group.php?gid=" . $groups[$i]['name'] . "'>";
-						$groups_html .= $groups[$i]['name'] . "</a></td>";
-		                $groups_html .= "<td>" . $groups[$i]['description']. "</td>";
-						$groups_html .= "<td>" . $groups[$i]['members']. "</td>";
-                		$groups_html .= "</tr>";
+					$descObj = json_decode($groups[$i]['description']);
+					if($descObj == NULL){
+						$description = $groups[$i]['description'];
+						$dirs = array();
+					} else {
+						$description = $descObj->description;
+						$dirs = $descObj->directories;
+						sort($dirs);
+					}
+			        
+            		$groups_html .= "<tr>";
+                	$groups_html .= "<td><a href='group.php?gid=" . $groups[$i]['name'] . "'>";
+					$groups_html .= $groups[$i]['name'] . "</a></td>";
+	                $groups_html .= "<td>" . $description. "</td>";
+	                $groups_html .= "<td>" . implode(", ", $dirs). "</td>";
+					$groups_html .= "<td>" . $groups[$i]['members']. "</td>";
+            		$groups_html .= "</tr>";
 			}
         }
 		return $groups_html;

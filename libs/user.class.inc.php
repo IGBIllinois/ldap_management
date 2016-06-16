@@ -419,7 +419,6 @@ class user {
 
 	public function authenticate($password) {
 		$rdn = $this->get_user_rdn();
-		var_dump($rdn,$password);
 		if ($this->ldap->bind($rdn, $password)){
 			if (user::is_ldap_user($this->ldap,$this->username)) {
 				$in_admin_group = $this->ldap->search("(memberuid=".$this->username.")", __LDAP_ADMIN_GROUP__);
@@ -432,7 +431,7 @@ class user {
 				return 2;
 			}
 		} else {
-			echo $this->ldap->get_error();
+// 			echo $this->ldap->get_error();
 			return 1;
 		}
 	}

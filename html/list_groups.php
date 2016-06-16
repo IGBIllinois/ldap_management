@@ -65,6 +65,7 @@
 			<tr>
 				<th class="sortable-th" onclick="sort_table('name')">Name<?php echo html::sort_icon('name', $sort, $asc); ?></th>
 				<th class="sortable-th" onclick="sort_table('description')">Description<?php echo html::sort_icon('description', $sort, $asc); ?></th>
+				<th>Managed Directories</th>
 				<th class="sortable-th" onclick="sort_table('members')">Members<?php echo html::sort_icon('members', $sort, $asc); ?></th>
 			</tr>
 		</thead>

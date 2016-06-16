@@ -9,6 +9,8 @@ class group {
 	private $name;
 	private $gidnumber;
 
+	private $serverdirs = array();
+	
 	private $creator;
 	private $createTime;
 	private $modifier;
@@ -220,15 +222,58 @@ class group {
 
 
 	public function set_description($description) {
-		$dn = "cn=".$this->get_name().",".__LDAP_GROUP_OU__;
-		$data = array("description"=>$description);
-		if ($this->ldap->modify($dn, $data)) {
-			log::log_message("Changed group description for ".$this->get_name()." to '$description'");
-			$this->description = $description;
+		$this->description = $description;
+		
+		if ($this->set_desc_obj()) {
+			log::log_message("Changed group description for ".$this->get_name()." to '$description'");	
 			return array('RESULT'=>true,
 				'MESSAGE'=>'Description changed',
 				'gid'=>$this->get_name());
 		}
+	}
+	
+	public function add_serverdir($server,$dir){
+		$serverdir = $server.": ".$dir;
+		array_push($this->serverdirs, $serverdir);
+		
+		if ($this->set_desc_obj()) {
+			log::log_message("Added server directory '$server: $dir' for ".$this->get_name());
+			return array('RESULT'=>true,
+				'MESSAGE'=>'Server directory added',
+				'gid'=>$this->get_name());
+		}
+	}
+	
+	public function remove_serverdir($serverdir){
+		$serverdirs = array();
+		foreach($this->serverdirs as $thisserverdir){
+			if($serverdir != $thisserverdir){
+				array_push($serverdirs, $thisserverdir);
+			}
+		}
+		$this->serverdirs = $serverdirs;
+		
+		if($this->set_desc_obj()){
+			log::log_message("Removed server directory '$serverdir' from ".$this->get_name());
+			return array('RESULT'=>true,
+				'MESSAGE'=>'Server directory removed',
+				'gid'=>$this->get_name());
+		}
+	}
+	
+	public function set_desc_obj(){
+		$dn = "cn=".$this->get_name().",".__LDAP_GROUP_OU__;
+		$descObj = array('description'=>$this->description,'directories'=>$this->serverdirs);
+		$data = array("description"=>json_encode($descObj));
+		if ($this->ldap->modify($dn, $data)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public function get_serverdirs(){
+		return $this->serverdirs;
 	}
 
 
@@ -237,7 +282,8 @@ class group {
 		if ($search == "") {
 			$filter = "(cn=*)";
 		} else {
-			$filter = "(cn=*$search*)";
+			// This ugly str_replace brought to you by our version of php being too old to support JSON_UNESCAPED_SLASHES
+			$filter = "(|(cn=*$search*)(description=*".str_replace("/","\\\\/",$search)."*))";
 		}
 		if ($filterusers) {
 			$users = user::get_all_users($ldap);
@@ -253,10 +299,12 @@ class group {
 			}
 		}
 
-		if (is_numeric($groups[0][$sort])) {
-			usort($groups, self::sorter($sort, $asc));
-		} else {
-			usort($groups, self::strsorter($sort, $asc));
+		if(count($groups)){
+			if (is_numeric($groups[0][$sort])) {
+				usort($groups, self::sorter($sort, $asc));
+			} else {
+				usort($groups, self::strsorter($sort, $asc));
+			}
 		}
 		if ($start>=0) {
 			$groups = array_slice($groups, $start, $count);
@@ -323,7 +371,16 @@ class group {
 		$attributes = array("cn", "description", "gidNumber", "memberuid", "creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp", "objectClass");
 		$result = $this->ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
 		$this->name = $result[0]['cn'][0];
-		$this->description = $result[0]['description'][0];
+		
+		// Attempt to parse JSON
+		$descJson = json_decode($result[0]['description'][0]);
+		if($descJson==NULL){
+			$this->description = $result[0]['description'][0];
+		} else {
+			$this->description = isset($descJson->description)?$descJson->description:"";
+			$this->serverdirs = isset($descJson->directories)?$descJson->directories:array();
+			sort($this->serverdirs);
+		}
 
 		if ( preg_match("/uid=(.*?),/um", $result[0]['creatorsname'][0], $matches) ) {
 			$this->creator = $matches[1];

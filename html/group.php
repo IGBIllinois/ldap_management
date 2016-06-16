@@ -8,7 +8,7 @@
 	$group = new group($ldap,$gid);
 	
 	$usershtml = "";
-	$copytext = "";
+	$userscopytext = "";
 	$users = $group->get_users();
 	sort($users);
 	for($i=0; $i<count($users);$i++){
@@ -17,7 +17,16 @@
 			$usershtml .= " <span class='glyphicon glyphicon-alert smallwarning' title='User does not exist'></span>";
 		}
 		$usershtml .= " <a href='remove_from_group.php?uid=".$users[$i]."&gid=$gid' class='btn btn-danger btn-xs pull-right'><span class='glyphicon glyphicon-remove'></span> Remove from group</a></td></tr>";
-		$copytext .= $users[$i]."\n";
+		$userscopytext .= $users[$i]."\n";
+	}
+	
+	$serverdirs = $group->get_serverdirs();
+	$dirhtml = "";
+	$dircopytext = "";
+	for($i=0; $i<count($serverdirs); $i++){
+		$dir = explode(':', $serverdirs[$i]);
+		$dirhtml .= "<tr><td>".$dir[0]."</td><td>".$dir[1]." <a href='remove_serverdir.php?gid=$gid&serverdir=".urlencode($serverdirs[$i])."' class='btn btn-danger btn-xs pull-right'><span class='glyphicon glyphicon-remove'></span> Remove directory</a></td></tr>";
+		$dircopytext .= $serverdirs[$i]."\n";
 	}
 
 	?>
@@ -64,12 +73,25 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="btn-group btn-group-xs pull-right">
+				<a class="btn btn-success btn-xs" href="add_serverdir.php?gid=<?php echo $gid; ?>"><span class='glyphicon glyphicon-plus'></span> Add directory</a>
+				<button class='btn btn-default btn-xs copy-button'><span class='glyphicon glyphicon-copy'></span> Copy</button>
+			</div>
+			<h3 class='panel-title'>Managed Directories</h3>
+		</div>
+		<textarea class='hidden copy-text'><?php echo $dircopytext; ?></textarea>
+		<table class="table table-bordered table-striped">
+			<?php echo $dirhtml; ?>
+		</table>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<div class="btn-group btn-group-xs pull-right">
 				<a class='btn btn-success btn-xs' href='add_to_group.php?gid=<?php echo $gid; ?>'><span class='glyphicon glyphicon-plus'></span> Add member</a>
 				<button class='btn btn-default btn-xs copy-button'><span class='glyphicon glyphicon-copy'></span> Copy</button>
 			</div>
 			<h3 class="panel-title">Members</h3>
 		</div>
-		<textarea class='hidden copy-text'><?php echo $copytext; ?></textarea>
+		<textarea class='hidden copy-text'><?php echo $userscopytext; ?></textarea>
 		<table class="table table-bordered table-striped">
 			<?php echo $usershtml; ?>
 		</table>

@@ -71,7 +71,7 @@
 	
 	$hostshtml = "";
 	if($hid != ""){
-		$hostshtml = "<input type='hidden' name='username' value='$uid'/><label class='control-label'>$hid</label>";
+		$hostshtml = "<input type='hidden' name='host' value='$hid'/><label class='control-label'>$hid</label>";
 	} else {
 		$hosts = host::get_all_hosts($ldap);
 		

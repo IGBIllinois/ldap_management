@@ -13,7 +13,7 @@
 		} elseif (!group::is_ldap_group($ldap,$_POST['group'])) {
 			$message .= html::error_message("Invalid group name. Please stop trying to break my web interface.");
 		}
-		if($_POST['new_server']==""){
+		if($_POST['host']==""){
 			$message .= html::error_message("Please enter a server.");
 		}
 		if($_POST['new_directory']==""){
@@ -22,7 +22,7 @@
 		
 		if($message == ""){
 			$group = new group($ldap,$_POST['group']);
-			$result = $group->add_serverdir($_POST['new_server'],$_POST['new_directory']);
+			$result = $group->add_serverdir($_POST['host'],$_POST['new_directory']);
 		
 			if($result['RESULT'] == true){
 				if($_POST['from']==""){
@@ -60,12 +60,48 @@
 		$groupshtml = "<input type='hidden' name='group' value='$gid'/><label class='control-label'>$gid</label>";
 	}
 	
-	$servers = explode(",",__SERVERS__);
-	$serverhtml = "<select name='new_server' class='form-control server-select'><option></option>";
-	foreach($servers as $server){
-		$serverhtml .= "<option>".$server."</option>";
+	$hostshtml = "";
+	$hosts = host::get_all_hosts($ldap);
+	
+	$igb = array();
+	$biotech = array();
+	$other = array();
+	foreach($hosts as $host){
+		if(strpos($host['name'],"biotec") !== false){
+			$biotech[] = $host['name'];
+		} else if(strpos($host['name'],"igb") !== false){
+			$igb[] = $host['name'];
+		} else {
+			$other[] = $host['name'];
+		}
 	}
-	$serverhtml .= "</select>";
+	sort($igb);
+	sort($biotech);
+	sort($other);
+	
+	$hostshtml .= "<select name='host' class='form-control host-select'><option></option>";
+	$hostshtml .= "<optgroup label='IGB Hosts'>";
+	foreach($igb as $host){
+		$hostshtml .= "<option value='".$host."'";
+		$hostshtml .= ">".$host."</option>";
+	}
+	$hostshtml .= "/<optgroup>";
+	$hostshtml .= "<optgroup label='Biotech Hosts'>";
+	foreach($biotech as $host){
+		$hostshtml .= "<option value='".$host."'";
+		$hostshtml .= ">".$host."</option>";
+	}
+	$hostshtml .= "/<optgroup>";
+	if(count($other)!=0){
+		$hostshtml .= "<optgroup label='Other Hosts'>";
+		foreach($other as $host){
+			$hostshtml .= "<option value='".$host."'";
+			$hostshtml .= ">".$host."</option>";
+		}
+		$hostshtml .= "/<optgroup>";
+	}
+		$hostshtml .= "</select>";
+
 ?>
 <form class="form-horizontal" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
@@ -79,7 +115,7 @@
 		<div class="form-group">
 			<label class="col-sm-2 control-label" for="username-input">Server:</label>
 			<div class="col-sm-4">
-				<?php echo $serverhtml; ?>
+				<?php echo $hostshtml; ?>
 			</div>
 		</div>
 		<div class="form-group">
@@ -101,7 +137,7 @@
 </form>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$(".server-select").select2({
+		$(".host-select").select2({
 			placeholder: "Please select a server"
 		});
 	});

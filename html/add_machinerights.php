@@ -69,6 +69,7 @@
 		$usershtml .= "</select>";
 	}
 	
+// 	TODO move this out into html.class
 	$hostshtml = "";
 	if($hid != ""){
 		$hostshtml = "<input type='hidden' name='host' value='$hid'/><label class='control-label'>$hid</label>";

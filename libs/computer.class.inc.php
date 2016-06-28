@@ -51,12 +51,13 @@ class computer {
 		else {
 			// Find first unused uidNumber,gidNumber
 			$uidnumber = 10000;
-			$uidnumbers = $this->ldap->search("(cn=computer)", __LDAP_COMPUTER_OU__, array('cn', 'uidNumber'));
+			$uidnumbers = $this->ldap->search("(uid=*)", __LDAP_COMPUTER_OU__, array('uidnumber'));
 			$cleanpass = 1;
+			
 			while ($cleanpass) {
 				$cleanpass = 0;
 				for ($i=0;$i<$uidnumbers['count'];$i++) {
-					if ($uidnumbers[$i]['uidnumber'][0] == $uidnumber) {
+					if ($uidnumbers[$i]['count'] != 0 && $uidnumbers[$i]['uidnumber'][0] == $uidnumber) {
 						$cleanpass++;
 						$uidnumber++;
 					}

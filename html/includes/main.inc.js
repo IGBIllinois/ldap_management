@@ -2,6 +2,16 @@ function confirm_disable_user() {
 	return confirm("Are you sure you wish to delete this user? This operation cannot be undone.");
 }
 
+function toggleClasses(e,onClass,offClass){
+	if(e.hasClass(onClass)){
+		e.addClass(offClass);
+		e.removeClass(onClass);
+	} else {
+		e.addClass(onClass);
+		e.removeClass(offClass);
+	}
+}
+
 function sort_table(column){
 	// Build new url
 	var currentURL = window.location.href;
@@ -35,6 +45,7 @@ function sort_table(column){
 		}
 	}
 }
+
 
 function show_classroom_text(){
 	var prefix = $('#prefix-input').val();
@@ -129,6 +140,7 @@ function showGroupnameError(errornum,valid,text){
 }
 
 function check_passwords(){
+	console.log('check_passwords');
 	var passworda = document.getElementById('passworda_input').value;
 	var passwordb = document.getElementById('passwordb_input').value;
 	
@@ -147,14 +159,28 @@ function check_passwords(){
 	return rule1 && rule2 && rule3 && rule4 && rule5;
 }
 
-function add_user_errors(){
-	var password_errors = check_passwords();
-	var username_errors = check_username();
+function add_user_errors(username_errors,password_errors){
+	console.log(username_errors,password_errors);
+	var return_pass_errors = true;
+	if(password_errors==null){
+		password_errors = check_passwords();
+		
+	}
+	if(username_errors==null){
+		return_pass_errors = false;
+		username_errors = check_username();		
+	}
 	
 	if (password_errors && username_errors){
 		document.getElementById('add_user_submit').disabled = false;
 	} else {
 		document.getElementById('add_user_submit').disabled = true;
+	}
+	
+	if(return_pass_errors){
+		return password_errors;
+	} else {
+		return username_errors;
 	}
 }
 
@@ -189,6 +215,7 @@ function change_password_errors(){
 }
 
 function check_username(){
+	console.log('check_username');
 	var username = document.getElementById('username_input').value;
 	var warning1 = false;
 	$.ajax('check_netid.php',{

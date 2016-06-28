@@ -27,7 +27,7 @@
 			if($result['RESULT'] == true){
 				header("Location: ".$_POST['from']);
 			} else if ($result['RESULT'] == false) {
-				$message = $result['MESSAGE'];
+				$message = html::error_message($result['MESSAGE']);
 			}
 		}
 	} else if (isset($_POST['cancel_user'])) {

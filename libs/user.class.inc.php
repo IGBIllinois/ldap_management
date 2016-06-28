@@ -153,8 +153,7 @@ class user {
 			// Run script to add user to file-server, mail
 			if(__RUN_SHELL_SCRIPTS__){
 				$safeusername = escapeshellarg($username);
-				// TODO script didnt work
-				exec("sudo ../bin/add_user.pl $safeusername".$options);
+				exec("sudo ../bin/add_user.pl $safeusername");
 			}
 			
 			return array('RESULT'=>true,
@@ -284,6 +283,9 @@ class user {
 				return array('RESULT'=>true,
 				'MESSAGE'=>'Machine rights successfully added.',
 				'uid'=>$this->get_username());
+			} else {
+				return array('RESULT'=>false,
+				'MESSAGE'=>'Error: '.$this->ldap->get_error());
 			}
 		}
 	}

@@ -52,6 +52,28 @@ class group {
 
 		//Everything looks good, add group
 		else {
+			
+			// Find first unused gidNumber
+			$groups = $this->ldap->search("(cn=*)", __LDAP_GROUP_OU__, array('cn', 'gidNumber'));
+			$gidnumbers = array();
+			for($i=0; $i<$groups['count']; $i++){
+				// TODO check if $users[$i]['uidnumber'] exists first
+				if(isset($groups[$i]['gidnumber'])){
+					$gidnumbers[] = $groups[$i]['gidnumber'][0];
+				}
+			}
+			$gidnumber = 20000;
+			$cleanpass = 1;
+			while($cleanpass){
+				$cleanpass=0;
+				foreach($gidnumbers as $number){
+					if($number==$gidnumber){
+						$gidnumber++;
+						$cleanpass++;
+					}
+				}
+			}
+			
 			// Add to LDAP
 			$dn = "cn=".$name.",".__LDAP_GROUP_OU__;
 			$data = array("cn"=>$name, "objectClass"=>array('posixGroup', 'sambaGroupMapping'), "gidNumber"=>$gidnumber, "description"=>$description, 'sambaGroupType'=>2, 'sambaSID'=>__SAMBA_ID__."-".$gidnumber);
@@ -154,7 +176,7 @@ class group {
 			$filter = "(cn=" . $this->get_name() . ")";
 			$attributes = array('memberUid');
 			$result = $this->ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
-			if ($result['count']==0) {
+			if ($result[0]['count']==0) {
 				return array();
 			}
 			unset($result[0]['memberuid']['count']);

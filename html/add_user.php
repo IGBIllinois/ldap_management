@@ -36,7 +36,7 @@
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="username-input">Username:</label>
 					<div class="col-sm-8">
-						<input class="form-control" type="text" name="new_username" id="username_input" value="<?php if (isset($_POST['new_username'])){echo $_POST['new_username'];}?>" oninput="username_errors=add_user_errors(null,password_errors);" autofocus />
+						<input class="form-control" type="text" name="new_username" id="username_input" value="<?php if (isset($_POST['new_username'])){echo $_POST['new_username'];}?>" oninput="[username_errors,password_errors]=add_user_errors(null,password_errors);" autofocus />
 					</div>
 				</div>
 				<div class="form-group">
@@ -54,13 +54,13 @@
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="passworda-input">Password:</label>
 					<div class="col-sm-8">
-						<input class="form-control" type="password" name="new_passworda" id="passworda_input" value="<?php if (isset($_POST['new_passworda'])){echo $_POST['new_passworda'];}?>" oninput="password_errors=add_user_errors(username_errors,null);" />
+						<input class="form-control" type="password" name="new_passworda" id="passworda_input" value="<?php if (isset($_POST['new_passworda'])){echo $_POST['new_passworda'];}?>" oninput="[username_errors,password_errors]=add_user_errors(username_errors,null);" />
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="passwordb-input">Confirm Password:</label>
 					<div class="col-sm-8">
-						<input class="form-control" type="password" name="new_passwordb" id="passwordb_input" value="<?php if (isset($_POST['new_passwordb'])){echo $_POST['new_passwordb'];}?>" oninput="password_errors=add_user_errors(username_errors,null);" />
+						<input class="form-control" type="password" name="new_passwordb" id="passwordb_input" value="<?php if (isset($_POST['new_passwordb'])){echo $_POST['new_passwordb'];}?>" oninput="[username_errors,password_errors]=add_user_errors(username_errors,null);" />
 					</div>
 				</div>
 				<div class="form-group">
@@ -91,8 +91,8 @@
 	username_errors = null;
 	password_errors = null;
 	$(document).ready(function(){
-		add_user_errors();
-		$('#password-button').on('click',function(){generate_password();add_user_errors();});
+		[username_errors,password_errors]=add_user_errors();
+		$('#password-button').on('click',function(){generate_password();[username_errors,password_errors]=add_user_errors();});
 	});
 </script>
 <?php

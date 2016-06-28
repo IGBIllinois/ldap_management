@@ -140,7 +140,6 @@ function showGroupnameError(errornum,valid,text){
 }
 
 function check_passwords(){
-	console.log('check_passwords');
 	var passworda = document.getElementById('passworda_input').value;
 	var passwordb = document.getElementById('passwordb_input').value;
 	
@@ -160,14 +159,11 @@ function check_passwords(){
 }
 
 function add_user_errors(username_errors,password_errors){
-	console.log(username_errors,password_errors);
-	var return_pass_errors = true;
 	if(password_errors==null){
 		password_errors = check_passwords();
 		
 	}
 	if(username_errors==null){
-		return_pass_errors = false;
 		username_errors = check_username();		
 	}
 	
@@ -177,11 +173,7 @@ function add_user_errors(username_errors,password_errors){
 		document.getElementById('add_user_submit').disabled = true;
 	}
 	
-	if(return_pass_errors){
-		return password_errors;
-	} else {
-		return username_errors;
-	}
+	return [username_errors,password_errors];
 }
 
 function change_username_errors(){
@@ -215,7 +207,6 @@ function change_password_errors(){
 }
 
 function check_username(){
-	console.log('check_username');
 	var username = document.getElementById('username_input').value;
 	var warning1 = false;
 	$.ajax('check_netid.php',{
@@ -239,8 +230,8 @@ function check_username(){
 			rule1 = data;
 		}
 	});
-	var rule2 = ( username.match(/^[a-z]/) );
-	var rule3 = !( username.match(/[^A-Za-z0-9_]/) );
+	var rule2 = ( username.match(/^[a-z]/)!=null );
+	var rule3 = ( username.match(/[^A-Za-z0-9_]/)==null );
 
 	showUsernameError(1,rule1==0,rule1==0?"Username not in use":(rule1==1?"Username already exists":"Username exists as group"));
 	showUsernameError(2,rule2,"Username must begin with a lowercase letter");

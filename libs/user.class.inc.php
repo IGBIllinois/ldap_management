@@ -19,6 +19,7 @@ class user {
 	private $createTime;
 	private $modifier;
 	private $modifyTime;
+	private $passwordSet = null;
 
 	////////////////Public Functions///////////
 
@@ -242,6 +243,9 @@ class user {
 	}
 	public function get_modifyTime(){
 		return $this->modifyTime;
+	}
+	public function get_passwordSet(){
+		return $this->passwordSet;
 	}
 
 	public function get_machinerights() {
@@ -562,7 +566,7 @@ class user {
 
 	public function load_by_username($username) {
 		$filter = "(uid=".$username.")";
-		$attributes = array("uid","cn","homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber");
+		$attributes = array("uid","cn","homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet');
 		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 		if($result['count']>0){
 			$this->name = $result[0]['cn'][0];
@@ -586,6 +590,9 @@ class user {
 			}
 			$this->modifyTime = strtotime($result[0]['modifytimestamp'][0]);
 			$this->uidnumber = $result[0]['uidnumber'][0];
+			if(isset($result[0]['sambapwdlastset'])){
+				$this->passwordSet = $result[0]['sambapwdlastset'][0];
+			}
 		}
 	}
 

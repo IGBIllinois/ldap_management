@@ -69,6 +69,13 @@
 				<th>Login Shell:</th>
 				<td><?php echo $user->get_loginShell(); ?> <a class='btn btn-info btn-xs pull-right' href='edit_login_shell.php?uid=<?php echo $user->get_username(); ?>'><span class='glyphicon glyphicon-pencil'> </span> Change Login Shell</a></td>
 			</tr>
+			
+			<?php if($user->get_passwordSet() != null){ ?>
+			<tr>
+				<th>Password Last Set:</th>
+				<td><?php echo strftime('%m/%d/%Y %I:%M:%S %p', $user->get_passwordSet() ); ?></td>
+			</tr>
+			<?php } ?>
 			<tr>
 				<th>Biocluster Access:</th>
 				<td><?php if($user->get_machinerights() && in_array('biocluster.igb.illinois.edu', $user->get_machinerights())){

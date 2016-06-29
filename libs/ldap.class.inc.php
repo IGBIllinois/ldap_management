@@ -95,11 +95,15 @@ class ldap {
 			$ou = $this->get_base_dn();
 		}
 		if (($this->get_connection()) && ($attributes != "")) {
-			$ldap_result = ldap_search($this->get_resource(), $ou, $filter, $attributes);
-			$result = ldap_get_entries($this->get_resource(), $ldap_result);
+			if ($this->bind($this->get_bind_user(), $this->get_bind_pass())) {
+				$ldap_result = ldap_search($this->get_resource(), $ou, $filter, $attributes);
+				$result = ldap_get_entries($this->get_resource(), $ldap_result);
+			}
 		} elseif (($this->get_connection()) && ($attributes == "")) {
-			$ldap_result = ldap_search($this->get_resource(), $ou, $filter);
-			$result = ldap_get_entries($this->get_resource(), $ldap_result);
+			if ($this->bind($this->get_bind_user(), $this->get_bind_pass())) {
+				$ldap_result = ldap_search($this->get_resource(), $ou, $filter);
+				$result = ldap_get_entries($this->get_resource(), $ldap_result);
+			}
 		}
 		return $result;
 	}

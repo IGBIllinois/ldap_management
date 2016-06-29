@@ -36,6 +36,7 @@
 	}
 	if($uid == ""){
 		header('location: index.php');
+		exit();
 	}
 ?>
 <form class="form-horizontal" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
@@ -56,7 +57,7 @@
 		<div class="form-group">
 			<div class="col-sm-4 col-sm-offset-2">
 				<div class="btn-group">
-					<input onclick="window.open('https://biocluster.igb.illinois.edu/accounting/add_user.php?new_username=<?php echo $_GET['uid']; ?>','_blank');" class="btn btn-primary" type="submit" name="biocluster_user" value="Give access" /> <input class="btn btn-default" type="submit" name="cancel_user" value="Cancel" />
+					<input onclick="window.open('https://biocluster.igb.illinois.edu/accounting/add_user.php?new_username=<?php echo $uid; ?>','_blank');" class="btn btn-primary" type="submit" name="biocluster_user" value="Give access" /> <input class="btn btn-default" type="submit" name="cancel_user" value="Cancel" />
 				</div>
 			</div>
 		</div>

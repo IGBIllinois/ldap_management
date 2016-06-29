@@ -96,7 +96,7 @@ class html {
 					}
 				}
 				if(!user::is_ad_user($adldap,$users[$i]['username'])){
-					$users_html .= " <span class='glyphicon glyphicon-education smallwarning' title='User not in campus AD'></span>";
+					$users_html .= " <span class='glyphicon glyphicon-education smallwarning' title='User left UIUC'></span>";
 				}
 				$users_html .= "</td>";
                 $users_html .= "<td>" . $users[$i]['name']. "</td>";

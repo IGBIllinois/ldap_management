@@ -23,16 +23,7 @@
 			}
 			return $count;
 		}
-		public static function non_ad_users($ldap,$adldap){
-			$users = user::get_all_users($ldap);
-			$count = 0;
-			for($i=0; $i<count($users); $i++){
-				if(!user::is_ad_user($adldap,$users[$i])){
-					$count++;
-				}
-			}
-			return $count;
-		}
+
 		public static function groups($ldap){
 			$filter = "(cn=*)";
 			$result = $ldap->search($filter,__LDAP_GROUP_OU__, array(''));

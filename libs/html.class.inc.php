@@ -95,7 +95,7 @@ class html {
 						$users_html .= " <span class='glyphicon glyphicon-time smallwarning' title='User set to expire'></span>";
 					}
 				}
-				if(!user::is_ad_user($adldap,$users[$i]['username'])){
+				if(!user::is_ad_current($adldap,$users[$i]['username'])){
 					$users_html .= " <span class='glyphicon glyphicon-education smallwarning' title='User left UIUC'></span>";
 				}
 				$users_html .= "</td>";

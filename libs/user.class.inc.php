@@ -154,7 +154,7 @@ class user {
 			// Run script to add user to file-server, mail
 			if(__RUN_SHELL_SCRIPTS__){
 				$safeusername = escapeshellarg($username);
-				exec("sudo ../bin/add_user.pl $safeusername");
+				exec("sudo ../bin/add_user.pl $safeusername",$shellout);
 			}
 			
 			return array('RESULT'=>true,
@@ -499,7 +499,7 @@ class user {
 		if($userfilter == 'left'){
 			$foundusers = array();
 			for($i=0;$i<count($users)&&count($foundusers)<$start+$count;$i++){
-				if(!user::is_ad_user($adldap,$users[$i]['username'])){
+				if(!user::is_ad_current($adldap,$users[$i]['username'])){
 					$foundusers[] = $users[$i];
 				}
 			}
@@ -551,7 +551,18 @@ class user {
 		}
 	}
 	
+
 	public static function is_ad_user($adldap,$username){
+		$filter = "(uid=".$username.")";
+		$results = $adldap->search($filter);
+		if($results && $results['count']>0){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static function is_ad_current($adldap,$username){
 		$filter = "(uid=".$username.")";
 		$attributes = array('uiucEduPhInactiveDate');
 		$results = $adldap->search($filter,"",$attributes);

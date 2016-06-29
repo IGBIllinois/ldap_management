@@ -511,9 +511,28 @@ class user {
 		} else {
 			$filter = "(|(uid=*$search*)(cn=*$search*))";
 		}
-		$attributes = array("uid","cn","mail");
+		$attributes = array("uid","cn","shadowexpire");
 		$result = $ldap->search($filter,__LDAP_PEOPLE_OU__,$attributes,1);
-		return $result['count'];
+		$users = array();
+		for($i=0; $i<$result['count']; $i++){
+			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''));
+			if($userfilter != 'none'){
+				if($userfilter == 'expiring'){
+					if($user['shadowexpire'] > time()){
+						$users[] = $user;
+					}
+				} else if($userfilter == 'expired'){
+					if($user['shadowexpire']!='' && $user['shadowexpire'] <= time()){
+						$users[] = $user;
+					}
+				} else {
+					$users[] = $user;
+				}
+			} else {
+				$users[] = $user;
+			}
+		}
+		return count($users);
 	}
 	
 	public static function is_ldap_user($ldap, $username) {

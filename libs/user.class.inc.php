@@ -461,7 +461,7 @@ class user {
 		return $users_array;
 	}
 
-	public static function get_search_users($ldap,$search,$start,$count,$sort="username",$asc="true"){
+	public static function get_search_users($ldap,$adldap,$search,$start,$count,$sort="username",$asc="true",$userfilter='none'){
 		if($search == ""){
 			$filter = "(uid=*)";
 		} else {
@@ -472,13 +472,40 @@ class user {
 		$users = array();
 		for($i=0; $i<$result['count']; $i++){
 			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''));
-			$users[] = $user;
+			if($userfilter != 'none'){
+				if($userfilter == 'expiring'){
+					if($user['shadowexpire'] > time()){
+						$users[] = $user;
+					}
+				} else if($userfilter == 'expired'){
+					if($user['shadowexpire']!='' && $user['shadowexpire'] <= time()){
+						$users[] = $user;
+					}
+				} else {
+					$users[] = $user;
+				}
+			} else {
+				$users[] = $user;
+			}
 		}
+
 		usort($users,self::sorter($sort,$asc));
+		
+		//filter users by left campus after sorting to make it a little faster
+		if($userfilter == 'left'){
+			$foundusers = array();
+			for($i=0;$i<count($users)&&count($foundusers)<$start+$count;$i++){
+				if(!user::is_ad_user($adldap,$users[$i]['username'])){
+					$foundusers[] = $users[$i];
+				}
+			}
+			return array_slice($foundusers,$start,$count);
+		}
+		
 		return array_slice($users,$start,$count);
 	}
 	
-	public static function get_search_users_count($ldap,$search){
+	public static function get_search_users_count($ldap,$search,$userfilter='none'){
 		if($search == ""){
 			$filter = "(uid=*)";
 		} else {
@@ -493,7 +520,7 @@ class user {
 		$username = trim(rtrim($username));
 		$filter = "(uid=" . $username . ")";
 		$attributes = array('');
-		$result = $ldap->search($filter, "", $attributes);
+		$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 		if ($result['count']) {
 			return true;
 		} else {
@@ -503,8 +530,9 @@ class user {
 	
 	public static function is_ad_user($adldap,$username){
 		$filter = "(uid=".$username.")";
-		$results = $adldap->search($filter);
-		if($results && $results['count']>0){
+		$attributes = array('uiucEduPhInactiveDate');
+		$results = $adldap->search($filter,"",$attributes);
+		if($results && (($results['count']>0 && $results[0]['count']==0)||($results['count']==0))){
 			return true;
 		} else {
 			return false;

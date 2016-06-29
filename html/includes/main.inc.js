@@ -46,6 +46,27 @@ function sort_table(column){
 	}
 }
 
+function filter_table(filter){
+	// Build new URL
+	var currentURL = window.location.href;
+	var URLMatch = currentURL.match(/filter=(.*?)(&|$)/);
+	if(URLMatch == null){
+		// Add filter to the end of the URL
+		if(currentURL.indexOf('?')>-1){
+			window.location.href=currentURL+"&filter="+filter;
+		} else {
+			window.location.href=currentURL+"?filter="+filter;
+		}
+	} else {
+		// Replace filter in place
+		if(URLMatch[1] == filter){
+			// Clicked twice, no filter
+			window.location.href=currentURL.replace(/filter=(.*?)(&|$)/g, "filter=none$2");
+		} else {
+			window.location.href=currentURL.replace(/filter=(.*?)(&|$)/g, "filter="+filter+"$2");
+		}
+	}
+}
 
 function show_classroom_text(){
 	var prefix = $('#prefix-input').val();

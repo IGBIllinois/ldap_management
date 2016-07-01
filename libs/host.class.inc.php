@@ -140,15 +140,19 @@ class host {
 		}
 	}
 	
-	public static function get_all_hosts($ldap){
+	public static function get_all_hosts($ldap,$expandedinfo = false){
 		$filter = "(cn=*)";
 		$attributes = array("cn","ipHostNumber");
 		$result = $ldap->search($filter,__LDAP_HOST_OU__,$attributes);
 		$hosts = array();
 		for($i=0; $i<$result['count']; $i++){
-			$num_users = $ldap->search("(host=".$result[$i]['cn'][0].")",__LDAP_PEOPLE_OU__,array(''));
-			$num_users = $num_users['count']?$num_users['count']:0;
-			$host = array("name"=>$result[$i]['cn'][0],"ip"=>isset($result[$i]['iphostnumber'][0])?$result[$i]['iphostnumber'][0]:"","numusers"=>$num_users);
+			if($expandedinfo){
+				$num_users = $ldap->search("(host=".$result[$i]['cn'][0].")",__LDAP_PEOPLE_OU__,array(''));
+				$num_users = $num_users['count']?$num_users['count']:0;
+				$host = array("name"=>$result[$i]['cn'][0],"ip"=>isset($result[$i]['iphostnumber'][0])?$result[$i]['iphostnumber'][0]:"","numusers"=>$num_users);
+			} else {
+				$host = array("name"=>$result[$i]['cn'][0],"ip"=>isset($result[$i]['iphostnumber'][0])?$result[$i]['iphostnumber'][0]:"");
+			}
 			$hosts[] = $host;
 		}
 		return $hosts;

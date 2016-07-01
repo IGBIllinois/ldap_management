@@ -29,7 +29,7 @@
 		$get_array['asc'] = $asc;
 	}
 	
-	$hosts = host::get_all_hosts($ldap);
+	$hosts = host::get_all_hosts($ldap,true);
 	$hosts_html = "";
 	
 	$hosts_html = html::get_hosts_rows($hosts);

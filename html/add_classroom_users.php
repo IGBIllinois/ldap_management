@@ -34,7 +34,8 @@
 					// clear out the biocluster/file-server home folder, if it exists
 					if(__RUN_SHELL_SCRIPTS__){
 						$safeusername = escapeshellarg($username);
-						exec("sudo ../bin/classroom_cleanup.pl $safeusername");
+						exec("sudo ../bin/classroom_cleanup.pl $safeusername 2>&1",$output);
+						log::log_message("Cleaned up file-server and biocluster directories for $username";)
 					}
 					// Set the password
 					$user->set_password($password);

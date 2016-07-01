@@ -4,6 +4,10 @@
 		
 	if (isset($_GET['uid'])) {
 	    $uid = $_GET['uid'];
+	    if(!computer::is_ldap_computer($ldap,$uid)){
+		    header('location: list_computers.php');
+		    exit();
+	    }
 	}
 	$computer = new computer($ldap,$uid);
 	

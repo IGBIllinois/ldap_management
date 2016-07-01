@@ -5,6 +5,10 @@
 	$username = $login_user->get_username();
 	if (isset($_GET['uid'])) {
 	    $username = $_GET['uid'];
+	    if(!user::is_ldap_user($ldap,$username)){
+		    header('location: list_users.php');
+		    exit();
+	    }
 	}
 
 	$user = new user($ldap,$username);

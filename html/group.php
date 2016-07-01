@@ -4,6 +4,10 @@
 		
 	if (isset($_GET['gid'])) {
 	    $gid = $_GET['gid'];
+	    if(!group::is_ldap_group($ldap,$gid)){
+		    header('location: list_groups.php');
+		    exit();
+	    }
 	}
 	$group = new group($ldap,$gid);
 	

@@ -4,6 +4,10 @@
 		
 	if (isset($_GET['hid'])) {
 	    $hostname = $_GET['hid'];
+	    if(!host::is_ldap_host($ldap,$hostname)){
+		    header('location: list_hosts.php');
+		    exit();
+	    }
 	}
 	$host = new host($ldap,$hostname);
 	

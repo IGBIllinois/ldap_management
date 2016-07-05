@@ -78,13 +78,7 @@ function show_classroom_text(){
 		$('#classroom-txt').html('<div class="glyphicon glyphicon-remove"></div> Number must be > 1').removeClass('text-success').addClass('text-danger');
 		document.getElementById('add_user_submit').disabled = true;
 	} else {
-		var onepadded = "1";
-		var log = Math.floor(Math.log(num)/Math.log(10));
-		console.log(log);
-		for (var i=0; i<log; i++){
-			onepadded = "0"+onepadded;
-		}
-		$('#classroom-txt').html('<div class="glyphicon glyphicon-ok"></div> Will create/clean up users '+prefix+onepadded+'-'+prefix+num).removeClass('text-danger').addClass('text-success');
+		$('#classroom-txt').html('<div class="glyphicon glyphicon-ok"></div> Will create/clean up users '+prefix+'01-'+prefix+(num<10?'0':'')+num).removeClass('text-danger').addClass('text-success');
 		document.getElementById('add_user_submit').disabled = false;
 	}
 }

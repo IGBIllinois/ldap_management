@@ -54,6 +54,10 @@
 				<td><?php echo $group->get_gidnumber(); ?></td>
 			</tr>
 			<tr>
+				<th>Owner:</th>
+				<td><?php echo $group->get_owner(); ?> <a href="change_group_owner.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span> Change Owner</a></td>
+			</tr>
+			<tr>
 				<th>Created By:</th>
 				<td><?php echo $group->get_creator(); ?></td>
 			</tr>

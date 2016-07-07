@@ -10,6 +10,7 @@ class group {
 	private $gidnumber;
 
 	private $serverdirs = array();
+	private $owner;
 	
 	private $creator;
 	private $createTime;
@@ -282,10 +283,21 @@ class group {
 				'gid'=>$this->get_name());
 		}
 	}
+	public function set_owner($owner){
+		if(user::is_ldap_user($this->ldap,$owner)){
+			$this->owner = $owner;
+			if($this->set_desc_obj()){
+				log::log_message("Set owner to $owner for group ".$this->get_name());
+				return array('RESULT'=>true,
+				'MESSAGE'=>'Group owner set',
+				'gid'=>$this->get_name());
+			}
+		}
+	}
 	
 	public function set_desc_obj(){
 		$dn = "cn=".$this->get_name().",".__LDAP_GROUP_OU__;
-		$descObj = array('description'=>$this->description,'directories'=>$this->serverdirs);
+		$descObj = array('description'=>$this->description,'directories'=>$this->serverdirs,'owner'=>$this->owner);
 		$data = array("description"=>json_encode($descObj));
 		if ($this->ldap->modify($dn, $data)) {
 			return true;
@@ -296,6 +308,10 @@ class group {
 	
 	public function get_serverdirs(){
 		return $this->serverdirs;
+	}
+	
+	public function get_owner(){
+		return $this->owner;
 	}
 
 
@@ -331,6 +347,7 @@ class group {
 		if ($start>=0) {
 			$groups = array_slice($groups, $start, $count);
 		}
+		
 		return $groups;
 	}
 
@@ -395,13 +412,21 @@ class group {
 		$this->name = $result[0]['cn'][0];
 		
 		// Attempt to parse JSON
-		$descJson = json_decode($result[0]['description'][0]);
-		if($descJson==NULL){
-			$this->description = $result[0]['description'][0];
+		if(!isset($result[0]['description'])){
+			$this->description = "";
+			$this->owner = "";
+			$this->serverdirs = array();
 		} else {
-			$this->description = isset($descJson->description)?$descJson->description:"";
-			$this->serverdirs = isset($descJson->directories)?$descJson->directories:array();
-			sort($this->serverdirs);
+			$descJson = json_decode($result[0]['description'][0]);
+			if($descJson==NULL){
+				$this->description = $result[0]['description'][0];
+				$this->owner = '';
+			} else {
+				$this->description = isset($descJson->description)?$descJson->description:"";
+				$this->serverdirs = isset($descJson->directories)?$descJson->directories:array();
+				sort($this->serverdirs);
+				$this->owner = isset($descJson->owner)?$descJson->owner:"";
+			}
 		}
 
 		if ( preg_match("/uid=(.*?),/um", $result[0]['creatorsname'][0], $matches) ) {

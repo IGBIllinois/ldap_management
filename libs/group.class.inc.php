@@ -332,7 +332,18 @@ class group {
 		$groups = array();
 		for ($i=0; $i<$result['count']; $i++) {
 			if ( $filterusers==0 || ($filterusers==1 && !in_array($result[$i]['cn'][0], $users)) || ($filterusers ==2 && in_array($result[$i]['cn'][0], $users)) ) {
-				$group = array("name"=>$result[$i]['cn'][0], "description"=>isset($result[$i]['description'][0])?$result[$i]['description'][0]:"", "members"=>(isset($result[$i]['memberuid'])?$result[$i]['memberuid']['count']:0));
+				$description = isset($result[$i]['description'][0])?$result[$i]['description'][0]:"";
+				$descObj = json_decode($description);
+				if($descObj == NULL){
+					$owner = "";
+					$serverdirs = array();
+				} else {
+					$description = $descObj->description;
+					$owner = isset($descObj->owner)?$descObj->owner:"";
+					$serverdirs = isset($descObj->directories)?$descObj->directories:"";
+					sort($serverdirs);
+				}
+				$group = array("name"=>$result[$i]['cn'][0], "description"=>$description, 'owner'=>$owner, 'dirs'=>$serverdirs, "members"=>(isset($result[$i]['memberuid'])?$result[$i]['memberuid']['count']:0));
 				$groups[] = $group;
 			}
 		}

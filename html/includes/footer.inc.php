@@ -15,6 +15,7 @@
 					<li><a href="add_host.php">Add Host</a></li>
 					<hr>
 					<li><a href="add_classroom_users.php">Add Classroom Users</a></li>
+					<li><a href="remove_classroom_users.php">Remove Classroom Users</a></li>
 					<li><a href="statistics.php">Statistics</a></li>
 				</ul>
 			</div>

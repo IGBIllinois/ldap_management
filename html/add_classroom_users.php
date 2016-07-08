@@ -81,13 +81,13 @@
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="prefix-input">Prefix:</label>
 					<div class="col-sm-8">
-						<input class="form-control" type="text" name="new_prefix" id="prefix-input" value="<?php if (isset($_POST['new_prefix'])){echo $_POST['new_prefix'];}?>" oninput="show_classroom_text()" autofocus />
+						<input class="form-control" type="text" name="new_prefix" id="prefix-input" value="<?php if (isset($_POST['new_prefix'])){echo $_POST['new_prefix'];}?>" oninput="show_add_classroom_text()" autofocus />
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="num-input">Number of users:</label>
 					<div class="col-sm-8">
-						<input class="form-control" type="text" name="new_num" id="num-input" value="<?php if (isset($_POST['new_num'])){echo $_POST['new_num'];}?>" oninput="show_classroom_text()" />
+						<input class="form-control" type="text" name="new_num" id="num-input" value="<?php if (isset($_POST['new_num'])){echo $_POST['new_num'];}?>" oninput="show_add_classroom_text()" />
 					</div>
 				</div>
 				<div class="form-group">
@@ -106,7 +106,7 @@
 </form>
 	
 <script type="text/javascript">
-	$(document).ready(function(){show_classroom_text();});
+	$(document).ready(function(){show_add_classroom_text();});
 </script>
 <?php
 		if(isset($message))echo $message;

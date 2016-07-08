@@ -68,7 +68,7 @@ function filter_table(filter){
 	}
 }
 
-function show_classroom_text(){
+function show_add_classroom_text(){
 	var prefix = $('#prefix-input').val();
 	var num = $('#num-input').val();
 	if(prefix == ""){
@@ -81,6 +81,42 @@ function show_classroom_text(){
 		$('#classroom-txt').html('<div class="glyphicon glyphicon-ok"></div> Will create/clean up users '+prefix+'01-'+prefix+(num<10?'0':'')+num).removeClass('text-danger').addClass('text-success');
 		document.getElementById('add_user_submit').disabled = false;
 	}
+}
+
+function show_remove_classroom_text(){
+	var prefix = $('#prefix-input').val();
+	var start = $('#start-input').val();
+	var end = $('#end-input').val();
+	var paddedstart = start<10?'0'+start:start;
+	var paddedend = end<10?'0'+end:end;
+	
+	var rule1 = 0;
+	$.ajax('check_username.php',{
+		async: false,
+		data: {'username':prefix+paddedstart},
+		method: 'POST',
+		success: function(data){
+			rule1 = data;
+		}
+	});
+	rule1 = rule1==1?true:false;
+	
+	var rule2 = start>0;
+	var rule3 = end>start;
+	
+	var error = prefix+paddedstart+'-'+prefix+paddedend+' will be removed';
+	if(prefix == ""){
+		error = "Please enter a prefix.";
+	} else if (!isInt(start) || start<1){
+		error = "Start must be >=1";
+	} else if (!isInt(end) || end<=start){
+		error = "End must be greater than start";
+	} else if (!rule1){
+		error = prefix+paddedstart+" does not exist";
+	}
+	
+	showUsernameError(1,rule1 && rule2 && rule3,error);
+	document.getElementById('remove_user_submit').disabled = !( rule1 && rule2 && rule3 );
 }
 
 function copy_panel(event){
@@ -294,6 +330,12 @@ function generate_password(){
 		$('#passworda_input').val(password);
 		$('#passwordb_input').val(password);
 	} while(!check_passwords());
+}
+
+function isInt(value) {
+  return !isNaN(value) && 
+         parseInt(Number(value)) == value && 
+         !isNaN(parseInt(value, 10));
 }
 
 $(document).ready(function(){

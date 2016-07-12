@@ -121,6 +121,14 @@ class host {
 		$dn = "cn=".$old_name.",".__LDAP_HOST_OU__;
 		if($this->ldap->mod_rename($dn,"cn=".$name)){
 			log::log_message("Changed host name from $old_name to $name.");
+			
+			$users = $this->get_users();
+			foreach($users as $username){
+				$user = new user($this->ldap,$username);
+				$user->remove_machinerights($old_name);
+				$user->add_machinerights($name);
+			}
+			
 			$this->name = $name;
 			return array('RESULT'=>true,
 			'MESSAGE'=>'Name changed',

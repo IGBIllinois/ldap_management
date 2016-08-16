@@ -107,9 +107,9 @@ function show_remove_classroom_text(){
 	var error = prefix+paddedstart+'-'+prefix+paddedend+' will be removed';
 	if(prefix == ""){
 		error = "Please enter a prefix.";
-	} else if (!isInt(start) || start<1){
+	} else if (!isInt(start) || Number(start)<1){
 		error = "Start must be >=1";
-	} else if (!isInt(end) || end<=start){
+	} else if (!isInt(end) || Number(end)<=Number(start)){
 		error = "End must be greater than start";
 	} else if (!rule1){
 		error = prefix+paddedstart+" does not exist";
@@ -194,13 +194,13 @@ function check_passwords(){
 	var passworda = document.getElementById('passworda_input').value;
 	var passwordb = document.getElementById('passwordb_input').value;
 	
-	var rule1 = ( passworda.length >= 8 && passworda.length <= 15 );
+	var rule1 = ( passworda.length >= 8 && passworda.length <= 12 );
 	var rule2 = ( passworda.match(/[A-Z]/) );
 	var rule3 = ( passworda.match(/[a-z]/) );
 	var rule4 = ( passworda.match(/[^A-Za-z]/) && !passworda.match(/[\s]/) );
 	var rule5 = ( passworda == passwordb );
 	
-	showPasswordError(1,rule1,"Password must be between 8 and 15 characters in length");
+	showPasswordError(1,rule1,"Password must be between 8 and 12 characters in length");
 	showPasswordError(2,rule2,"Password must contain at least 1 uppercase letter");
 	showPasswordError(3,rule3,"Password must contain at least 1 lowercase letter");
 	showPasswordError(4,rule4,"Password must contain at least 1 number or special character (no spaces)");

@@ -13,8 +13,8 @@ if(scalar(@ARGV)==1){
 
 	# Remove user from mail
 	ssh('root@mail.igb.illinois.edu',"mv -f /home/$homesub/$netid /home/oldusers/$homesub/");
-	# Remove user from everyone mailing list
-	ssh('root@mail.igb.illinois.edu',"/usr/lib/mailman/bin/remove_members everyone \"$netid\@igb.uiuc.edu\"");
+	# Remove user from everyone, igb-facilities-announce, igb-master mailing lists
+	ssh('root@mail.igb.illinois.edu',"/usr/local/bin/unsubscribe.sh \"$netid\@igb.uiuc.edu\"");
 	# Remove mail alias
 # 	ssh('root@mail.igb.illinois.edu',"/usr/local/sbin/remove_alias.pl $netid");
 

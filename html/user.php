@@ -113,12 +113,22 @@
 				<th>Last Modified:</th>
 				<td><?php echo strftime('%m/%d/%Y %I:%M:%S %p',$user->get_modifyTime()); ?></td>
 			</tr>
+			<?php if($user->islocked()) { ?>
+				<tr class="danger">
+					<td colspan="2" class="text-danger">User is locked</td>
+				</tr>
+			<?php	} ?>
 		</table>
 
 		<div class="panel-body">
-			<a href="change_password.php?uid=<?php echo $username; ?>" class="btn btn-info"><span class="glyphicon glyphicon-lock"></span> Change Password</a>
+			<a href="change_password.php?uid=<?php echo $username; ?>" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span> Change Password</a>
 			<a href="expire_user.php?uid=<?php echo $username; ?>" class="btn btn-warning"><span class="glyphicon glyphicon-time"></span> Set Expiration</a>
-			<a href="remove_user.php?uid=<?php echo $username; ?>" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Remove User</a>
+			<?php if($user->islocked()){ ?>
+			<a href="unlock_user.php?uid=<?php echo $username; ?>" class="btn btn-warning"><span class="glyphicon glyphicon-lock"></span> Unlock User</a>
+			<?php } else { ?>
+			<a href="lock_user.php?uid=<?php echo $username; ?>" class="btn btn-danger"><span class="glyphicon glyphicon-lock"></span> Lock User</a>
+			<?php } ?>
+			<a href="remove_user.php?uid=<?php echo $username; ?>" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Remove User</a>
 		</div>
 	</div>
 	<div class="panel panel-default">

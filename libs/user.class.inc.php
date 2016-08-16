@@ -390,6 +390,57 @@ class user {
 		}
 	}
 	
+	public function lock(){
+		$filter = "(uid=".$this->get_username().")";
+		$attributes = array("userPassword");
+		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
+		if($result['count']>0){
+			$dn = $this->get_user_rdn();
+			$data = array('userPassword'=>'!'.$result[0]['userpassword'][0]);
+			if($this->ldap->modify($dn,$data)){
+				log::log_message("User ".$this->get_username()." locked");
+				return array('RESULT'=>true,
+					'MESSAGE'=>'User locked.',
+					'uid'=>$this->get_username());
+			}
+		}
+		return array('RESULT'=>false,
+		'MESSAGE'=>'Lock failed: '.$this->ldap->get_error());
+	}
+	
+	public function unlock(){
+		$filter = "(uid=".$this->get_username().")";
+		$attributes = array("userPassword");
+		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
+		if($result['count']>0){
+			if(substr($result[0]['userpassword'][0],0,1) == '!'){
+				$dn = $this->get_user_rdn();
+				$data = array('userPassword'=>substr($result[0]['userpassword'][0],1));
+				if($this->ldap->modify($dn,$data)){
+					log::log_message("User ".$this->get_username()." unlocked");
+					return array('RESULT'=>true,
+						'MESSAGE'=>'User unlocked.',
+						'uid'=>$this->get_username());
+				}
+			}
+		}
+		return array('RESULT'=>false,
+		'MESSAGE'=>'Unlock failed: '.$this->ldap->get_error());
+	}
+	public function islocked(){
+		$filter = "(uid=".$this->get_username().")";
+		$attributes = array("userPassword");
+		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
+		if($result['count']>0){
+			if(substr($result[0]['userpassword'][0],0,1) == '!'){
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
+	
 	public function set_expiration($expiration){
 		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
 		$data = array("shadowExpire"=>$expiration);

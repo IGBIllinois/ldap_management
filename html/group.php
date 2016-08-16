@@ -10,7 +10,8 @@
 	    }
 	}
 	$group = new group($ldap,$gid);
-	
+	$isusergroup = user::is_ldap_user($ldap, $group->get_name());
+
 	$usershtml = "";
 	$userscopytext = "";
 	$users = $group->get_users();
@@ -20,7 +21,9 @@
 		if(!user::is_ldap_user($ldap,$users[$i])){
 			$usershtml .= " <span class='glyphicon glyphicon-alert smallwarning' title='User does not exist'></span>";
 		}
-		$usershtml .= " <a href='remove_from_group.php?uid=".$users[$i]."&gid=$gid' class='btn btn-danger btn-xs pull-right'><span class='glyphicon glyphicon-remove'></span> Remove from group</a></td></tr>";
+		if($group->get_name()!=$users[$i]){
+			$usershtml .= " <a href='remove_from_group.php?uid=".$users[$i]."&gid=$gid' class='btn btn-danger btn-xs pull-right'><span class='glyphicon glyphicon-remove'></span> Remove from group</a></td></tr>";
+		}
 		$userscopytext .= $users[$i]."\n";
 	}
 	
@@ -43,11 +46,11 @@
 		<table class="table table-bordered table-condensed table-striped">
 			<tr>
 				<th>Name:</th>
-				<td><?php echo $group->get_name(); ?> <a href="change_group_name.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span> Change Name</a></td>
+				<td><?php echo $group->get_name(); if(!$isusergroup){ ?> <a href="change_group_name.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span> Change Name</a><?php } ?></td>
 			</tr>
 			<tr>
 				<th>Description:</th>
-				<td><?php echo $group->get_description(); ?> <a href="change_description.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span> Change Description</a></td>
+				<td><?php echo $group->get_description(); if(!$isusergroup){ ?> <a href="change_description.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span> Change Description</a><?php } ?></td>
 			</tr>
 			<tr>
 				<th>GID Number:</th>
@@ -55,7 +58,7 @@
 			</tr>
 			<tr>
 				<th>Owner:</th>
-				<td><?php echo $group->get_owner(); ?> <a href="change_group_owner.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span> Change Owner</a></td>
+				<td><?php echo $group->get_owner(); if(!$isusergroup){ ?> <a href="change_group_owner.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span> Change Owner</a><?php } ?></td>
 			</tr>
 			<tr>
 				<th>Created By:</th>
@@ -93,10 +96,12 @@
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
+			<?php if(!$isusergroup){ ?>
 			<div class="btn-group btn-group-xs pull-right">
 				<a class='btn btn-success btn-xs' href='add_to_group.php?gid=<?php echo $gid; ?>'><span class='glyphicon glyphicon-plus'></span> Add member</a>
 				<button class='btn btn-default btn-xs copy-button'><span class='glyphicon glyphicon-copy'></span> Copy</button>
 			</div>
+			<?php } ?>
 			<h3 class="panel-title">Members</h3>
 		</div>
 		<textarea class='hidden copy-text'><?php echo $userscopytext; ?></textarea>

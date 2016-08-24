@@ -13,7 +13,7 @@
 	
 	$search = "";
 	if ( isset($_GET['search']) ){
-		$search = $_GET['search'];
+		$search = trim($_GET['search']);
 		$get_array['search'] = $search;
 	}
 	

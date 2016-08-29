@@ -291,7 +291,15 @@ class group {
 				return array('RESULT'=>true,
 				'MESSAGE'=>'Group owner set',
 				'gid'=>$this->get_name());
+			} else {
+				return array('RESULT'=>false,
+				'MESSAGE'=>'LDAP modify failed',
+				'gid'=>$this->get_name());
 			}
+		} else {
+			return array('RESULT'=>false,
+			'MESSAGE'=>'No such user',
+			'gid'=>$this->get_name());
 		}
 	}
 	

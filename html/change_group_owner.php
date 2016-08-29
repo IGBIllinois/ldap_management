@@ -1,7 +1,7 @@
 <?php
 	$title = "Add to Group";
 	require_once 'includes/header.inc.php';
-
+	
 	$message="";
 	if (isset($_POST['change_owner'])) {
 		foreach($_POST as $var){
@@ -28,13 +28,15 @@
 					$_POST['from']="group.php?gid=".$_POST['group'];
 				}
 				header("Location: ".$_POST['from']);
+				exit();
 			} else if ($result['RESULT'] == false) {
 				$message = $result['MESSAGE'];
 			}
 		}
-	} else if (isset($_POST['cancel_user'])) {
+	} elseif (isset($_POST['cancel_user'])) {
 		header("Location: ".$_POST['from']);
 		unset($_POST);
+		exit();
 	}
 	
 	$from = "";
@@ -48,7 +50,7 @@
 	
 	$gid = "";
 	$groupusers = array();
-	if(isset($_GET['gid']) && group::is_ldap_group($ldap,$_GET['gid'])){
+	if( (isset($_GET['gid']) && group::is_ldap_group($ldap,$_GET['gid'])) || (isset($_POST['group']) && group::is_ldap_group($ldap,$_POST['group'])) ){
 		$gid = $_GET['gid'];
 		$grouptoadd = new group($ldap,$gid);
 		$from = "group.php?gid=$gid";

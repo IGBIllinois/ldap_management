@@ -25,13 +25,13 @@
 			$result = $user->remove_machinerights($_POST['host']);
 		
 			if($result['RESULT'] == true){
-				header("Location: user.php?uid=".$result['uid']);
+				header("Location: ".$_POST['from']);
 			} else if ($result['RESULT'] == false) {
 				$message = $result['MESSAGE'];
 			}
 		}
 	} else if (isset($_POST['cancel_user'])) {
-		header("Location: user.php?uid=".$_POST['username']);
+		header("Location: ".$_POST['from']);
 		unset($_POST);
 	}
 	
@@ -48,6 +48,14 @@
 	if(isset($_GET['hid'])){
 		$hid = $_GET['hid'];
 		$machineusers = $ldap->search("(host=".$hid.")", __LDAP_PEOPLE_OU__, array('uid'));
+	}
+	
+	$from = "host.php?hid=$hid";
+	if( isset($_GET['from']) && $_GET['from']=='user' ) {
+		$from = "user.php?uid=$uid";
+	}
+	if( isset($_POST['from']) ){
+		$from = $_POST['from'];
 	}
 	
 	$usershtml = "";
@@ -142,6 +150,7 @@
 		<div class="form-group">
 			<div class="col-sm-4 col-sm-offset-2">
 				<div class="btn-group">
+					<input type="hidden" name="from" value="<?php echo $from; ?>">
 					<input class="btn btn-danger" type="submit" name="remove_user" value="Remove Access" /> <input class="btn btn-default" type="submit" name="cancel_user" value="Cancel" />
 				</div>
 			</div>

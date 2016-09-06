@@ -23,7 +23,7 @@
 			if(!host::is_ldap_host($ldap,$machinerights[$i])){
 				$machinerightshtml .= " <span class='glyphicon glyphicon-alert smallwarning' title='Host does not exist'></span>";
 			}
-			$machinerightshtml .= " <a class='btn btn-danger btn-xs pull-right' href='remove_machinerights.php?uid=$username&hid=".$machinerights[$i]."'><span class='glyphicon glyphicon-remove'> </span> Remove host</a></td></tr>";
+			$machinerightshtml .= " <a class='btn btn-danger btn-xs pull-right' href='remove_machinerights.php?uid=$username&hid=".$machinerights[$i]."&from=user'><span class='glyphicon glyphicon-remove'> </span> Remove host</a></td></tr>";
 			$machinecopytext .= $machinerights[$i]."\n";
 		}
 	}
@@ -35,7 +35,7 @@
 	for($i=0; $i<count($groups);$i++){
 		$groupshtml .= "<tr><td><a href='group.php?gid=".$groups[$i]."'>".$groups[$i]."</a>";
 		if($username != $groups[$i]){
-			$groupshtml .= " <a class='btn btn-danger btn-xs pull-right' href='remove_from_group.php?uid=$username&gid=".$groups[$i]."'><span class='glyphicon glyphicon-remove'> </span> Remove from group</a>";
+			$groupshtml .= " <a class='btn btn-danger btn-xs pull-right' href='remove_from_group.php?uid=$username&gid=".$groups[$i]."&from=user'><span class='glyphicon glyphicon-remove'> </span> Remove from group</a>";
 		}
 		$groupcopytext .= $groups[$i]."\n";
 		$groupshtml .= "</td></tr>";

@@ -140,6 +140,9 @@
 			<h3 class="panel-title">Groups</h3>
 		</div>
 		<textarea class='hidden copy-text'><?php echo $groupcopytext; ?></textarea>
+		<?php if(count($groups) > 16){
+			echo '<div class="panel-body bg-warning"><span class="glyphicon glyphicon-alert"> </span> User is a member of >16 groups. This may cause issues with NFS.</div>';	
+		} ?>
 		<table class="table table-bordered table-striped">
 			<?php echo $groupshtml; ?>
 		</table>

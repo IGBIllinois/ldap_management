@@ -228,6 +228,12 @@ class user {
 	public function get_expiration(){
 		return $this->expiration;
 	}
+	public function is_expired(){
+		return ($this->expiration != null && $this->expiration <= time());
+	}
+	public function is_expiring(){
+		return ($this->expiration != null && $this->expiration > time());
+	}
 	public function get_uidnumber(){
 		return $this->uidnumber;
 	}
@@ -635,7 +641,7 @@ class user {
 			$this->username = $result[0]['uid'][0];
 			$this->homeDirectory = $result[0]['homedirectory'][0];
 			$this->loginShell = $result[0]['loginshell'][0];
-			$this->email = $result[0]['mail'][0];
+			$this->email = isset($result[0]['mail'])?$result[0]['mail'][0]:null;
 			if(isset($result[0]['shadowexpire'])){
 				$this->expiration = $result[0]['shadowexpire'][0];
 			}

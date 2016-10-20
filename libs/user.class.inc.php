@@ -287,6 +287,14 @@ class user {
 	public function add_machinerights($host) {
 		if(host::is_ldap_host($this->ldap,$host) && (!$this->get_machinerights() || !in_array($host, $this->get_machinerights()))){
 			$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
+			$filter = "(&(uid=".$this->get_username().")(objectClass=account))";
+			$result = $this->ldap->search($filter,__LDAP_PEOPLE_OU__,array());
+			
+			if($result['count']==0){
+				$data = array("objectClass"=>'account');
+				$this->ldap->mod_add($dn,$data);
+			}
+			
 			$data = array("host"=>$host);
 			if($this->ldap->mod_add($dn,$data)){
 				log::log_message("Gave host access for ".$host." to ".$this->get_username());

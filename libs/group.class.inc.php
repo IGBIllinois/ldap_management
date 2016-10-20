@@ -177,7 +177,7 @@ class group {
 			$filter = "(cn=" . $this->get_name() . ")";
 			$attributes = array('memberUid');
 			$result = $this->ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
-			if ($result[0]['count']==0) {
+			if ($result['count']==0) {
 				return array();
 			}
 			unset($result[0]['memberuid']['count']);

@@ -36,7 +36,7 @@
 	}
 	
 	$all_users = user::get_search_users($ldap,$adldap,$search,$start,$count,$sort,$asc,$filter);
-	$num_users = user::get_search_users_count($ldap,$search,$filter);
+	$num_users = user::get_search_users_count($ldap,$adldap,$search,$filter);
 	$pages_url = $_SERVER['PHP_SELF']."?".http_build_query($get_array);
 	$pages_html = html::get_pages_html($pages_url,$num_users,$start,$count);
 	$users_html = "";

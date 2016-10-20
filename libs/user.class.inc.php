@@ -574,7 +574,7 @@ class user {
 		return array_slice($users,$start,$count);
 	}
 	
-	public static function get_search_users_count($ldap,$search,$userfilter='none'){
+	public static function get_search_users_count($ldap,$adldap,$search,$userfilter='none'){
 		if($search == ""){
 			$filter = "(uid=*)";
 		} else {
@@ -601,6 +601,17 @@ class user {
 				$users[] = $user;
 			}
 		}
+		
+		if($userfilter == 'left'){
+			$foundusers = array();
+			for($i=0;$i<count($users);$i++){
+				if(!user::is_ad_current($adldap,$users[$i]['username'])){
+					$foundusers[] = $users[$i];
+				}
+			}
+			return count($foundusers);
+		}
+		
 		return count($users);
 	}
 	

@@ -95,7 +95,7 @@
 <form class="form-horizontal" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
 		<legend>Add User to Group</legend>
-		<?php if(count($groups) > 15){
+		<?php if($uid != "" && count($usertoadd->get_groups()) > 15){
 			echo html::warning_message('<span class="glyphicon glyphicon-alert"> </span> After this operation, '.$uid.' will be a member of >16 groups. This may cause issues with NFS.');
 		} ?>
 		<div class="form-group">

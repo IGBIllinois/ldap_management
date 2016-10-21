@@ -42,7 +42,7 @@
 	$users_html = "";
 	$user_count = 0;
 	
-	$users_html = html::get_users_rows($adldap,$all_users);
+	$users_html = html::get_users_rows($adldap,$all_users,($filter=='expiring'||$filter=='expired'));
 	
 	?>
 	
@@ -76,6 +76,9 @@
 					<th class="sortable-th" onclick="sort_table('username')">NetID<?php echo html::sort_icon('username', $sort, $asc); ?></th>
 					<th class="sortable-th" onclick="sort_table('name')">Name<?php echo html::sort_icon('name', $sort, $asc); ?></th>
 					<th class="sortable-th" onclick="sort_table('email')">Email<?php echo html::sort_icon('email', $sort, $asc); ?></th>
+					<?php if ($filter == 'expired' || $filter == 'expiring'){ ?>
+						<th class="sortable-th" onclick="sort_table('shadowexpire')">Expiration<?php echo html::sort_icon('shadowexpire',$sort,$asc); ?></th>
+					<?php } ?>
 				</tr>
 			</thead>
 			<tbody>

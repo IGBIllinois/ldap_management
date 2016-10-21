@@ -78,7 +78,7 @@ class html {
 	}
 
 	// Returns trs for the given users list
-	public static function get_users_rows($adldap,$users) {
+	public static function get_users_rows($adldap,$users,$showexpiration=false) {
 		$i_start = 0;
 		$i_count = count($users);
 		
@@ -101,6 +101,9 @@ class html {
 				$users_html .= "</td>";
                 $users_html .= "<td>" . $users[$i]['name']. "</td>";
 				$users_html .= "<td>" . $users[$i]['email']. "</td>";
+				if($showexpiration){
+					$users_html .= "<td>" . date('m/d/Y',$users[$i]['shadowexpire']). "</td>";
+				}
         		$users_html .= "</tr>";
 			}
         }

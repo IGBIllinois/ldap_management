@@ -126,10 +126,7 @@ function copy_panel(event){
 	if(document.queryCommandSupported('copy')){
 		showTextArea = false;
 		$textarea.removeClass('hidden');
-		
-		var range = document.createRange();
-		range.selectNode($textarea[0]);
-		window.getSelection().addRange(range);
+		$textarea[0].select();
 		
 		try {
 			var success = document.execCommand('copy');

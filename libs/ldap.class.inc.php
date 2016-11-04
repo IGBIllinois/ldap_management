@@ -137,7 +137,7 @@ class ldap {
 				return $result;
 			}
 		}
-		return $false;
+		return false;
 	}
 
 

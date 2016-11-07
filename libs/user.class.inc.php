@@ -9,6 +9,7 @@ class user {
 	private $ldap;
 	private $uidnumber;
 	private $email;
+	private $emailforward;
 	private $homeDirectory;
 	private $machinerights = null;
 	private $groups = null;
@@ -195,7 +196,32 @@ class user {
 	public function get_email() {
 		return $this->email;
 	}
-
+	
+	public function get_emailforward(){
+		return $this->emailforward;
+	}
+	public function set_emailforward($emailforward){
+		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
+		$data = array("postalAddress"=>$emailforward);
+		if($this->ldap->modify($dn,$data)){
+			$this->emailforward = $emailforward;
+			log::log_message("Set email forwarding for ".$this->get_username()." to ".$emailforward);
+			return array('RESULT'=>true,
+				'MESSAGE'=>'Email forwarding set',
+				'uid'=>$this->get_username());
+		}
+	}
+	public function remove_emailforward(){
+		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
+		$data = array("postalAddress"=>array());
+		if($this->ldap->mod_del($dn,$data)){
+			$this->emailforward = null;
+			log::log_message("Removed email forwarding for ".$this->get_username());
+			return array('RESULT'=>true,
+			'MESSAGE'=>'Email forwarding removed',
+			'uid'=>$this->get_username());
+		}
+	}
 
 	public function get_loginShell() {
  		return $this->loginShell;
@@ -536,11 +562,11 @@ class user {
 		} else {
 			$filter = "(|(uid=*$search*)(cn=*$search*))";
 		}
-		$attributes = array("uid","cn","mail","shadowexpire");
+		$attributes = array("uid","cn","mail","shadowexpire","postaladdress");
 		$result = $ldap->search($filter,__LDAP_PEOPLE_OU__,$attributes);
 		$users = array();
 		for($i=0; $i<$result['count']; $i++){
-			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''));
+			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''), "emailforward"=>(isset($result[$i]['postaladdress'])?$result[$i]['postaladdress'][0]:''));
 			if($userfilter != 'none'){
 				if($userfilter == 'expiring'){
 					if($user['shadowexpire'] > time()){
@@ -653,7 +679,7 @@ class user {
 
 	public function load_by_username($username) {
 		$filter = "(uid=".$username.")";
-		$attributes = array("uid","cn","homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet');
+		$attributes = array("uid","cn","homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress');
 		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 		if($result['count']>0){
 			$this->name = $result[0]['cn'][0];
@@ -661,6 +687,7 @@ class user {
 			$this->homeDirectory = $result[0]['homedirectory'][0];
 			$this->loginShell = $result[0]['loginshell'][0];
 			$this->email = isset($result[0]['mail'])?$result[0]['mail'][0]:null;
+			$this->emailforward = isset($result[0]['postaladdress'][0])?$result[0]['postaladdress'][0]:null; // Yes, postalAddress holds the forwarding email. 
 			if(isset($result[0]['shadowexpire'])){
 				$this->expiration = $result[0]['shadowexpire'][0];
 			}

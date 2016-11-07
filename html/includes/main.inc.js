@@ -187,6 +187,17 @@ function showGroupnameError(errornum,valid,text){
 	$('#groupnameerror'+errornum+' .text').html(text);
 }
 
+function showEmailError(errornum,valid,text){
+	if(valid){
+		$('#emailerror'+errornum).removeClass('text-danger').addClass('text-success');
+		$('#emailerror'+errornum+' .glyphicon').removeClass('glyphicon-remove').addClass('glyphicon-ok');
+	} else {
+		$('#emailerror'+errornum).removeClass('text-success').addClass('text-danger');
+		$('#emailerror'+errornum+' .glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
+	}
+	$('#emailerror'+errornum+' .text').html(text);
+}
+
 function check_passwords(){
 	var passworda = document.getElementById('passworda_input').value;
 	var passwordb = document.getElementById('passwordb_input').value;
@@ -206,7 +217,17 @@ function check_passwords(){
 	return rule1 && rule2 && rule3 && rule4 && rule5;
 }
 
-function add_user_errors(username_errors,password_errors){
+function check_email(){
+	var email = document.getElementById('emailforward_input').value;
+	
+	var rule1 = ( email.length==0 || email.match(/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z0-9\._-]+$/) );
+	
+	showEmailError(1,rule1,rule1?"Valid forwarding email":"Invalid forwarding email");
+	
+	return rule1;
+}
+
+function add_user_errors(username_errors,password_errors,email_errors){
 	if(password_errors==null){
 		password_errors = check_passwords();
 		
@@ -214,14 +235,27 @@ function add_user_errors(username_errors,password_errors){
 	if(username_errors==null){
 		username_errors = check_username();		
 	}
+	if(email_errors==null){
+		email_errors = check_email();
+	}
 	
-	if (password_errors && username_errors){
+	if (password_errors && username_errors && email_errors){
 		document.getElementById('add_user_submit').disabled = false;
 	} else {
 		document.getElementById('add_user_submit').disabled = true;
 	}
 	
-	return [username_errors,password_errors];
+	return [username_errors,password_errors,email_errors];
+}
+
+function change_emailforward_errors(){
+	var email_errors = check_email();
+	console.log(email_errors);
+	if(email_errors){
+		document.getElementById('change_emailforward_submit').disabled = false;
+	} else {
+		document.getElementById('change_emailforward_submit').disabled = true;
+	}
 }
 
 function change_username_errors(){
@@ -268,6 +302,13 @@ function check_username(){
 		}
 	});
 	showUsernameWarning(1,warning1,warning1?"Username matches a UIUC netid":"Username does not match a UIUC netid");
+	if(document.getElementById('emailforward_input') != null){
+		if(warning1){
+			document.getElementById('emailforward_input').value = document.getElementById('username_input').value + "@illinois.edu";
+		} else {
+			document.getElementById('emailforward_input').value = '';
+		}
+	}
 	
 	var rule1 = true;
 	$.ajax('check_username.php',{

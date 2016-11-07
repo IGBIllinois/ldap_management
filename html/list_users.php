@@ -76,6 +76,7 @@
 					<th class="sortable-th" onclick="sort_table('username')">NetID<?php echo html::sort_icon('username', $sort, $asc); ?></th>
 					<th class="sortable-th" onclick="sort_table('name')">Name<?php echo html::sort_icon('name', $sort, $asc); ?></th>
 					<th class="sortable-th" onclick="sort_table('email')">Email<?php echo html::sort_icon('email', $sort, $asc); ?></th>
+					<th class="sortable-th" onclick="sort_table('emailforward')">Forwarding Email<?php echo html::sort_icon('emailforward', $sort, $asc); ?></th>
 					<?php if ($filter == 'expired' || $filter == 'expiring'){ ?>
 						<th class="sortable-th" onclick="sort_table('shadowexpire')">Expiration<?php echo html::sort_icon('shadowexpire',$sort,$asc); ?></th>
 					<?php } ?>

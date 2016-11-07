@@ -101,6 +101,7 @@ class html {
 				$users_html .= "</td>";
                 $users_html .= "<td>" . $users[$i]['name']. "</td>";
 				$users_html .= "<td>" . $users[$i]['email']. "</td>";
+				$users_html .= "<td>" . $users[$i]['emailforward']. "</td>";
 				if($showexpiration){
 					$users_html .= "<td>" . date('m/d/Y',$users[$i]['shadowexpire']). "</td>";
 				}

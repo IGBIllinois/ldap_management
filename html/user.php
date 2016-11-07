@@ -66,6 +66,15 @@
 				<td><?php echo $user->get_email(); ?></td>
 			</tr>
 			<tr>
+				<th>Forwarding Email:</th>
+				<td><?php if($user->get_emailforward() != null){
+						echo $user->get_emailforward();
+					} else {
+						echo "None";
+					} ?> 
+					<a class='btn btn-info btn-xs pull-right' href='change_email_forward.php?uid=<?php echo $user->get_username(); ?>'><span class='glyphicon glyphicon-pencil'> </span> Change Forwarding Email</a></td>
+			</tr>
+			<tr>
 				<th>Home Directory:</th>
 				<td><a href="https://www-app2.igb.illinois.edu/file-server/user.php?username=<?php echo $user->get_username(); ?>" target="_blank"><?php echo $user->get_homeDirectory(); ?></a></td>
 			</tr>

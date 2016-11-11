@@ -376,6 +376,8 @@ function isInt(value) {
          !isNaN(parseInt(value, 10));
 }
 
+$.fn.select2.defaults.set( "width", null );
+
 $(document).ready(function(){
 	$('.copy-button').click(copy_panel);
 });

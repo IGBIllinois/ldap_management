@@ -207,7 +207,7 @@ class group {
 			}
 		}
 		return array('RESULT'=>false,
-			'MESSAGE'=>'LDAP error.'
+			'MESSAGE'=>'LDAP error: '.$this->ldap->get_error()
 		);
 	}
 

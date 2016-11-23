@@ -25,6 +25,22 @@
 					exit();
 				}
 		}
+		if($_REQUEST['task']=='user' && isset($_REQUEST['uid'])){
+			$user= new user($ldap,$_REQUEST['uid']);
+			if($user->get_username()==null){
+				echo json_encode(array(
+					'code'=>404,
+					'msg'=>'No such user'
+				));
+			} else {
+				echo json_encode(array(
+					'code'=>200,
+					'msg'=>'OK',
+					'user'=>$user->serializable()
+				));
+			}
+			exit();
+		}
 /*
 		if($_REQUEST['task']=='expired_users'){
 			$filter = "(shadowExpire=*)";
@@ -98,7 +114,7 @@
 					));
 					exit();
 				} else {
-					if(in_array($_REQUEST['uid'],$groupinfo[0]['memberuid'])){
+					if(isset($groupinfo[0]['memberuid']) && in_array($_REQUEST['uid'],$groupinfo[0]['memberuid'])){
 						echo json_encode(array(
 							'code'=> 200,
 							'msg'=> 'User already in group'
@@ -114,7 +130,7 @@
 						} else {
 							echo json_encode(array(
 								'code'=> 500,
-								'msg'=> $result['message']
+								'msg'=> $result['MESSAGE']
 							));
 						}
 					}
@@ -156,7 +172,7 @@
 					));
 					exit();
 				} else {
-					if(!in_array($_REQUEST['uid'],$groupinfo[0]['memberuid'])){
+					if(isset($groupinfo[0]['memberuid']) && !in_array($_REQUEST['uid'],$groupinfo[0]['memberuid'])){
 						echo json_encode(array(
 							'code'=> 200,
 							'msg'=> 'User not in group'
@@ -172,7 +188,7 @@
 						} else {
 							echo json_encode(array(
 								'code'=> 500,
-								'msg'=> $result['message']
+								'msg'=> print_r($_REQUEST,true)
 							));
 						}
 					}

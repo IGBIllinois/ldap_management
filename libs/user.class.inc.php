@@ -11,6 +11,8 @@ class user {
 	private $email;
 	private $emailforward;
 	private $homeDirectory;
+	private $givenName;
+	private $sn;
 	private $machinerights = null;
 	private $groups = null;
 	private $loginShell;
@@ -674,15 +676,30 @@ class user {
 			return false;
 		}
 	}
+	
+	public function serializable(){
+		$data = array(
+			'username'=>$this->username,
+			'name'=>$this->name,
+			'homeDirectory'=>$this->homeDirectory,
+			'loginShell'=>$this->loginShell,
+			'email'=>$this->email,
+			'givenName'=>$this->givenName,
+			'sn'=>$this->sn			
+		);
+		return $data;
+	}
 
 //////////////////Private Functions//////////
 
 	public function load_by_username($username) {
 		$filter = "(uid=".$username.")";
-		$attributes = array("uid","cn","homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress');
+		$attributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress');
 		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 		if($result['count']>0){
 			$this->name = $result[0]['cn'][0];
+			$this->sn = $result[0]['sn'][0];
+			$this->givenName = $result[0]['givenname'][0];
 			$this->username = $result[0]['uid'][0];
 			$this->homeDirectory = $result[0]['homedirectory'][0];
 			$this->loginShell = $result[0]['loginshell'][0];

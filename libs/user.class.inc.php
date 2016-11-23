@@ -699,7 +699,11 @@ class user {
 		if($result['count']>0){
 			$this->name = $result[0]['cn'][0];
 			$this->sn = $result[0]['sn'][0];
-			$this->givenName = $result[0]['givenname'][0];
+			if(isset($result[0]['givenname'])){
+				$this->givenName = $result[0]['givenname'][0];
+			} else {
+				$this->givenName = trim(strstr($this->name,$this->sn,true));
+			}
 			$this->username = $result[0]['uid'][0];
 			$this->homeDirectory = $result[0]['homedirectory'][0];
 			$this->loginShell = $result[0]['loginshell'][0];

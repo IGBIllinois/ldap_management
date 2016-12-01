@@ -37,7 +37,7 @@
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="description-input">Description:</label>
 					<div class="col-sm-8">
-						<input class="form-control" type="text" name="new_description" id="description_input" value="<?php if (isset($_POST['new_description'])){echo $_POST['new_description'];}?>" autofocus />
+						<input class="form-control" type="text" name="new_description" id="description_input" value="<?php if (isset($_POST['new_description'])){echo $_POST['new_description'];}?>" oninput="change_group_errors();" />
 					</div>
 				</div>
 				<div class="form-group">
@@ -52,6 +52,7 @@
 				<p id="groupnameerror1" class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="text">Name not in use</span></p>
 				<p id="groupnameerror2" class="text-danger"><span class="glyphicon glyphicon-remove"></span> <span class="text">Name must begin with a lowercase letter</span></p>
 				<p id="groupnameerror3" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Name must be alphanumeric (letters, numbers, underscore)</p>
+				<p id="groupdescriptionerror1" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Description must not be blank</p>
 			</div>
 		</div>
 	</fieldset>

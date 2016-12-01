@@ -44,6 +44,11 @@ class group {
 			$error = true;
 			$message = html::error_message("A group with that name already exists.");
 		}
+		// Verify description
+		if (strlen($description)==0){
+			$error = true;
+			$message = html::error_message("Description must not be blank.");
+		}
 
 		//If Errors, return with error messages
 		if ($error) {

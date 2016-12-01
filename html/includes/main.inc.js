@@ -187,6 +187,17 @@ function showGroupnameError(errornum,valid,text){
 	$('#groupnameerror'+errornum+' .text').html(text);
 }
 
+function showGroupdescriptionError(errornum,valid,text){
+	if(valid){
+		$('#groupdescriptionerror'+errornum).removeClass('text-danger').addClass('text-success');
+		$('#groupdescriptionerror'+errornum+' .glyphicon').removeClass('glyphicon-remove').addClass('glyphicon-ok');
+	} else {
+		$('#groupdescriptionerror'+errornum).removeClass('text-success').addClass('text-danger');
+		$('#groupdescriptionerror'+errornum+' .glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
+	}
+	$('#groupdescriptionerror'+errornum+' .text').html(text);
+}
+
 function showEmailError(errornum,valid,text){
 	if(valid){
 		$('#emailerror'+errornum).removeClass('text-danger').addClass('text-success');
@@ -270,8 +281,9 @@ function change_username_errors(){
 
 function change_group_errors(){
 	var group_errors = check_groupname();
+	var description_errors = check_groupdescription();
 	
-	if(group_errors){
+	if(group_errors && description_errors){
 		document.getElementById('group_submit').disabled = false;
 	} else {
 		document.getElementById('group_submit').disabled = true;
@@ -348,6 +360,15 @@ function check_groupname(){
 	showGroupnameError(3,rule3,"Name must be alphanumeric (letters, numbers, underscore)");
 	
 	return rule1==0 && rule2 && rule3;
+}
+function check_groupdescription(){
+	var description = document.getElementById('description_input').value;
+	console.log(description);
+	var rule1 = ( description.length>0 );
+	
+	showGroupdescriptionError(1,rule1,"Description must not be blank");
+	
+	return rule1;
 }
 
 function random_password(length){

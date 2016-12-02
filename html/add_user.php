@@ -84,13 +84,13 @@
 				<p id="usernameerror1" class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="text">Username not in use</span></p>
 				<p id="usernamewarning1" class="text-warning"><span class="glyphicon glyphicon-alert"></span> <span class="text">Username does not match a UIUC netid</span></p>
 				<p id="usernameerror2" class="text-danger"><span class="glyphicon glyphicon-remove"></span> <span class="text">Username must begin with a lowercase letter</span></p>
-				<p id="usernameerror3" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Username must be alphanumeric (letters, numbers, underscore)</p>
-				<p id="emailerror1" class="text-succes"><span class="glyphicon glyphicon-ok"></span> Valid forwarding email</p>
-				<p id="passworderror1" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Password must be between 8 and 15 characters in length</p>
-				<p id="passworderror2" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Password must contain at least 1 uppercase letter</p>
-				<p id="passworderror3" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Password must contain at least 1 lowercase letter</p>
-				<p id="passworderror4" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Password must contain at least 1 number or special character (no spaces)</p>
-				<p id="passworderror5" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Password and confirm password must match</p>
+				<p id="usernameerror3" class="text-danger"><span class="glyphicon glyphicon-remove"></span> <span class="text">Username must be alphanumeric (letters, numbers, underscore)</span></p>
+				<p id="emailerror1" class="text-succes"><span class="glyphicon glyphicon-ok"></span> <span class="text">Valid forwarding email</span></p>
+				<p id="passworderror1" class="text-danger"><span class="glyphicon glyphicon-remove"></span> <span class="text">Password must be between 8 and 12 characters in length</span></p>
+				<p id="passworderror2" class="text-danger"><span class="glyphicon glyphicon-remove"></span> <span class="text">Password must contain at least 1 uppercase letter</span></p>
+				<p id="passworderror3" class="text-danger"><span class="glyphicon glyphicon-remove"></span> <span class="text">Password must contain at least 1 lowercase letter</span></p>
+				<p id="passworderror4" class="text-danger"><span class="glyphicon glyphicon-remove"></span> <span class="text">Password must contain at least 1 number or special character (no spaces)</span></p>
+				<p id="passworderror5" class="text-danger"><span class="glyphicon glyphicon-remove"></span> <span class="text">Password and confirm password must match</span></p>
 				<p><button class="btn btn-default" id="password-button" type="button">Generate Password</button> <span id="password-text"></span></p>
 			</div>
 		</div>

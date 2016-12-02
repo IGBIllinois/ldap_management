@@ -57,9 +57,14 @@ class user {
 		} elseif (group::is_ldap_group($this->ldap,$username)) {
 			$error = true;
 			$message = html::error_message("Username already exists as group");
-		} elseif ($name == "") {
+		}
+		if ($firstname == "") {
 			$error = true;
-			$message .= html::error_message("Please enter a name.");
+			$message .= html::error_message("Please enter a first name.");
+		}
+		if ($lastname == "") {
+			$error = true;
+			$message .= html::error_message("Please enter a last name.");
 		}
 		if ($password == "") {
 			$error = true;
@@ -146,7 +151,12 @@ class user {
 				'sambaNTPassword' => $ntpasswd,
 				'SambaPwdLastSet' => time()
 			);
-			$this->ldap->add($dn, $data);
+			if(!$this->ldap->add($dn, $data)){
+				return array(
+					'RESULT'=>false,
+					'MESSAGE'=>html::error_message('LDAP error when adding user: '.$this->ldap->get_error())
+				);
+			}
 			$this->load_by_username($username);
 			log::log_message("Added user ".$this->get_username()." (".$this->get_name().")");
 			
@@ -161,7 +171,7 @@ class user {
 			}
 			
 			return array('RESULT'=>true,
-				'MESSAGE'=>'User successfully added.',
+				'MESSAGE'=>html::success_message('User successfully added.'),
 				'uid'=>$username);
 		}
 

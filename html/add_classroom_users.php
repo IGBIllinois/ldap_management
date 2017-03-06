@@ -11,18 +11,22 @@
 		if(!isset($_POST['new_prefix'])){
 			$message = html::error_message("Please enter a username prefix.");
 		}
-		if(!isset($_POST['new_num']) || !is_numeric($_POST['new_num'])){
-			$message = html::error_message("Please enter a valid number.");
+		if(!isset($_POST['new_start']) || !is_numeric($_POST['new_start'])){
+			$message = html::error_message("Please enter a valid start.");
+		}
+		if(!isset($_POST['new_end']) || !is_numeric($_POST['new_end'])){
+			$message = html::error_message("Please enter a valid end.");
 		}
 		
 		if($message == ""){
-			$_POST['new_num'] = intval($_POST['new_num']);
+			$_POST['new_start'] = intval($_POST['new_start']);
+			$_POST['new_end'] = intval($_POST['new_end']);
 			$passwords = array();
 			$padlength = 2;
 			$classroom_queue = new group($ldap,'classroom_queue');
 			$show_users = true;
 			$users_html = "<pre>";
-			for($i=1; $i<=$_POST['new_num']; $i++){
+			for($i=$_POST['new_start']; $i<=$_POST['new_end']; $i++){
 				$paddednum = str_pad($i,$padlength,"0",STR_PAD_LEFT);
 				$username = $_POST['new_prefix'].$paddednum;
 				$users_html .= $username." ";
@@ -51,7 +55,7 @@
 			}
 			$users_html .= "</pre>";
 
-			$subject = "IGB Classroom Users ".$_POST['new_prefix'].'01-'.$_POST['new_prefix'].str_pad($_POST['new_num'],$padlength,"0",STR_PAD_LEFT);
+			$subject = "IGB Classroom Users ".$_POST['new_prefix'].str_pad($_POST['new_start'],$padlength,"0",STR_PAD_LEFT).'-'.$_POST['new_prefix'].str_pad($_POST['new_end'],$padlength,"0",STR_PAD_LEFT);
 			$to = $login_user->get_email();
 			$emailmessage = "<p>The following classroom users have been added.</p>";
 			$emailmessage .= $users_html;
@@ -85,9 +89,15 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-4 control-label" for="num-input">Number of users:</label>
+					<label class="col-sm-4 control-label" for="start-input">Range start:</label>
 					<div class="col-sm-8">
-						<input class="form-control" type="text" name="new_num" id="num-input" value="<?php if (isset($_POST['new_num'])){echo $_POST['new_num'];}?>" oninput="show_add_classroom_text()" />
+						<input class="form-control" type="text" name="new_start" id="start-input" value="<?php if (isset($_POST['new_start'])){echo $_POST['new_start'];} else { echo 1; }?>" oninput="show_add_classroom_text()" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="end-input">Range end:</label>
+					<div class="col-sm-8">
+						<input class="form-control" type="text" name="new_end" id="end-input" value="<?php if (isset($_POST['new_end'])){echo $_POST['new_end'];}?>" oninput="show_add_classroom_text()" />
 					</div>
 				</div>
 				<div class="form-group">
@@ -99,7 +109,7 @@
 				</div>
 			</div>
 			<div class="col-sm-6">
-				<p id="classroom-txt"></p>
+				<p id="usernameerror1" class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="text">Users do not exist</span></p>
 			</div>
 		</div>
 	</fieldset>

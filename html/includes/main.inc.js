@@ -70,17 +70,25 @@ function filter_table(filter){
 
 function show_add_classroom_text(){
 	var prefix = $('#prefix-input').val();
-	var num = $('#num-input').val();
+	var start = $('#start-input').val();
+	var end = $('#end-input').val();
+	var paddedstart = start<10?'0'+start:start;
+	var paddedend = end<10?'0'+end:end;
+	
+	var rule2 = Number(start)>0;
+	var rule3 = Number(end)>Number(start);
+	
+	var error = prefix+paddedstart+'-'+prefix+paddedend+' will be removed';
 	if(prefix == ""){
-		$('#classroom-txt').html('<div class="glyphicon glyphicon-remove"></div> Please enter a username prefix').removeClass('text-success').addClass('text-danger');	
-		document.getElementById('add_user_submit').disabled = true;
-	} else if(num == "" || num<2){
-		$('#classroom-txt').html('<div class="glyphicon glyphicon-remove"></div> Number must be > 1').removeClass('text-success').addClass('text-danger');
-		document.getElementById('add_user_submit').disabled = true;
-	} else {
-		$('#classroom-txt').html('<div class="glyphicon glyphicon-ok"></div> Will create/clean up users '+prefix+'01-'+prefix+(num<10?'0':'')+num).removeClass('text-danger').addClass('text-success');
-		document.getElementById('add_user_submit').disabled = false;
+		error = "Please enter a prefix.";
+	} else if (!isInt(start) || Number(start)<1){
+		error = "Start must be >=1";
+	} else if (!isInt(end) || Number(end)<=Number(start)){
+		error = "End must be greater than start";
 	}
+	
+	showUsernameError(1,rule2 && rule3,error);
+	document.getElementById('add_user_submit').disabled = !( rule2 && rule3 );
 }
 
 function show_remove_classroom_text(){
@@ -101,8 +109,8 @@ function show_remove_classroom_text(){
 	});
 	rule1 = rule1==1?true:false;
 	
-	var rule2 = start>0;
-	var rule3 = end>start;
+	var rule2 = Number(start)>0;
+	var rule3 = Number(end)>Number(start);
 	
 	var error = prefix+paddedstart+'-'+prefix+paddedend+' will be removed';
 	if(prefix == ""){

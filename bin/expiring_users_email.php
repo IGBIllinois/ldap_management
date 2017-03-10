@@ -59,7 +59,7 @@ if ($sapi_type != 'cli') {
 			$subject = "IGB Account Expiration Notice";
 			$to = $user->get_email();
 // 			$to = "jleigh@illinois.edu";
-			$emailmessage = $user->get_name().",<br><br>You are receiving this email because your IGB account will expire and be removed in one month (".date('F j, Y', $user->get_expiration())."). Please make sure you have no important data on the IGB File Server or Biocluster, as it will be inaccessible after this time. If you believe you are receiving this message in error, or would like to request additional time to remove your data, please contact us at help@igb.illinois.edu. <strong>Do not reply directly to this email.</strong><br/><br/>Computer and Network Resource Group<br/>Institute for Genomic Biology<br/>help@igb.illinois.edu";
+			$emailmessage = $user->get_name().",<br><br>You are receiving this email because your IGB account will expire and be removed in one month (".date('F j, Y', $user->get_expiration())."). This will not affect your University of Illinois account. Please make sure you have no important data on the IGB File Server or Biocluster, as it will be inaccessible after this time. If you believe you are receiving this message in error, or would like to request additional time to remove your data, please contact us at help@igb.illinois.edu. <strong>Do not reply directly to this email.</strong><br/><br/>Computer and Network Resource Group<br/>Institute for Genomic Biology<br/>help@igb.illinois.edu";
 	
 			$headers = "From: do-not-reply@igb.illinois.edu\r\n";
 			$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
@@ -81,7 +81,7 @@ if ($sapi_type != 'cli') {
 			$subject = "IGB Account Expiration Final Notice";
 			$to = $user->get_email();
 // 			$to = "jleigh@illinois.edu";
-			$emailmessage = $user->get_name().",<br><br>You are receiving this email because your IGB account will expire and be removed in one week (".date('F j, Y', $user->get_expiration())."). Please make sure you have no important data on the IGB File Server or Biocluster, as it will be inaccessible after this time. If you believe you are receiving this message in error, or would like to request additional time to remove your data, please contact us at help@igb.illinois.edu. <strong>Do not reply directly to this email.</strong><br/><br/>Computer and Network Resource Group<br/>Institute for Genomic Biology<br/>help@igb.illinois.edu";
+			$emailmessage = $user->get_name().",<br><br>You are receiving this email because your IGB account will expire and be removed in one week (".date('F j, Y', $user->get_expiration())."). This will not affect your University of Illinois account. Please make sure you have no important data on the IGB File Server or Biocluster, as it will be inaccessible after this time. If you believe you are receiving this message in error, or would like to request additional time to remove your data, please contact us at help@igb.illinois.edu. <strong>Do not reply directly to this email.</strong><br/><br/>Computer and Network Resource Group<br/>Institute for Genomic Biology<br/>help@igb.illinois.edu";
 	
 			$headers = "From: do-not-reply@igb.illinois.edu\r\n";
 			$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";

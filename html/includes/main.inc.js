@@ -78,7 +78,7 @@ function show_add_classroom_text(){
 	var rule2 = Number(start)>0;
 	var rule3 = Number(end)>Number(start);
 	
-	var error = prefix+paddedstart+'-'+prefix+paddedend+' will be removed';
+	var error = prefix+paddedstart+'-'+prefix+paddedend+' will be created';
 	if(prefix == ""){
 		error = "Please enter a prefix.";
 	} else if (!isInt(start) || Number(start)<1){

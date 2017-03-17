@@ -17,6 +17,8 @@
 			$result = $user->give_biocluster_access();
 		
 			if($result['RESULT'] == true){
+				$queue_group = new group($ldap,"biocluster_queue");
+				$queue_group->add_user($user->get_username());
 				header("Location: user.php?uid=".$_POST['username']);
 			} else if ($result['RESULT'] == false) {
 				$message = $result['MESSAGE'];

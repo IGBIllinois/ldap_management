@@ -89,7 +89,8 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$(".shell-select").select2({
-			placeholder: "Please select a shell"
+			placeholder: "Please select a shell",
+			width: 'element'
 		});
 	});
 </script>

@@ -72,10 +72,8 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$(".username-select").select2({
-			placeholder: "Please select a user"
-		});
-		$(".group-select").select2({
-			placeholder: "Please select a group"
+			placeholder: "Please select a user",
+			width: 'element'
 		});
 	});
 </script>

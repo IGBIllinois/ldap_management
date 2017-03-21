@@ -160,10 +160,12 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$(".username-select").select2({
-			placeholder: "Please select a user"
+			placeholder: "Please select a user",
+			width: 'element'
 		});
 		$(".host-select").select2({
-			placeholder: "Please select a host"
+			placeholder: "Please select a host",
+			width: 'element'
 		});
 	});
 </script>

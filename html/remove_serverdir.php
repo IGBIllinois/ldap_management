@@ -104,7 +104,8 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		$(".server-select").select2({
-			placeholder: "Please select a server"
+			placeholder: "Please select a server",
+			width: 'element'
 		});
 	});
 </script>

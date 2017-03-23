@@ -127,6 +127,58 @@
 					<td colspan="2" class="text-danger">User is locked</td>
 				</tr>
 			<?php	} ?>
+			<?php
+				if($attributes = extensions::get_attributes('user')){
+					for($attr=0; $attr<count($attributes); $attr++){
+						// TODO get uid field programmatically
+						$classname = 'ext_'.$attributes[$attr]['ext'];
+						// Generate button, if necessary
+						$button = "";
+						if(isset($attributes[$attr]['button'])){
+							$color = 'btn-primary';
+							$icon = '';
+							$text = '';
+							if(isset($attributes[$attr]['button']['type']) && $attributes[$attr]['button']['type'] == 'edit'){
+								$color = 'btn-info';
+								$icon = '<span class="glyphicon glyphicon-pencil"></span>';
+								$text = "Change ".$attributes[$attr]['fullname'];
+							}
+							if(isset($attributes[$attr]['button']['color'])){
+								$color = 'btn-'.$attributes[$attr]['button']['color'];
+							}
+							if(isset($attributes[$attr]['button']['icon'])){
+								$icon = '<span class="glyphicon glyphicon-'.$attributes[$attr]['button']['icon'].'"></span>';
+							}
+							if(isset($attributes[$attr]['button']['text'])){
+								$text = $attributes[$attr]['button']['text'];
+							}
+							$button = " <a href='edit_user_attribute.php?attr=".$attributes[$attr]['name']."&id=".$user->get_username()."' class='btn btn-xs pull-right ".$color."'>".$icon." ".$text."</a>";
+						} else {
+							$funcname = $attributes[$attr]['name'].'_button';
+							if(method_exists($classname, $funcname)){
+								$button = $classname::$funcname($ldap,$user->get_username());
+							}
+						}
+						// TODO the extensions class will eventually fetch attributes
+						// Fetch field
+						$field = '';
+						if(isset($attributes[$attr]['field'])){
+							if($user->get_attribute($attributes[$attr]['field'])==NULL){
+								continue;
+							}
+							// LDAP field given, fetch it.
+							$field = extensions::format($user->get_attribute($attributes[$attr]['field']),isset($attributes[$attr]['format'])?$attributes[$attr]['format']:'');
+						} else {
+							// No LDAP field given, look for a function
+							$funcname = $attributes[$attr]['name'].'_field';
+							if(method_exists($classname, $funcname)){
+								$field = $classname::$funcname($ldap,$user->get_username());
+							}
+						}
+						echo "<tr><th>".$attributes[$attr]['fullname'].":</th><td>".$field.$button."</td></tr>";
+					}
+				}
+			?>
 		</table>
 
 		<div class="panel-body">

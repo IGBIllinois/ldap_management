@@ -200,6 +200,18 @@ class user {
 				'uid'=>$this->username);
 		}		
 	}
+	
+	public function get_attribute($field){
+		// TODO update this class to pull in all fields from extensions so we don't have to search for each attribute
+		$filter = "(uid=".$this->get_username().")";
+		$attributes = array($field);
+		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
+		if($result['count']>0 && $result[0]['count']>0){
+			return $result[0][$field][0];
+		} else {
+			return NULL;
+		}
+	}
 
 	public function get_username() {
 		return $this->username;

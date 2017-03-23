@@ -1,0 +1,85 @@
+{
+	"user": {
+		"attributes": [ 
+			{
+				"name": "name",
+				"fullname": "Name",
+				"field": "cn",
+				"button": {
+					"type": "edit"
+				}
+			},{
+				"name": "username",
+				"fullname": "Username",
+				"field": "uid",
+				"button": {
+					"type": "edit"
+				}
+			},
+			{
+				"name": "uidnumber",
+				"fullname": "UID Number",
+				"field": "uidnumber"
+			},
+			{
+				"name": "mail",
+				"fullname": "Email",
+				"field": "mail"
+			},
+			{
+				"name": "homedirectory",
+				"fullname": "Home Directory",
+				"field": "homedirectory"
+			},
+			{
+				"name": "loginshell",
+				"fullname": "Login Shell",
+				"field": "loginshell",
+				"button": {
+					"type": "edit"
+				},
+				"options": [
+					"/usr/libexec/openssh/sftp-server",
+					"/bin/bash",
+					"/usr/local/bin/system-specific"
+				]
+			},
+			{
+				"name": "pwdlastset",
+				"fullname": "Password Last Set",
+				"field": "sambapwdlastset",
+				"format": "timestamp"
+			},
+			{
+				"name": "expiration",
+				"fullname": "Expiration",
+				"field": "shadowexpire",
+				"format": "timestamp"
+			},
+			{
+				"name": "createddate",
+				"fullname": "Created",
+				"field": "createtimestamp",
+				"format": "date"
+			},
+			{
+				"name": "createdby",
+				"fullname": "Created By",
+				"field": "creatorsname",
+				"format": "dn"
+			},
+			{
+				"name": "modifieddate",
+				"fullname": "Last Modified",
+				"field": "modifytimestamp",
+				"format": "date"
+			},
+			{
+				"name": "modifiedby",
+				"fullname": "Modified By",
+				"field": "modifiersname",
+				"format": "dn"
+			}
+		]
+	}
+}

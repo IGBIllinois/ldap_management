@@ -1,0 +1,14 @@
+{
+	"user": {
+		"attributes": [
+			{
+				"name": "emailforward",
+				"fullname": "Forwarding Email",
+				"field": "postaladdress",
+				"button": {
+					"type": "edit"
+					}
+			}
+		]
+	}
+}

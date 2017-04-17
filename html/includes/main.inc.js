@@ -297,6 +297,15 @@ function change_group_errors(){
 		document.getElementById('group_submit').disabled = true;
 	}
 }
+function change_groupname_errors(){
+	var group_errors = check_groupname();
+	
+	if(group_errors){
+		document.getElementById('group_submit').disabled = false;
+	} else {
+		document.getElementById('group_submit').disabled = true;
+	}
+}
 
 function change_password_errors(){
 	var password_errors = check_passwords();

@@ -12,7 +12,7 @@ class extensions{
 		for($i=0; $i<count($loadorder); $i++){
 			$loadextension = json_decode(file_get_contents(self::$extensionpath.$loadorder[$i]."/ext.json"),true);
 			if($loadextension == NULL){
-				echo html::error_message("JSON Error: ".json_last_error_msg());
+				echo html::error_message("JSON error in extension '".$loadorder[$i]."': ".json_last_error_msg());
 			}
 // 			echo "Loaded JSON: <pre>"; var_dump($loadextension); echo "</pre>";
 			foreach($loadextension as $type=>$typeinfo){
@@ -35,6 +35,16 @@ class extensions{
 	function get_attributes($type){
 		if(isset(self::$extensions[$type])){
 			return self::$extensions[$type]['attributes'];
+		}
+		return false;
+	}
+	function get_attribute($type,$attr){
+		if(isset(self::$extensions[$type])){
+			for($i=0; $i<count(self::$extensions[$type]['attributes']); $i++){
+				if(self::$extensions[$type]['attributes'][$i]['name'] == $attr){
+					return self::$extensions[$type]['attributes'][$i];
+				}
+			}
 		}
 		return false;
 	}

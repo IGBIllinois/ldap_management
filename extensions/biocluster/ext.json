@@ -3,7 +3,19 @@
 		"attributes": [
 			{
 				"name": "bioclusteraccess",
-				"fullname": "Biocluster Access"
+				"fullname": "Biocluster Access",
+				"button": {
+					"inputs": [
+						{
+							"type": "text",
+							"text": "When you click Give Biocluster Access, you will be taken to the Biocluster Accounting site to enter billing details."
+						}
+					],
+					"submit": {
+						"text": "Give Biocluster Access",
+						"color": "primary"
+					}
+				}
 			}
 		]
 	}

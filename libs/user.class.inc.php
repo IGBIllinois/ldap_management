@@ -212,6 +212,22 @@ class user {
 			return NULL;
 		}
 	}
+	
+	public function set_attribute($field,$value){
+		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
+		$data = array($field=>$value);
+		if($this->ldap->modify($dn,$data)){
+			// TODO once all fields are pulled in during load, update the field here
+			log::log_message("Set ".$field." for ".$this->get_username()." to ".$value);
+			return array('RESULT'=>true,
+				'MESSAGE'=>$field." set",
+				'uid'=>$this->get_username());
+		} else {
+			return array('RESULT'=>false,
+				'MESSAGE'=>'LDAP Error: '.$this->ldap->get_error(),
+				'uid'=>$this->username);
+		}
+	}
 
 	public function get_username() {
 		return $this->username;

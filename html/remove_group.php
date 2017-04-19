@@ -22,7 +22,7 @@
 				$message = $result['MESSAGE'];
 			}
 		}
-	} else if (isset($_POST['cancel_user'])) {
+	} else if (isset($_POST['cancel_group'])) {
 		header('location: group.php?uid='.$_POST['group']);
 		unset($_POST);
 		exit();

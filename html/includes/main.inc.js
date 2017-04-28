@@ -230,6 +230,19 @@ function showValidateError(field,errornum,valid,text){
 	}
 	$('#'+field+'error'+errornum+' .text').html(text);
 }
+function showValidateWarning(field,warnnum,valid,text){
+	if( !($('#validation p#'+field+'warning'+warnnum).length) ){
+		$('#validation').append('<p id='+field+'warning'+warnnum+'><span class="glyphicon"></span> <span class="text"></span></p>');
+	}
+	if(valid){
+		$('#'+field+'warning'+warnnum).removeClass('text-warning').addClass('text-success');
+		$('#'+field+'warning'+warnnum+' .glyphicon').removeClass('glyphicon-alert').addClass('glyphicon-ok');
+	} else {
+		$('#'+field+'warning'+warnnum).removeClass('text-success').addClass('text-warning');
+		$('#'+field+'warning'+warnnum+' .glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-alert');
+	}
+	$('#'+field+'warning'+warnnum+' .text').html(text);
+}
 
 function check_passwords(){
 	var passworda = document.getElementById('passworda_input').value;

@@ -46,6 +46,11 @@
 				} else {
 					// Create user with random password
 					$user->create($username,$username,$username,$password);
+					// Run script to add user to file-server
+					if(__RUN_SHELL_SCRIPTS__){
+						$safeusername = escapeshellarg($username);
+						exec("sudo ../bin/add_user.pl $safeusername --classroom",$shellout);
+					}
 				}
 				// Give user biocluster access
 				$user->give_biocluster_access();

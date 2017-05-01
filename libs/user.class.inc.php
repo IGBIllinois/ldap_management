@@ -164,12 +164,6 @@ class user {
 			$group = new group($this->ldap);
 			$group->create_user_group($username,$username,$gidnumber);
 			
-			// Run script to add user to file-server, mail
-			if(__RUN_SHELL_SCRIPTS__){
-				$safeusername = escapeshellarg($username);
-				exec("sudo ../bin/add_user.pl $safeusername",$shellout);
-			}
-			
 			return array('RESULT'=>true,
 				'MESSAGE'=>html::success_message('User successfully added.'),
 				'uid'=>$username);

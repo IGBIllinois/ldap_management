@@ -2,7 +2,7 @@
 
 use Net::SSH qw(ssh);
 use Net::SCP qw(scp);
-if(scalar(@ARGV)>=1){
+if(scalar(@ARGV)>=1 and not $ARGV[0] eq ""){
 	my $netid = $ARGV[0];
 	my $classroomUser = 0;
 	if(scalar(@ARGV)>=2 and $ARGV[1] eq '--classroom'){

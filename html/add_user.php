@@ -22,7 +22,7 @@
 			if($result['RESULT'] == true){
 				// Run script to add user to file-server, mail
 				if(__RUN_SHELL_SCRIPTS__){
-					$safeusername = escapeshellarg($username);
+					$safeusername = escapeshellarg($_POST['new_username']);
 					exec("sudo ../bin/add_user.pl $safeusername",$shellout);
 				}
 				header("Location: user.php?uid=".$result['uid']);

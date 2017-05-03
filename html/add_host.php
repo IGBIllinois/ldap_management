@@ -37,7 +37,7 @@
 				<div class="form-group">
 					<label class="col-sm-4 control-label" for="name-input">Hostname:</label>
 					<div class="col-sm-8">
-						<input class="form-control" type="text" name="new_name" id="name_input" value="<?php if (isset($_POST['new_name'])){echo $_POST['new_name'];}?>" oninput="change_group_errors();" autofocus />
+						<input class="form-control" type="text" name="new_name" id="name_input" value="<?php if (isset($_POST['new_name'])){echo $_POST['new_name'];}?>" autofocus />
 					</div>
 				</div>
 				<div class="form-group">

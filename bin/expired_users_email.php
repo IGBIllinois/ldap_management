@@ -44,20 +44,6 @@ if ($sapi_type != 'cli') {
 		$user = new user($ldap,$uid);
 		if($user->is_expired() && $user->get_email()!=null){
 			$contactinfo[] = $user;
-/*
-			$aduser = user::is_ad_user($adldap,$user->get_username());
-			$leftcampus = !user::is_ad_current($adldap,$user->get_username());
-			$forwarding = isset($aliases[$user->get_username()]);
-			$forwardingillinois = isset($aliases[$user->get_username()]) && preg_match("/illinois\\.edu|uiuc\\.edu/um", $aliases[$user->get_username()]);
-			
-			if($aduser && $leftcampus && $forwardingillinois){
-				$nocontact[] = $user;
-			} else if( !$forwarding ) {
-				$igbmail[] = $user;
-			} else {
-				$contactinfo[] = $user;
-			}
-*/
 		}
 	}
 	

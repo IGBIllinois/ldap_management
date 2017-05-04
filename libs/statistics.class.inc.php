@@ -23,6 +23,11 @@
 			}
 			return $count;
 		}
+		public static function leftcampus_users($ldap){
+			$filter = "(employeeType=leftcampus)";
+			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, array(''));
+			return $result['count'];
+		}
 
 		public static function groups($ldap){
 			$filter = "(cn=*)";

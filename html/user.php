@@ -127,6 +127,11 @@
 					<td colspan="2" class="text-danger">User is locked</td>
 				</tr>
 			<?php	} ?>
+			<?php if($user->get_leftcampus()) { ?>
+				<tr class="warning">
+					<td colspan="2" class="text-warning">User has left UIUC</td>
+				</tr>
+			<?php } ?>
 		</table>
 
 		<div class="panel-body">

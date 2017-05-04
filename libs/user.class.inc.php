@@ -17,6 +17,7 @@ class user {
 	private $groups = null;
 	private $loginShell;
 	private $expiration = null;
+	private $leftcampus = false;
 	
 	private $creator;
 	private $createTime;
@@ -568,11 +569,11 @@ class user {
 		} else {
 			$filter = "(|(uid=*$search*)(cn=*$search*))";
 		}
-		$attributes = array("uid","cn","mail","shadowexpire","postaladdress");
+		$attributes = array("uid","cn","mail","shadowexpire","postaladdress","employeetype");
 		$result = $ldap->search($filter,__LDAP_PEOPLE_OU__,$attributes);
 		$users = array();
 		for($i=0; $i<$result['count']; $i++){
-			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''), "emailforward"=>(isset($result[$i]['postaladdress'])?$result[$i]['postaladdress'][0]:''));
+			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''), "emailforward"=>(isset($result[$i]['postaladdress'])?$result[$i]['postaladdress'][0]:''),"leftcampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='leftcampus':false));
 			if($userfilter != 'none'){
 				if($userfilter == 'expiring'){
 					if($user['shadowexpire'] > time()){
@@ -580,6 +581,10 @@ class user {
 					}
 				} else if($userfilter == 'expired'){
 					if($user['shadowexpire']!='' && $user['shadowexpire'] <= time()){
+						$users[] = $user;
+					}
+				} else if($userfilter == 'left'){
+					if($user['leftcampus']){
 						$users[] = $user;
 					}
 				} else {
@@ -591,18 +596,6 @@ class user {
 		}
 
 		usort($users,self::sorter($sort,$asc));
-		
-		//filter users by left campus after sorting to make it a little faster
-		if($userfilter == 'left'){
-			$foundusers = array();
-			for($i=0;$i<count($users)&&count($foundusers)<$start+$count;$i++){
-				if(!user::is_ad_current($adldap,$users[$i]['username'])){
-					$foundusers[] = $users[$i];
-				}
-			}
-			return array_slice($foundusers,$start,$count);
-		}
-		
 		return array_slice($users,$start,$count);
 	}
 	
@@ -612,11 +605,11 @@ class user {
 		} else {
 			$filter = "(|(uid=*$search*)(cn=*$search*))";
 		}
-		$attributes = array("uid","cn","shadowexpire");
+		$attributes = array("uid","cn","shadowexpire","employeetype");
 		$result = $ldap->search($filter,__LDAP_PEOPLE_OU__,$attributes,1);
 		$users = array();
 		for($i=0; $i<$result['count']; $i++){
-			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''));
+			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''),"leftcampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='leftcampus':false));
 			if($userfilter != 'none'){
 				if($userfilter == 'expiring'){
 					if($user['shadowexpire'] > time()){
@@ -626,6 +619,10 @@ class user {
 					if($user['shadowexpire']!='' && $user['shadowexpire'] <= time()){
 						$users[] = $user;
 					}
+				} else if($userfilter == 'left'){
+					if($user['leftcampus']){
+						$users[] = $user;
+					}
 				} else {
 					$users[] = $user;
 				}
@@ -633,17 +630,6 @@ class user {
 				$users[] = $user;
 			}
 		}
-		
-		if($userfilter == 'left'){
-			$foundusers = array();
-			for($i=0;$i<count($users);$i++){
-				if(!user::is_ad_current($adldap,$users[$i]['username'])){
-					$foundusers[] = $users[$i];
-				}
-			}
-			return count($foundusers);
-		}
-		
 		return count($users);
 	}
 	
@@ -670,14 +656,19 @@ class user {
 		}
 	}
 	
-	public static function is_ad_current($adldap,$username){
-		$filter = "(uid=".$username.")";
-		$attributes = array('uiucEduPhInactiveDate');
-		$results = $adldap->search($filter,"",$attributes);
-		if($results && (($results['count']>0 && $results[0]['count']==0)||($results['count']==0))){
-			return true;
-		} else {
-			return false;
+	public function get_leftcampus(){
+		return $this->leftcampus;
+	}
+	
+	public function set_leftcampus($leftcampus){
+		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
+		$data = array("employeetype"=>($leftcampus?'leftcampus':''));
+		if($this->ldap->modify($dn,$data)){
+			$this->leftcampus = $leftcampus;
+			log::log_message("Set left-campus for ".$this->get_username()." to ".$this->get_leftcampus());
+			return array('RESULT'=>true,
+				'MESSAGE'=>'Leftcampus successfully set.',
+				'uid'=>$this->get_username());
 		}
 	}
 	
@@ -698,7 +689,7 @@ class user {
 
 	public function load_by_username($username) {
 		$filter = "(uid=".$username.")";
-		$attributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress');
+		$attributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress','employeetype');
 		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 		if($result['count']>0){
 			$this->name = $result[0]['cn'][0];
@@ -731,6 +722,9 @@ class user {
 			$this->uidnumber = $result[0]['uidnumber'][0];
 			if(isset($result[0]['sambapwdlastset'])){
 				$this->passwordSet = $result[0]['sambapwdlastset'][0];
+			}
+			if(isset($result[0]['employeetype'])){
+				$this->leftcampus = ($result[0]['employeetype'][0]=='leftcampus');
 			}
 		}
 	}

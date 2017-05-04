@@ -41,7 +41,7 @@
 	$pages_html = html::get_pages_html($pages_url,$num_users,$start,$count);
 	$users_html = "";
 	$user_count = 0;
-	
+		
 	$users_html = html::get_users_rows($adldap,$all_users,($filter=='expiring'||$filter=='expired'));
 	
 	?>

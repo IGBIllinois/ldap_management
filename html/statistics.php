@@ -17,6 +17,10 @@
 			<td><?php echo statistics::expired_users($ldap); ?></td>
 		</tr>
 		<tr>
+			<td># of Users who have left UIUC</td>
+			<td><?php echo statistics::leftcampus_users($ldap); ?></td>
+		</tr>
+		<tr>
 			<td># of Groups</td>
 			<td><?php echo statistics::groups($ldap); ?></td>
 		</tr>

@@ -33,7 +33,6 @@
 		$filterusers = 0;
 		$get_array['filterusers'] = $filterusers;
 	}
-
 	$all_groups = group::get_search_groups($ldap,$search,$start,$count,$sort,$asc,$filterusers);
 	$num_groups = group::get_search_groups_count($ldap,$search,$filterusers);
 	$pages_url = $_SERVER['PHP_SELF']."?".http_build_query($get_array);

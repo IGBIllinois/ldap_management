@@ -25,6 +25,8 @@ class user {
 	private $modifier;
 	private $modifyTime;
 	private $passwordSet = null;
+	
+	private static $lastSearch = array();
 
 	////////////////Public Functions///////////
 
@@ -597,10 +599,12 @@ class user {
 		}
 
 		usort($users,self::sorter($sort,$asc));
+		self::$lastSearch = $users;
 		return array_slice($users,$start,$count);
 	}
 	
 	public static function get_search_users_count($ldap,$adldap,$search,$userfilter='none'){
+/*
 		if($search == ""){
 			$filter = "(uid=*)";
 		} else {
@@ -632,6 +636,8 @@ class user {
 			}
 		}
 		return count($users);
+*/
+		return count(self::$lastSearch);
 	}
 	
 	public static function is_ldap_user($ldap, $username) {

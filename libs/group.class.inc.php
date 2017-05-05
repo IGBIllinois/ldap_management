@@ -18,6 +18,8 @@ class group {
 	private $modifyTime;
 
 	private $isGroupOfNames = false;
+	
+	private static $lastSearch = array();
 
 	////////////////Public Functions///////////
 
@@ -342,62 +344,46 @@ class group {
 
 		$attributes = array("cn", "description", "memberUid");
 		$result = $ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
+		$sortedgroups = array();
+		for($i=0; $i<$result['count']; $i++){
+			$description = isset($result[$i]['description'][0])?$result[$i]['description'][0]:"";
+			$descObj = json_decode($description);
+			if($descObj == NULL){
+				$owner = "";
+				$serverdirs = array();
+			} else {
+				$description = $descObj->description;
+				$owner = isset($descObj->owner)?$descObj->owner:"";
+				$serverdirs = isset($descObj->directories)?$descObj->directories:"";
+				sort($serverdirs);
+			}
+			$group = array("name"=>$result[$i]['cn'][0], "description"=>$description, 'owner'=>$owner, 'dirs'=>$serverdirs, "members"=>(isset($result[$i]['memberuid'])?$result[$i]['memberuid']['count']:0));
+			$sortedgroups[] = $group;
+		}
+		if(count($sortedgroups)){
+			if (is_numeric($sortedgroups[0][$sort])) {
+				usort($sortedgroups, self::sorter($sort, $asc));
+			} else {
+				usort($sortedgroups, self::strsorter($sort, $asc));
+			}
+		}
 		$groups = array();
 		for ($i=0; $i<$result['count']; $i++) {
-			if ( $filterusers==0 || ($filterusers==1 && !in_array($result[$i]['cn'][0], $users)) || ($filterusers ==2 && in_array($result[$i]['cn'][0], $users)) ) {
-				$description = isset($result[$i]['description'][0])?$result[$i]['description'][0]:"";
-				$descObj = json_decode($description);
-				if($descObj == NULL){
-					$owner = "";
-					$serverdirs = array();
-				} else {
-					$description = $descObj->description;
-					$owner = isset($descObj->owner)?$descObj->owner:"";
-					$serverdirs = isset($descObj->directories)?$descObj->directories:"";
-					sort($serverdirs);
-				}
-				$group = array("name"=>$result[$i]['cn'][0], "description"=>$description, 'owner'=>$owner, 'dirs'=>$serverdirs, "members"=>(isset($result[$i]['memberuid'])?$result[$i]['memberuid']['count']:0));
-				$groups[] = $group;
+			if ( $filterusers==0 || ($filterusers==1 && !in_array($sortedgroups[$i]['name'], $users)) || ($filterusers ==2 && in_array($sortedgroups[$i]['name'], $users)) ) {
+				$groups[] = $sortedgroups[$i];
 			}
 		}
-
-		if(count($groups)){
-			if (is_numeric($groups[0][$sort])) {
-				usort($groups, self::sorter($sort, $asc));
-			} else {
-				usort($groups, self::strsorter($sort, $asc));
-			}
-		}
+		
+		self::$lastSearch = $groups;
 		if ($start>=0) {
 			$groups = array_slice($groups, $start, $count);
 		}
-		
 		return $groups;
 	}
 
 
-	public static function get_search_groups_count($ldap, $search, $filterusers) {
-		if ($search == "") {
-			$filter = "(cn=*)";
-		} else {
-			$filter = "(cn=*$search*)";
-		}
-		if ($filterusers) {
-			$users = user::get_all_users($ldap);
-		}
-		$attributes = array("cn", "description", "memberUid");
-		$result = $ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
-		$count = 0;
-		if ($filterusers > 0) {
-			for ($i=0; $i<$result['count']; $i++) {
-				if ( ($filterusers==1 && !in_array($result[$i]['cn'][0], $users)) || ($filterusers ==2 && in_array($result[$i]['cn'][0], $users)) ) {
-					$count++;
-				}
-			}
-		} else {
-			$count = $result['count'];
-		}
-		return $count;
+	public static function get_search_groups_count() {
+		return count(self::$lastSearch);
 	}
 
 

@@ -95,8 +95,11 @@ class html {
 						$users_html .= " <span class='glyphicon glyphicon-time smallwarning' title='User set to expire'></span>";
 					}
 				}
-				if($users[$i]['leftcampus'] == '1'){
+				if($users[$i]['leftcampus']){
 					$users_html .= " <span class='glyphicon glyphicon-education smallwarning' title='User left UIUC'></span>";
+				}
+				if($users[$i]['noncampus']){
+					$users_html .= " <span class='glyphicon glyphicon-education smallinfo' title='User not from UIUC'></span>";
 				}
 				$users_html .= "</td>";
                 $users_html .= "<td>" . $users[$i]['name']. "</td>";

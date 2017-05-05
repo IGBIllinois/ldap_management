@@ -30,17 +30,34 @@ if ($sapi_type != 'cli') {
 		$filter = "(uid=".$uid.")";
 		$attributes = array('uiucEduPhInactiveDate');
 		$results = $adldap->search($filter,"",$attributes);
-		if( !( $results && (($results['count']>0 && $results[0]['count']==0)||($results['count']==0)) ) ){
-			echo $user->get_username()." ";
-			if($user->get_leftcampus() == false){
-				echo "\n";
-				$user->set_leftcampus(true);
+		if($results){
+			echo $user->get_username().": ";
+			if($results['count']==0){
+				// User not in campus ldap
+				if(!$user->get_noncampus()){
+					echo "non-campus\n";
+					$user->set_noncampus(true);
+				} else {
+					echo "non-campus (already knew)\n";
+				}
 			} else {
-				echo " Skipping\n";
-			}
-		} else {
-			if($user->get_leftcampus() == true){
-				$user->set_leftcampus(false);
+				// User in campus ldap
+				if( !( ($results[0]['count']==0)||($results['count']==0) ) ){
+					// User left campus
+					if($user->get_leftcampus() == false){
+						echo "left campus\n";
+						$user->set_leftcampus(true);
+					} else {
+						echo "left campus (already knew)\n";
+					}
+				} else {
+					if($user->get_leftcampus() == true){
+						echo "on campus\n";
+						$user->set_leftcampus(false);
+					} else {
+						echo "on campus (already knew)\n";
+					}
+				}
 			}
 		}
 	}

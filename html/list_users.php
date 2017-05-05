@@ -90,7 +90,8 @@
 	<p>
 		<span class="glyphicon glyphicon-time smallwarning"> </span>=expiration set &nbsp;
 		<span class="glyphicon glyphicon-time smalldanger"> </span>=expired &nbsp;
-		<span class="glyphicon glyphicon-education smallwarning"> </span>=left campus 
+		<span class="glyphicon glyphicon-education smallwarning"> </span>=left campus &nbsp;
+		<span class="glyphicon glyphicon-education smallinfo"> </span>=non-campus
 	</p>
 	<?php echo $pages_html; ?>
 	<script type="text/javascript">

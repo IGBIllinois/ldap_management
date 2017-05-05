@@ -18,6 +18,7 @@ class user {
 	private $loginShell;
 	private $expiration = null;
 	private $leftcampus = false;
+	private $noncampus = false;
 	
 	private $creator;
 	private $createTime;
@@ -573,7 +574,7 @@ class user {
 		$result = $ldap->search($filter,__LDAP_PEOPLE_OU__,$attributes);
 		$users = array();
 		for($i=0; $i<$result['count']; $i++){
-			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''), "emailforward"=>(isset($result[$i]['postaladdress'])?$result[$i]['postaladdress'][0]:''),"leftcampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='leftcampus':false));
+			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''), "emailforward"=>(isset($result[$i]['postaladdress'])?$result[$i]['postaladdress'][0]:''),"leftcampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='leftcampus':false),"noncampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='noncampus':false));
 			if($userfilter != 'none'){
 				if($userfilter == 'expiring'){
 					if($user['shadowexpire'] > time()){
@@ -672,6 +673,21 @@ class user {
 		}
 	}
 	
+	public function get_noncampus(){
+		return $this->noncampus;
+	}
+	public function set_noncampus($noncampus){
+		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
+		$data = array("employeetype"=>($noncampus?'noncampus':''));
+		if($this->ldap->modify($dn,$data)){
+			$this->noncampus = $noncampus;
+			log::log_message("Set non-campus for ".$this->get_username()." to ".$this->get_noncampus());
+			return array('RESULT'=>true,
+				'MESSAGE'=>'Noncampus successfully set.',
+				'uid'=>$this->get_username());
+		}
+	}
+	
 	public function serializable(){
 		$data = array(
 			'username'=>$this->username,
@@ -725,6 +741,7 @@ class user {
 			}
 			if(isset($result[0]['employeetype'])){
 				$this->leftcampus = ($result[0]['employeetype'][0]=='leftcampus');
+				$this->noncampus = ($result[0]['employeetype'][0]=='noncampus');
 			}
 		}
 	}

@@ -63,6 +63,7 @@
 							<button type="button" class="btn btn-default<?php if($filter=='expiring'){echo ' active btn-warning';} ?>" id="expiring-button" onclick="filter_table('expiring')"><span class="glyphicon glyphicon-time"></span> Expiring</button>
 							<button type="button" class="btn btn-default<?php if($filter=='expired'){echo ' active btn-danger';} ?>" id="expired-button" onclick="filter_table('expired')"><span class="glyphicon glyphicon-time"></span> Expired</button>
 							<button type="button" class="btn btn-default<?php if($filter=='left'){echo ' active btn-warning';} ?>" id="ad-button" onclick="filter_table('left')"><span class="glyphicon glyphicon-education"></span> Left Campus</button>
+							<button type="button" class="btn btn-default<?php if($filter=='noncampus'){echo ' active btn-info';} ?>" id="noncampus-button" onclick="filter_table('noncampus')"><span class="glyphicon glyphicon-education"></span> Non-Campus</button>
 						</div>
 <!-- 					</div> -->
 				</form>
@@ -104,6 +105,10 @@
 		$('#ad-button').on('click',function(){
 			var $this = $(this);
 			toggleClasses($this,'btn-default','btn-warning active');
+		});
+		$('#noncampus-button').on('click',function(){
+			var $this = $(this);
+			toggleClasses($this,'btn-default','btn-info active');
 		});
 	</script>
 <?php

@@ -61,7 +61,12 @@
 						$classname = 'ext_'.$attributes[$attr]['ext'];
 						// Generate button, if necessary
 						$button = "";
-						if(isset($attributes[$attr]['button'])){
+						$funcname = $attributes[$attr]['name'].'_button';
+						if(method_exists($classname, $funcname)){
+							// Use custom method, if available
+							$button = $classname::$funcname($ldap,$user->get_username());
+						} else if(isset($attributes[$attr]['button'])){
+							// Generate from JSON attributes
 							$color = 'btn-primary';
 							$icon = '';
 							$text = '';
@@ -90,13 +95,7 @@
 							if(isset($attributes[$attr]['button']['url'])){
 								$url = $attributes[$attr]['button']['text'];
 							}
-							// TODO different urls for different types
 							$button = " <a href='$url?attr=".$attributes[$attr]['name']."&uid=".$user->get_username()."' class='btn btn-xs pull-right ".$color."'>".$icon." ".$text."</a>";
-						} else {
-							$funcname = $attributes[$attr]['name'].'_button';
-							if(method_exists($classname, $funcname)){
-								$button = $classname::$funcname($ldap,$user->get_username());
-							}
 						}
 						// Fetch field
 						$field = '';

@@ -24,7 +24,7 @@
 			$message .= html::error_message("Invalid username. Please stop trying to break my web interface.");
 		} else {
 			$classname = 'ext_'.$attr['ext'];
-			$funcname = $attr['name'].'_edit';
+			$funcname = $attr['name'].'_remove';
 			if(method_exists($classname, $funcname)){
 				// Call remove function, if it exists
 				$inputs = array();
@@ -47,7 +47,7 @@
 						$message .= html::error_message("Invalid option given for ".$fields[0]['fullname'].".");
 					} else {
 						// Finally do the edit
-						$result = $user->set_attribute($attr['field'],$_POST[$fields[0]['name']]);
+						$result = $user->remove_attribute($attr['field']);
 						if($result['RESULT']){
 							header("Location: user.php?uid=".$result['uid']);
 							unset($_POST);

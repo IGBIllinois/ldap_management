@@ -5,6 +5,7 @@
 				"name": "bioclusteraccess",
 				"fullname": "Biocluster Access",
 				"button": {
+					"title": "Give Biocluster Access",
 					"inputs": [
 						{
 							"type": "text",
@@ -13,7 +14,8 @@
 					],
 					"submit": {
 						"text": "Give Biocluster Access",
-						"color": "primary"
+						"color": "primary",
+						"onclick": "window.open('https://biocluster.igb.illinois.edu/accounting/add_user.php','_blank');"
 					}
 				}
 			}

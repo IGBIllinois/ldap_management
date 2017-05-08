@@ -26,10 +26,12 @@
 			$classname = 'ext_'.$attr['ext'];
 			$funcname = $attr['name'].'_edit';
 			if(method_exists($classname, $funcname)){
-				// TODO call extension function
+				// call extension function, if it exists
 				$inputs = array();
 				for($i=0; $i<count($fields); $i++){
-					$inputs[$fields[$i]['name']] = $_POST[$fields[$i]['name']];
+					if(isset($fields[$i]['name'])){
+						$inputs[$fields[$i]['name']] = $_POST[$fields[$i]['name']];
+					}
 				}
 				$result = $classname::$funcname($ldap,$_POST['uid'],$inputs);
 				if($result['RESULT']){
@@ -70,7 +72,16 @@
 	?>
 <form class="form-horizontal" method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>" name="form">
 	<fieldset>
-		<legend>Change <?php echo $attr['fullname']; ?></legend>
+		<legend>
+		<?php
+			if(isset($attr['button']['title'])){
+				$title = $attr['button']['title'];
+			} else {
+				$title = 'Change '.$attr['fullname'];
+			}
+			echo $title;
+		?>
+		</legend>
 		<div class="row">
 			<div class="col-sm-6">
 				<div class="form-group">
@@ -82,7 +93,6 @@
 					</div>
 				</div>
 				<?php
-					// TODO implement drop-down options
 					for($i=0; $i<count($fields); $i++){
 					?>
 				<div class="form-group">
@@ -91,6 +101,7 @@
 						<?php if(isset($fields[$i]['type']) && $fields[$i]['type']=='select'){
 							// Dropdown menu
 							echo "<select class='form-control' name='".$fields[$i]['name']."' id='".$fields[$i]['name']."_input'>";
+							// TODO initially select user's current value for this field
 							for($option=0; $option<count($fields[$i]['options']);$option++){
 								echo "<option value='".$fields[$i]['options'][$option]."'>".$fields[$i]['options'][$option]."</option>";
 							}
@@ -113,6 +124,7 @@
 							<?php 
 							$color = "btn-info";
 							$text = "Change ".$attr['fullname'];
+							$onclick = "";
 							if(isset($attr['button']['submit'])){
 								if(isset($attr['button']['submit']['color'])){
 									$color = "btn-".$attr['button']['submit']['color'];
@@ -120,8 +132,11 @@
 								if(isset($attr['button']['submit']['text'])){
 									$text = $attr['button']['submit']['text'];
 								}
+								if(isset($attr['button']['submit']['onclick'])){
+									$onclick = $attr['button']['submit']['onclick'];
+								}
 							} ?>
-							<input class="btn <?php echo $color; ?>" type="submit" name="change_<?php echo $attr['name'];?>" id="change_<?php echo $attr['name'];?>_submit" value="<?php echo $text;?>"/>
+							<input class="btn <?php echo $color; ?>" onclick="<?php echo $onclick;?>" type="submit" name="change_<?php echo $attr['name'];?>" id="change_<?php echo $attr['name'];?>_submit" value="<?php echo $text;?>"/>
 							<input class="btn btn-default" type="submit" name="cancel_change" value="Cancel"/>
 						</div>
 					</div>

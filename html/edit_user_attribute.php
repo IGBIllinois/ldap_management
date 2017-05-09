@@ -156,11 +156,14 @@ $jsfunc = 'ext_'.$attr['ext'].'_'.$attr['name'].'_validate';
 if(file_exists($jsfile) && strpos(file_get_contents($jsfile),$jsfunc)!==false){
 	echo '<script type="text/javascript">';
 	include $jsfile;
+	echo 'function validateform(){
+		document.getElementById("change_'.$attr['name'].'_submit").disabled = !'.$jsfunc.'();
+	}'."\n";
 	echo '$(document).ready(function(){'."\n";
 	for($i=0;$i<count($fields);$i++){
-		echo "\t".'$("#'.$fields[$i]['name'].'_input").on("input",'.$jsfunc.');'."\n";
+		echo "\t".'$("#'.$fields[$i]['name'].'_input").on("input",validateform);'."\n";
 	}
-	echo "\t".$jsfunc.'();'."\n";
+	echo "\t".'validateform();'."\n";
 	echo '});</script>';// TODO validation needs to actually disable the submit button
 }
 ?>

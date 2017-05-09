@@ -14,21 +14,21 @@
 			$data = array("mail"=>$inputs['username'].__MAIL_SUFFIX__,"homeDirectory"=>"/home/".$homesub."/".$inputs['username']);
 			if($ldap->mod_rename($dn,"uid=".$inputs['username'])){
 				$dn = "uid=".$inputs['username'].",".__LDAP_PEOPLE_OU__;
-				$this->ldap->modify($dn,$data);
+				$ldap->modify($dn,$data);
 				log::log_message("Changed username for $uid to ".$inputs['username'].".");
 			}
 			
 			// Change username in groups user is a member of
 			for($i=0; $i<count($groups);$i++){
-				$group = new group($this->ldap,$groups[$i]);
+				$group = new group($ldap,$groups[$i]);
 				$group->remove_user($uid);
 				$group->add_user($inputs['username']);
 			}
 			
 			// Change name of user group
-			$group = new group($this->ldap,$old_username);
-			$group->set_name($username);
-			$group->set_description($username);
+			$group = new group($ldap,$uid);
+			$group->set_name($inputs['username']);
+			$group->set_description($inputs['username']);
 			
 			// Change username on file-server, mail
 			if(__RUN_SHELL_SCRIPTS__){

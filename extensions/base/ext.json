@@ -23,7 +23,17 @@
 				"fullname": "Username",
 				"field": "uid",
 				"button": {
-					"type": "edit"
+					"type": "edit",
+					"inputs": [
+						{
+							"name": "username",
+							"fullname": "Username"
+						},
+						{
+							"type": "text",
+							"text": "<strong>Note:</strong> This will <strong>not</strong> update the user's forwarding email. If this is a UIUC user and their netid has changed, their forwarding email also needs to be updated to reflect their new netid."
+						}
+					]
 				}
 			},
 			{

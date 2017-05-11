@@ -217,6 +217,33 @@ function showEmailError(errornum,valid,text){
 	$('#emailerror'+errornum+' .text').html(text);
 }
 
+function showValidateError(field,errornum,valid,text){
+	if( !($('#validation p#'+field+'error'+errornum).length) ){
+		$('#validation').append('<p id='+field+'error'+errornum+'><span class="glyphicon"></span> <span class="text"></span></p>');
+	}
+	if(valid){
+		$('#'+field+'error'+errornum).removeClass('text-danger').addClass('text-success');
+		$('#'+field+'error'+errornum+' .glyphicon').removeClass('glyphicon-remove').addClass('glyphicon-ok');
+	} else {
+		$('#'+field+'error'+errornum).removeClass('text-success').addClass('text-danger');
+		$('#'+field+'error'+errornum+' .glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
+	}
+	$('#'+field+'error'+errornum+' .text').html(text);
+}
+function showValidateWarning(field,warnnum,valid,text){
+	if( !($('#validation p#'+field+'warning'+warnnum).length) ){
+		$('#validation').append('<p id='+field+'warning'+warnnum+'><span class="glyphicon"></span> <span class="text"></span></p>');
+	}
+	if(valid){
+		$('#'+field+'warning'+warnnum).removeClass('text-warning').addClass('text-success');
+		$('#'+field+'warning'+warnnum+' .glyphicon').removeClass('glyphicon-alert').addClass('glyphicon-ok');
+	} else {
+		$('#'+field+'warning'+warnnum).removeClass('text-success').addClass('text-warning');
+		$('#'+field+'warning'+warnnum+' .glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-alert');
+	}
+	$('#'+field+'warning'+warnnum+' .text').html(text);
+}
+
 function check_passwords(){
 	var passworda = document.getElementById('passworda_input').value;
 	var passwordb = document.getElementById('passwordb_input').value;

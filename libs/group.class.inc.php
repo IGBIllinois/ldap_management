@@ -211,10 +211,14 @@ class group {
 					'MESSAGE'=>'User added to group.',
 					'gid'=>$this->get_name(),
 					'uid'=>$username);
+			} else {
+				return array('RESULT'=>false,
+					'MESSAGE'=>'Failed adding user to group: LDAP error: '.$this->ldap->get_error()
+				);
 			}
 		}
 		return array('RESULT'=>false,
-			'MESSAGE'=>'LDAP error: '.$this->ldap->get_error()
+			'MESSAGE'=>'Failed adding user to group: invalid username or user already in group.'
 		);
 	}
 

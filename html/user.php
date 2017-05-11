@@ -49,79 +49,6 @@
 	</style>
 	<div class="panel panel-default">
 		<table class="table table-bordered table-striped">
-			<tr>
-				<th>Name:</th>
-				<td><?php echo $user->get_name(); ?> <a href="change_name.php?uid=<?php echo $user->get_username(); ?>" class="btn btn-info btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span> Change Name</a></td>
-			</tr>
-			<tr>
-				<th>Username:</th>
-				<td><?php echo $user->get_username(); ?> <a href="change_username.php?uid=<?php echo $user->get_username(); ?>" class="btn btn-info btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span> Change Username</a></td>
-			</tr>
-			<tr>
-				<th>UID Number:</th>
-				<td><?php echo $user->get_uidnumber(); ?></td>
-			</tr>
-			<tr>
-				<th>Email:</th>
-				<td><?php echo $user->get_email(); ?></td>
-			</tr>
-			<tr>
-				<th>Forwarding Email:</th>
-				<td><?php if($user->get_emailforward() != null){
-						echo $user->get_emailforward();
-					} else {
-						echo "None";
-					} ?> 
-					<a class='btn btn-info btn-xs pull-right' href='change_email_forward.php?uid=<?php echo $user->get_username(); ?>'><span class='glyphicon glyphicon-pencil'> </span> Change Forwarding Email</a></td>
-			</tr>
-			<tr>
-				<th>Home Directory:</th>
-				<td><a href="https://www-app2.igb.illinois.edu/file-server/user.php?username=<?php echo $user->get_username(); ?>" target="_blank"><?php echo $user->get_homeDirectory(); ?></a></td>
-			</tr>
-			<tr>
-				<th>Login Shell:</th>
-				<td><?php echo $user->get_loginShell(); ?> <a class='btn btn-info btn-xs pull-right' href='edit_login_shell.php?uid=<?php echo $user->get_username(); ?>'><span class='glyphicon glyphicon-pencil'> </span> Change Login Shell</a></td>
-			</tr>
-			
-			<?php if($user->get_passwordSet() != null){ ?>
-			<tr>
-				<th>Password Last Set:</th>
-				<td><?php echo strftime('%m/%d/%Y %I:%M:%S %p', $user->get_passwordSet() ); ?></td>
-			</tr>
-			<?php } ?>
-			<tr>
-				<th>Biocluster Access:</th>
-				<td><?php if($user->get_machinerights() && in_array('biocluster.igb.illinois.edu', $user->get_machinerights())){
-					echo "<a target='_blank' href='https://biocluster.igb.illinois.edu/accounting/user.php?username=$username'>Yes</a>";
-				} else {
-					echo "No <a href='add_to_biocluster.php?uid=$username' class='btn btn-primary btn-xs pull-right'><span class='glyphicon glyphicon-plus-sign'></span> Give Biocluster Access</a>";
-				}
-				?></td>
-			</tr>
-			<?php if($user->get_expiration() != null){
-				?>
-			<tr>
-				<th>Expiration:</th>
-				<td><?php echo strftime('%m/%d/%Y', $user->get_expiration()); ?> <a href="unexpire_user.php?uid=<?php echo $username; ?>" class="btn btn-xs btn-danger pull-right"><span class="glyphicon glyphicon-remove-circle"></span> Cancel Expiration</a></td>
-			</tr>
-				<?php
-			} ?>
-			<tr>
-				<th>Created By:</th>
-				<td><?php echo $user->get_creator(); ?></td>
-			</tr>
-			<tr>
-				<th>Created:</th>
-				<td><?php echo strftime('%m/%d/%Y %I:%M:%S %p', $user->get_createTime()); ?></td>
-			</tr>
-			<tr>
-				<th>Modified By:</th>
-				<td><?php echo $user->get_modifier(); ?></td>
-			</tr>
-			<tr>
-				<th>Last Modified:</th>
-				<td><?php echo strftime('%m/%d/%Y %I:%M:%S %p',$user->get_modifyTime()); ?></td>
-			</tr>
 			<?php if($user->islocked()) { ?>
 				<tr class="danger">
 					<td colspan="2" class="text-danger">User is locked</td>
@@ -132,6 +59,68 @@
 					<td colspan="2" class="text-warning">User has left UIUC</td>
 				</tr>
 			<?php } ?>
+			<?php
+				if($attributes = extensions::get_attributes('user')){
+					for($attr=0; $attr<count($attributes); $attr++){
+						// TODO get uid field programmatically
+						$classname = 'ext_'.$attributes[$attr]['ext'];
+						// Generate button, if necessary
+						$button = "";
+						$funcname = $attributes[$attr]['name'].'_button';
+						if(method_exists($classname, $funcname)){
+							// Use custom method, if available
+							$button = $classname::$funcname($ldap,$user->get_username());
+						} else if(isset($attributes[$attr]['button'])){
+							// Generate from JSON attributes
+							$color = 'btn-primary';
+							$icon = '';
+							$text = '';
+							$url = '';
+							if(isset($attributes[$attr]['button']['type']) && $attributes[$attr]['button']['type'] == 'edit'){
+								$color = 'btn-info';
+								$icon = '<span class="glyphicon glyphicon-pencil"></span>';
+								$text = "Change ".$attributes[$attr]['fullname'];
+								$url = 'edit_user_attribute.php';
+							}
+							if(isset($attributes[$attr]['button']['type']) && $attributes[$attr]['button']['type'] == 'remove'){
+								$color = 'btn-danger';
+								$icon = '<span class="glyphicon glyphicon-remove-circle"></span>';
+								$text = "Remove ".$attributes[$attr]['fullname'];
+								$url = 'remove_user_attribute.php';
+							}
+							if(isset($attributes[$attr]['button']['color'])){
+								$color = 'btn-'.$attributes[$attr]['button']['color'];
+							}
+							if(isset($attributes[$attr]['button']['icon'])){
+								$icon = '<span class="glyphicon glyphicon-'.$attributes[$attr]['button']['icon'].'"></span>';
+							}
+							if(isset($attributes[$attr]['button']['text'])){
+								$text = $attributes[$attr]['button']['text'];
+							}
+							if(isset($attributes[$attr]['button']['url'])){
+								$url = $attributes[$attr]['button']['text'];
+							}
+							$button = " <a href='$url?attr=".$attributes[$attr]['name']."&uid=".$user->get_username()."' class='btn btn-xs pull-right ".$color."'>".$icon." ".$text."</a>";
+						}
+						// Fetch field
+						$field = '';
+						if(isset($attributes[$attr]['field'])){
+							if($user->get_attribute($attributes[$attr]['field'])==NULL){
+								continue;
+							}
+							// LDAP field given, fetch it.
+							$field = extensions::format($user->get_attribute($attributes[$attr]['field']),isset($attributes[$attr]['format'])?$attributes[$attr]['format']:'');
+						} else {
+							// No LDAP field given, look for a function
+							$funcname = $attributes[$attr]['name'].'_field';
+							if(method_exists($classname, $funcname)){
+								$field = $classname::$funcname($ldap,$user->get_username());
+							}
+						}
+						echo "<tr><th>".$attributes[$attr]['fullname'].":</th><td>".$field.$button."</td></tr>";
+					}
+				}
+			?>
 		</table>
 
 		<div class="panel-body">

@@ -105,7 +105,7 @@
 						// Fetch field
 						$field = '';
 						if(isset($attributes[$attr]['field'])){
-							if($user->get_attribute($attributes[$attr]['field'])==NULL){
+							if($user->get_attribute($attributes[$attr]['field'])==NULL && $attributes[$attr]['button']['type']!='edit'){
 								continue;
 							}
 							// LDAP field given, fetch it.
@@ -116,6 +116,9 @@
 							if(method_exists($classname, $funcname)){
 								$field = $classname::$funcname($ldap,$user->get_username());
 							}
+						}
+						if($field == '' && $attributes[$attr]['button']['type']!='edit'){
+							continue;
 						}
 						echo "<tr><th>".$attributes[$attr]['fullname'].":</th><td>".$field.$button."</td></tr>";
 					}

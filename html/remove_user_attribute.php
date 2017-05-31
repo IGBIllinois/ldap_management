@@ -29,9 +29,11 @@
 				// Call remove function, if it exists
 				$inputs = array();
 				for($i=0; $i<count($fields); $i++){
-					$inputs[$fields[$i]['name']] = $_POST[$fields[$i]['name']];
+					if(isset($fields[$i]['name'])){
+						$inputs[$fields[$i]['name']] = $_POST[$fields[$i]['name']];
+					}
 				}
-				$result = $classname::$funcname($ldap,$_POST['uid'],$inputs);
+				$result = $classname::$funcname($ldap,$_POST['uid']);
 				if($result['RESULT']){
 					header("Location: user.php?uid=".$result['uid']);
 					unset($_POST);
@@ -70,7 +72,16 @@
 	?>
 <form class="form-horizontal" method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>" name="form">
 	<fieldset>
-		<legend>Remove <?php echo $attr['fullname']; ?></legend>
+		<legend>
+		<?php
+			if(isset($attr['button']['title'])){
+				$title = $attr['button']['title'];
+			} else {
+				$title = 'Remove '.$attr['fullname'];
+			}
+			echo $title;
+		?>
+		</legend>
 		<div class="row">
 			<div class="col-sm-6">
 				<div class="form-group">
@@ -82,16 +93,22 @@
 					</div>
 				</div>
 				<?php
-					// TODO implement drop-down options
 					for($i=0; $i<count($fields); $i++){
-					?>
+				?>
 				<div class="form-group">
 					<label class="col-sm-4 control-label"><?php if(isset($fields[$i]['fullname'])){ echo $fields[$i]['fullname'].':'; } ?></label>
 					<div class="col-sm-8">
+						<?php
+							if (isset($fields[$i]['type']) && $fields[$i]['type']=='text'){
+								// Text
+								echo $fields[$i]['text'];
+							} else {
+								?>
 						<label class="control-label"><?php echo extensions::format($user->get_attribute($fields[$i]['field']),isset($fields[$i]['format'])?$fields[$i]['format']:''); ?></label>
+						<?php } ?>
 					</div>
 				</div>
-					<?php	
+					<?php
 					}
 					?>
 				<div class="form-group">

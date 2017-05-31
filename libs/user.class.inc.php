@@ -204,8 +204,12 @@ class user {
 		$filter = "(uid=".$this->get_username().")";
 		$attributes = array($field);
 		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
-		if($result['count']>0 && $result[0]['count']>0){
-			return $result[0][$field][0];
+		if($result['count']>0){
+			if($result[0]['count']==0){
+				return "";
+			} else {
+				return $result[0][$field][0];
+			}
 		} else {
 			return NULL;
 		}

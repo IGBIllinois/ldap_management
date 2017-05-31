@@ -1,6 +1,7 @@
 [
 	"base",
+	"postfix",
 	"biocluster",
 	"biocluster2",
-	"postfix"
+	"crashplan"
 ]

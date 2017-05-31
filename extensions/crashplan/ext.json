@@ -1,0 +1,24 @@
+{
+	"user": {
+		"attributes": [
+			{
+				"name": "crashplan",
+				"fullname": "Crashplan",
+				"button": {
+					"type": "remove",
+					"text": "Remove Crashplan Archive",
+					"title": "Remove Crashplan Archive",
+					"inputs": [
+						{
+							"type": "text",
+							"text": "<strong>Note: </strong>This operation will remove the user's backups from crashplan and free up their license. This operation <em>can</em> be undone."
+						}
+					],
+					"submit": {
+						"text": "Remove Crashplan Archive"
+					}
+				}
+			}
+		]
+	}
+}

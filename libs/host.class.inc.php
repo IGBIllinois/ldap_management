@@ -36,7 +36,7 @@ class host {
 		//Verify Name
 		if (self::is_ldap_host($this->ldap,$name)) {
 			$error = true;
-			$message = html::error_message("A group with that name already exists.");
+			$message = html::error_message("A host with that name already exists.");
 		}
 
 		//If Errors, return with error messages

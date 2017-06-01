@@ -54,6 +54,7 @@
 				}
 				// Give user biocluster access
 				$user->give_biocluster_access();
+				$user->add_machinerights('biocluster2.igb.illinois.edu');
 
 				// Add user to classroom queue
 				$classroom_queue->add_user($username);

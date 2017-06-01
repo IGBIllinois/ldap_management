@@ -6,6 +6,7 @@
 			curl_setopt($ch,CURLOPT_USERPWD,__CRASHPLAN_USER__.':'.__CRASHPLAN_PASS__);
 			curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
 			curl_setopt($ch,CURLOPT_HEADER,false);
+			curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
 			$jsonstr = curl_exec($ch);
 			curl_close($ch);
 			$json = json_decode($jsonstr,true);
@@ -30,7 +31,7 @@
 			}
 			log::log_message("Crashplan archive removed for ".$uid);
 			return array('RESULT'=>true,
-			'MESSAGE'=>'Crashplan removed',
+			'MESSAGE'=>"Crashplan archive(s) removed.",
 			'uid'=>$uid);
 		}
 	}

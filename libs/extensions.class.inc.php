@@ -27,6 +27,11 @@ class extensions{
 					$typeinfo['attributes'][$attr]['ext'] = $loadorder[$i];
 					self::$extensions[$type]['attributes'][] = $typeinfo['attributes'][$attr];
 				}
+				
+				// Load config file, if it exists
+				if(file_exists(self::$extensionpath.$loadorder[$i]."/ext_".$loadorder[$i]."_settings.inc.php")){
+					include_once(self::$extensionpath.$loadorder[$i]."/ext_".$loadorder[$i]."_settings.inc.php");
+				}
 			}
 		}
 // 		echo "Extensions: <pre>"; var_dump(self::$extensions); echo "</pre>";

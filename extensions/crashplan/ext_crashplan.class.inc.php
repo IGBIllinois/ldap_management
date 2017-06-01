@@ -2,8 +2,8 @@
 	class ext_crashplan {
 		
 		private static function has_crashplan($uid){
-			$ch = curl_init("https://crashplan.igb.illinois.edu:4285/api/User?username=$uid");
-			curl_setopt($ch,CURLOPT_USERPWD,'username:password');
+			$ch = curl_init(__CRASHPLAN_URL__."/api/User?username=$uid");
+			curl_setopt($ch,CURLOPT_USERPWD,__CRASHPLAN_USER__.':'.__CRASHPLAN_PASS__);
 			curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
 			curl_setopt($ch,CURLOPT_HEADER,false);
 			$jsonstr = curl_exec($ch);

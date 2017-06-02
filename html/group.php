@@ -21,6 +21,16 @@
 		if(!user::is_ldap_user($ldap,$users[$i])){
 			$usershtml .= " <span class='glyphicon glyphicon-alert smallwarning' title='User does not exist'></span>";
 		}
+		$userobj = new user($ldap,$users[$i]);
+		if($userobj->is_expired()){
+			$usershtml .= " <span class='glyphicon glyphicon-time smalldanger' title='User has expired'></span>";
+		}
+		if($userobj->is_expiring()){
+			$usershtml .= " <span class='glyphicon glyphicon-time smallwarning' title='User is expiring'></span>";
+		}
+		if($userobj->get_leftcampus()){
+			$usershtml .= " <span class='glyphicon glyphicon-education smallwarning' title='User has left UIUC'></span>";
+		}
 		if($group->get_name()!=$users[$i]){
 			$usershtml .= " <a href='remove_from_group.php?uid=".$users[$i]."&gid=$gid' class='btn btn-danger btn-xs pull-right'><span class='glyphicon glyphicon-remove'></span> Remove from group</a></td></tr>";
 		}

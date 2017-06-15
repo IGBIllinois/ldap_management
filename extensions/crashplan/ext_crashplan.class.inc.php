@@ -9,7 +9,7 @@
 			$jsonstr = curl_exec($ch);
 			curl_close($ch);
 			$json = json_decode($jsonstr,true);
-			if(isset($json['data']) && isset($json['data']['totalCount']) && $json['data']['totalCount']>0){
+			if(isset($json['data']) && isset($json['data']['totalCount']) && $json['data']['totalCount']>0 && $json['data']['users'][0]['status']=='Active'){
 				return true;
 			}
 			return false;

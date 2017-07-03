@@ -15,7 +15,7 @@
 					"submit": {
 						"text": "Give Biocluster2 Access",
 						"color": "primary",
-						"onclick": "window.open('https://biocluster.igb.illinois.edu/accounting/add_user.php','_blank');"
+						"onclick": "window.open('https://biocluster2.igb.illinois.edu/accounting/add_user.php','_blank');"
 					}
 				}
 			}

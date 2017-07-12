@@ -7,7 +7,7 @@
 		
 		public static function biocluster2access_field($ldap,$uid){
 			if(self::has_biocluster2_access($ldap,$uid)){
-				return "<a target='_blank' href='https://biocluster.igb.illinois.edu/accounting/user.php?username=$uid'>Yes</a>";
+				return "<a target='_blank' href='https://biocluster2.igb.illinois.edu/accounting/user.php?username=$uid'>Yes</a>";
 			} else {
 				return "No";
 			}

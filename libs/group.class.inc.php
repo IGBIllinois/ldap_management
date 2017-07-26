@@ -61,26 +61,17 @@ class group {
 		//Everything looks good, add group
 		else {
 			
-			// Find first unused gidNumber
-			$groups = $this->ldap->search("(cn=*)", __LDAP_GROUP_OU__, array('cn', 'gidNumber'));
+			// Get existing gidnumbers
+			$groups = $this->ldap->search("(!(cn=ftp_*))", __LDAP_GROUP_OU__, array('cn', 'gidNumber'));
 			$gidnumbers = array();
 			for($i=0; $i<$groups['count']; $i++){
-				// TODO check if $users[$i]['uidnumber'] exists first
 				if(isset($groups[$i]['gidnumber'])){
 					$gidnumbers[] = $groups[$i]['gidnumber'][0];
 				}
 			}
-			$gidnumber = 20000;
-			$cleanpass = 1;
-			while($cleanpass){
-				$cleanpass=0;
-				foreach($gidnumbers as $number){
-					if($number==$gidnumber){
-						$gidnumber++;
-						$cleanpass++;
-					}
-				}
-			}
+			// Find next highest gidnumber (starting at 20000)
+			$gidstart = 20000;
+			$gidnumber = max($gidstart,max($gidnumbers)) + 1;
 			
 			// Add to LDAP
 			$dn = "cn=".$name.",".__LDAP_GROUP_OU__;

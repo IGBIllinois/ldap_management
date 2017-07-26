@@ -83,40 +83,33 @@ class user {
 
 		//Everything looks good, add user
 		else {
-			// Find first unused uidNumber,gidNumber
-			$uidnumber = 20000;
-			$users = $this->ldap->search("(uid=*)", __LDAP_BASE_DN__, array('uid', 'uidNumber', 'gidNumber'));
+			// Get all users' uidnumber, gidnumber
+			$users = $this->ldap->search("(!(uid=ftp_*))", __LDAP_PEOPLE_OU__, array('uid', 'uidNumber', 'gidNumber'));
 			$uidnumbers = array();
 			$gidnumbers = array();
 			for($i=0; $i<$users['count']; $i++){
-				// TODO check if $users[$i]['uidnumber'] exists first
 				if(isset($users[$i]['uidnumber'])){
 					$uidnumbers[] = $users[$i]['uidnumber'][0];
 					$gidnumbers[] = $users[$i]['gidnumber'][0];
 				}
 			}
-			$uidgidstart = 1000;
-			$uidnumber = 0;
-			$gidnumber = -1;
-			while($uidnumber != $gidnumber){
-				$cleanpass=0;
-				foreach($uidnumbers as $number){
-					if($number==$uidgidstart){
-						$uidgidstart++;
-						$cleanpass++;
-					}
-				}
-				foreach($gidnumbers as $number){
-					if($number==$uidgidstart){
-						$uidgidstart++;
-						$cleanpass++;
-					}
-				}
-				if(!($cleanpass)){
-					$uidnumber = $uidgidstart;
-					$gidnumber = $uidgidstart;
+			// Get all groups' gidnumber
+			$groups = $this->ldap->search("(cn=*)", __LDAP_GROUP_OU__, array('cn', 'gidNumber'));
+			$groupgidnumbers = array();
+			for($i=0; $i<$groups['count']; $i++){
+				if(isset($users[$i]['gidnumber'])){
+					$groupgidnumbers[] = $groups[$i]['gidnumber'][0];
 				}
 			}
+			// Find the max uidnumber already in use (at least 1000)
+			$uidstart = 1000;
+			$uidnumber = max($uidstart,max($uidnumbers),max($gidnumbers)) + 1;
+			// Now start there and look for an empty slot in gidnumbers (which will probably be right away)
+			while(in_array($uidnumber, $groupgidnumbers)){
+				$uidnumber++;
+			}
+			// gidnumber and uidnumber should match
+			$gidnumber = $uidnumber;
 			
 			$passwd = "";
 			if(__PASSWD_HASH__=="MD5"){

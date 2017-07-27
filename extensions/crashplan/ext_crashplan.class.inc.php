@@ -1,7 +1,7 @@
 <?php
 	class ext_crashplan {
 		
-		private static function has_crashplan($uid){
+		public static function has_crashplan($uid){
 			$ch = curl_init("https://crashplan.igb.illinois.edu:4285/api/User?username=$uid");
 			curl_setopt($ch,CURLOPT_USERPWD,'username:password');
 			curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);

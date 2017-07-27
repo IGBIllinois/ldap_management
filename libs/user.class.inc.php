@@ -19,6 +19,7 @@ class user {
 	private $expiration = null;
 	private $leftcampus = false;
 	private $noncampus = false;
+	private $crashplan = false;
 	
 	private $creator;
 	private $createTime;
@@ -265,6 +266,25 @@ class user {
 			return array('RESULT'=>true,
 			'MESSAGE'=>'Email forwarding removed',
 			'uid'=>$this->get_username());
+		}
+	}
+	
+	public function get_crashplan(){
+		return $this->crashplan;
+	}
+	public function set_crashplan($crashplan){
+		$value = 0;
+		if($crashplan){
+			$value = 1;
+		}
+		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
+		$data = array("telexNumber"=>$value);
+		if($this->ldap->modify($dn,$data)){
+			$this->crashplan = $value;
+			log::log_message("Set crashplan for ".$this->get_username()." to ".($crashplan?'active':'inactive'));
+			return array('RESULT'=>true,
+				'MESSAGE'=>'Crashplan set',
+				'uid'=>$this->get_username());
 		}
 	}
 
@@ -717,7 +737,7 @@ class user {
 
 	public function load_by_username($username) {
 		$filter = "(uid=".$username.")";
-		$attributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress','employeetype');
+		$attributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress','employeetype','telexNumber');
 		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 		if($result['count']>0){
 			$this->name = $result[0]['cn'][0];
@@ -754,6 +774,9 @@ class user {
 			if(isset($result[0]['employeetype'])){
 				$this->leftcampus = ($result[0]['employeetype'][0]=='leftcampus');
 				$this->noncampus = ($result[0]['employeetype'][0]=='noncampus');
+			}
+			if(isset($result[0]['telexnumber'])){
+				$this->crashplan = ($result[0]['telexnumber'][0]==1);
 			}
 		}
 	}

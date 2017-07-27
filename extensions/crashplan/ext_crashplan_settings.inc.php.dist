@@ -1,0 +1,4 @@
+<?php
+	define("__CRASHPLAN_URL__","");
+	define("__CRASHPLAN_USER__","");
+	define("__CRASHPLAN_PASS__","");

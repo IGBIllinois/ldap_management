@@ -14,6 +14,7 @@ function __autoload($class_name) {
 }
 
 include_once '../conf/settings.inc.php';
+extensions::init();
 
 $sapi_type = php_sapi_name();
 // If run from command line
@@ -35,14 +36,14 @@ if ($sapi_type != 'cli') {
 			// Crashplan inactive
 			if($user->get_crashplan() == false){
 				echo "crashplan activated\n";
-// 				$user->set_crashplan(true);
+ 				$user->set_crashplan(true);
 			} else {
 				echo "crashplan active (already knew)\n";
 			}
 		} else {
 			if($user->get_crashplan() == true){
 				echo "crashplan deactivated\n";
-// 				$user->set_crashplan(false);
+ 				$user->set_crashplan(false);
 			} else {
 				echo "crashplan inactive (already knew)\n";
 			}

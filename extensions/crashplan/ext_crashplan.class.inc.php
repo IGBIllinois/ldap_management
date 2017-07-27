@@ -17,7 +17,8 @@
 		}
 		
 		public static function crashplan_field($ldap,$uid){
-			if(self::has_crashplan($uid)){
+			$user = new user($ldap,$uid);
+			if($user->get_crashplan()){
 				return "Yes";
 			} else {
 				return "";
@@ -29,6 +30,8 @@
 				$safeusername = escapeshellarg($uid);
 				exec("sudo ../bin/remove_crashplan.pl $safeusername");
 			}
+			$user = new user($ldap,$uid);
+			$user->set_crashplan(false);
 			log::log_message("Crashplan archive removed for ".$uid);
 			return array('RESULT'=>true,
 			'MESSAGE'=>"Crashplan archive(s) removed.",

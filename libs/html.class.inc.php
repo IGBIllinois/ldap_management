@@ -101,6 +101,9 @@ class html {
 				if($users[$i]['noncampus']){
 					$users_html .= " <span class='glyphicon glyphicon-education smallinfo' title='User not from UIUC'></span>";
 				}
+				if($users[$i]['crashplan']){
+					$users_html .= " <span class='glyphicon glyphicon-hdd smallsuccess' title='User has Crashplan'></span>";
+				}
 				$users_html .= "</td>";
                 $users_html .= "<td>" . $users[$i]['name']. "</td>";
 				$users_html .= "<td>" . $users[$i]['email']. "</td>";

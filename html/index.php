@@ -5,7 +5,7 @@
 <div class='jumbotron'>
 	<h1>
 		<img src="images/imark_bw.gif" style="padding: 0 10px 10px 0; vertical-align: text-top;">
-		IGB Account Management
+		IGB LDAP Account Management
 	</h1>
 	<p>View and manage IGB User Accounts</p>
 </div>

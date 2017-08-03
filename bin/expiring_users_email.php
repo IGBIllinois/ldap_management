@@ -10,6 +10,17 @@ function __autoload($class_name) {
 
 include_once '../conf/settings.inc.php';
 
+function emailmessage($user, $subject, $duration){
+	$to = $user->get_email();
+	$emailmessage = $user->get_name().",<br><br>You are receiving this email because your IGB account will expire and be removed in $duration (".date('F j, Y', $user->get_expiration())."). This will not affect your University of Illinois account. Please make sure you have no important data on the IGB File Server or Biocluster, as it will be inaccessible after this time. Connection information for the IGB File Server can be found here <a href='https://help.igb.illinois.edu/File_Server_Access'>https://help.igb.illinois.edu/File_Server_Access</a>, and information for the Biocluster can be found here <a href='https://help.igb.illinois.edu/Biocluster'>https://help.igb.illinois.edu/Biocluster</a>. <br/><br/>If you believe you are receiving this message in error, or would like to request additional time to remove your data, please contact us at help@igb.illinois.edu. <br/><br/>Computer and Network Resource Group<br/>Institute for Genomic Biology<br/>help@igb.illinois.edu";
+
+	$headers = "From: do-not-reply@igb.illinois.edu\r\n";
+	$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
+	$headers .= "Reply-To: help@igb.illinois.edu\r\n";
+	mail($to,$subject,$emailmessage,$headers," -f " . __ADMIN_EMAIL__);
+	log::log_message("Expiration email sent to ".$user->get_username().".");
+}
+
 $sapi_type = php_sapi_name();
 // If run from command line
 if ($sapi_type != 'cli') {
@@ -18,11 +29,10 @@ if ($sapi_type != 'cli') {
 	echo "Analyzing users...";
 	// Connect to ldap
 	$ldap = new ldap(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__);
-	$adldap = new ldap(__AD_LDAP_HOST__,false,__AD_LDAP_PORT__,__AD_LDAP_PEOPLE_OU__);
 	$users = user::get_all_users($ldap);
 	$onemonth = array();
 	$oneweek = array();
-	$other = array();
+	$emailtomorrow = array();
 	$digestmonth = "";
 	$digestweek = "";
 	$digestexpired = "";
@@ -31,11 +41,13 @@ if ($sapi_type != 'cli') {
 		if($user->is_expiring() && $user->get_email()!=null){
 			$expiration = $user->get_expiration();
 			$timetoexp = intval(($expiration-time())/(60*60*24));
-			
+
 			if( $timetoexp == 6 ){
 				$oneweek[] = $user;
 			} else if( $timetoexp == 29 ){
 				$onemonth[] = $user;
+			} else if( $timetoexp == 7 || $timetoexp == 30 ){
+				$emailtomorrow[] = $user;
 			}
 
 		} else if ($user->is_expired()){
@@ -51,19 +63,12 @@ if ($sapi_type != 'cli') {
 	if(count($onemonth)>0){
 		echo "\n==== Expiring in One Month ====\n";
 		foreach($onemonth as $user){
-			echo $user->get_username()."\t".$user->get_name()."\n";
+			echo date('Y-m-d',$user->get_expiration())."\t".$user->get_username()."  \t".$user->get_name()."\n";
 		}
 		echo "Sending mail...";
 		foreach($onemonth as $user){
 			$digestmonth .= $user->get_username()."<br>";
-			$subject = "IGB Account Expiration Notice";
-			$to = $user->get_email();
-// 			$to = "jleigh@illinois.edu";
-			$emailmessage = $user->get_name().",<br><br>You are receiving this email because your IGB account will expire and be removed in one month (".date('F j, Y', $user->get_expiration())."). This will not affect your University of Illinois account. Please make sure you have no important data on the IGB File Server or Biocluster, as it will be inaccessible after this time. If you believe you are receiving this message in error, or would like to request additional time to remove your data, please contact us at help@igb.illinois.edu. <strong>Do not reply directly to this email.</strong><br/><br/>Computer and Network Resource Group<br/>Institute for Genomic Biology<br/>help@igb.illinois.edu";
-	
-			$headers = "From: do-not-reply@igb.illinois.edu\r\n";
-			$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
-			mail($to,$subject,$emailmessage,$headers," -f " . __ADMIN_EMAIL__);
+			emailmessage($user, "IGB Account Expiration", "one month");
 		}
 	} else {
 		echo "\nNo users expiring in one month.\n";
@@ -77,31 +82,37 @@ if ($sapi_type != 'cli') {
 		echo "Sending mail...";
 		foreach($oneweek as $user){
 			$digestweek .= $user->get_username()."<br>";
-			
-			$subject = "IGB Account Expiration Final Notice";
-			$to = $user->get_email();
-// 			$to = "jleigh@illinois.edu";
-			$emailmessage = $user->get_name().",<br><br>You are receiving this email because your IGB account will expire and be removed in one week (".date('F j, Y', $user->get_expiration())."). This will not affect your University of Illinois account. Please make sure you have no important data on the IGB File Server or Biocluster, as it will be inaccessible after this time. If you believe you are receiving this message in error, or would like to request additional time to remove your data, please contact us at help@igb.illinois.edu. <strong>Do not reply directly to this email.</strong><br/><br/>Computer and Network Resource Group<br/>Institute for Genomic Biology<br/>help@igb.illinois.edu";
-	
-			$headers = "From: do-not-reply@igb.illinois.edu\r\n";
-			$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
-			mail($to,$subject,$emailmessage,$headers," -f " . __ADMIN_EMAIL__);
+			emailmessage($user, "IGB Account Expiration Final Notice", "one week");
 		}
 	} else {
 		echo "\nNo users expiring in one week.\n";
 	}
 	
-	if(strlen($digestmonth)>0 || strlen($digestweek)>0 || strlen($digestexpired)>0){
+	if(strlen($digestexpired)>0){
 		// Send a digest to help
-		$subject = "IGB Account Expiration Notices Sent";
-		$to = "help@igb.illinois.edu";
-// 		$to = "jleigh@illinois.edu";
-		$emailmessage = "The following users were sent notice that their account will expire in one month:<br><br>".$digestmonth."<br>The following users were sent notice that their account will expire in one week:<br><br>".$digestweek."<br>The following users expired today:<br><br>".$digestexpired;
+		$subject = "Expired IGB Users";
+ 		$to = "help@igb.illinois.edu";
+		$emailmessage = "The following users expired today:<br><br>".$digestexpired;
 
 		$headers = "From: do-not-reply@igb.illinois.edu\r\n";
 		$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
 		mail($to,$subject,$emailmessage,$headers," -f " . __ADMIN_EMAIL__);
 		echo "\nDone.\n";
+	}
+	
+	if(count($emailtomorrow)>0){
+		// Email joe secretly who's going to be emailed tomorrow
+		$subject = "IGB Account Expiration Notices Pending";
+		$to = "jleigh@illinois.edu";
+		$emailmessage = "The following users will be emailed expiration notices tomorrow:<br><pre>";
+		for($i=0; $i<count($emailtomorrow); $i++){
+			$emailmessage .= $emailtomorrow[$i]->get_username()."\t".date('F j, Y', $emailtomorrow[$i]->get_expiration())."\n";
+		}
+		$emailmessage .= "</pre><br><br>--IGBLAM";
+		
+		$headers = "From: do-not-reply@igb.illinois.edu\r\n";
+		$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
+		mail($to,$subject,$emailmessage,$headers," -f " . __ADMIN_EMAIL__);
 	}
 
 }

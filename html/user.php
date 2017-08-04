@@ -117,7 +117,7 @@
 								$field = $classname::$funcname($ldap,$user->get_username());
 							}
 						}
-						if($field == '' && $attributes[$attr]['button']['type']!='edit'){
+						if($field == '' && isset($attributes[$attr]['button']) && $attributes[$attr]['button']['type']!='edit'){
 							continue;
 						}
 						echo "<tr><th>".$attributes[$attr]['fullname'].":</th><td>".$field.$button."</td></tr>";

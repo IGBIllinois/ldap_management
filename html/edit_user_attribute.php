@@ -111,7 +111,11 @@
 							echo $fields[$i]['text'];
 						} else {
 							// Text input
-							echo '<input class="form-control" name="'.$fields[$i]['name'].'" id="'.$attr['name'].'_input" value=""/>';
+							$placeholder = "";
+							if(isset($fields[$i]['placeholder'])){
+								$placeholder = $fields[$i]['placeholder'];
+							}
+							echo '<input class="form-control" name="'.$fields[$i]['name'].'" id="'.$attr['name'].'_input" value="" placeholder="'.$placeholder.'"/>';
 						} ?>
 					</div>
 				</div>

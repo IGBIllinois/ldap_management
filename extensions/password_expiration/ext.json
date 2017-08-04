@@ -1,0 +1,22 @@
+{
+	"user":{
+		"attributes": [
+			{
+				"name": "passwordExpiration",
+				"fullname": "Password Expiration",
+				"field": "facsimiletelephonenumber",
+				"format": "timestamp",
+				"button": {
+					"type": "edit",
+					"inputs": [
+						{
+							"name": "passwordExpiration",
+							"fullname": "Password Expiration",
+							"placeholder": "MM/DD/YYYY"	
+						}
+					]
+				}
+			}
+		]
+	}
+}

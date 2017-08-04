@@ -91,7 +91,8 @@
 		<span class="glyphicon glyphicon-time smalldanger"> </span>=expired &nbsp;
 		<span class="glyphicon glyphicon-education smallwarning"> </span>=left campus &nbsp;
 		<span class="glyphicon glyphicon-education smallinfo"> </span>=non-campus &nbsp;
-		<span class='glyphicon glyphicon-hdd smallsuccess' title='User has Crashplan'></span>=has crashplan
+		<span class='glyphicon glyphicon-hdd smallsuccess' title='User has Crashplan'></span>=has crashplan &nbsp;
+		<span class='glyphicon glyphicon-lock smalldanger' title='Password Expired'></span>=password expired
 	</p>
 	<?php echo $pages_html; ?>
 	<script type="text/javascript">

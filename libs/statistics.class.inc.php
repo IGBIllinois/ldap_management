@@ -23,6 +23,19 @@
 			}
 			return $count;
 		}
+		
+		public static function password_expired_users($ldap){
+			$filter = "(facsimileTelephoneNumber=*)";
+			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, array('facsimileTelephoneNumber'));
+			$count = 0;
+			$time = time();
+			for($i=0; $i<$result['count']; $i++){
+				if($result[$i]['facsimiletelephonenumber'][0] < $time){
+					$count++;
+				}
+			}
+			return $count;
+		}
 		public static function leftcampus_users($ldap){
 			$filter = "(employeeType=leftcampus)";
 			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, array(''));

@@ -38,6 +38,8 @@ define("__SHELLS__",implode(",",array(
 
 define("__PASSWD_HASH__","SSHA");
 
+define("__PASSWD_EXPIRE_TIME__",60*60*24*365); // One year
+
 define("__ADMIN_EMAIL__","do-not-reply@igb.illinois.edu");
 define("__SESSION_NAME__","account_management");
 define("__SESSION_TIMEOUT__",36000);

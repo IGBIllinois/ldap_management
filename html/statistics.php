@@ -9,6 +9,10 @@
 			<td><?php echo statistics::users($ldap); ?></td>
 		</tr>
 		<tr>
+			<td># of Expired Passwords</td>
+			<td><?php echo statistics::password_expired_users($ldap); ?></td>
+		</tr>
+		<tr>
 			<td># of Expiring Users</td>
 			<td><?php echo statistics::expiring_users($ldap)-statistics::expired_users($ldap); ?></td>
 		</tr>

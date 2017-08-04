@@ -26,6 +26,7 @@ class user {
 	private $modifier;
 	private $modifyTime;
 	private $passwordSet = null;
+	private $passwordExpiration = null;
 	
 	private static $lastSearch = array();
 
@@ -319,11 +320,17 @@ class user {
 	public function get_expiration(){
 		return $this->expiration;
 	}
+	public function get_password_expiration(){
+		return $this->passwordExpiration;
+	}
 	public function is_expired(){
 		return ($this->expiration != null && $this->expiration <= time());
 	}
 	public function is_expiring(){
 		return ($this->expiration != null && $this->expiration > time());
+	}
+	public function is_password_expired(){
+		return ($this->passwordExpiration != null && $this->passwordExpiration <= time());
 	}
 	public function get_uidnumber(){
 		return $this->uidnumber;
@@ -568,6 +575,28 @@ class user {
 		}
 	}
 	
+	public function set_password_expiration($expiration){
+		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
+		$data = array("facsimiletelephonenumber"=>$expiration);
+		if($this->ldap->modify($dn,$data)){
+			$this->expiration = $expiration;
+			log::log_message("Set password expiration for ".$this->get_username()." to ".strftime('%m/%d/%Y', $this->get_password_expiration()));
+			return array('RESULT'=>true,
+				'MESSAGE'=>'Password expiration successfully set.',
+				'uid'=>$this->get_username());
+		}
+	}
+	public function cancel_password_expiration(){
+		$dn = $this->get_user_rdn();
+		$data = array("facsimiletelephonenumber"=>array());
+		if($this->ldap->mod_del($dn,$data)){
+			log::log_message("Cancelled password expiration for user ".$this->get_username());
+			return array('RESULT'=>true,
+				'MESSAGE'=>'Password expiration cancelled.',
+				'uid'=>$this->get_username());
+		}
+	}
+	
 	public function give_biocluster_access(){
 		$result = $this->set_loginShell('/usr/local/bin/system-specific');
 		if($result['RESULT']){
@@ -627,11 +656,12 @@ class user {
 		} else {
 			$filter = "(|(uid=*$search*)(cn=*$search*))";
 		}
-		$attributes = array("uid","cn","mail","shadowexpire","postaladdress","employeetype",'telexnumber');
+		$attributes = array("uid","cn","mail","shadowexpire","postaladdress","employeetype",'telexnumber','facsimiletelephonenumber');
 		$result = $ldap->search($filter,__LDAP_PEOPLE_OU__,$attributes);
 		$users = array();
+		$time = time();
 		for($i=0; $i<$result['count']; $i++){
-			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''), "emailforward"=>(isset($result[$i]['postaladdress'])?$result[$i]['postaladdress'][0]:''),"leftcampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='leftcampus':false),"noncampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='noncampus':false),'crashplan'=>(isset($result[$i]['telexnumber'])?$result[$i]['telexnumber'][0]==1:false));
+			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''), "emailforward"=>(isset($result[$i]['postaladdress'])?$result[$i]['postaladdress'][0]:''),"leftcampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='leftcampus':false),"noncampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='noncampus':false),'crashplan'=>(isset($result[$i]['telexnumber'])?$result[$i]['telexnumber'][0]==1:false), "passwordexpired"=>(isset($result[$i]['facsimiletelephonenumber'])?$result[$i]['facsimiletelephonenumber'][0]<$time:false));
 			if($userfilter != 'none'){
 				if($userfilter == 'expiring'){
 					if($user['shadowexpire'] > time()){
@@ -737,7 +767,7 @@ class user {
 
 	public function load_by_username($username) {
 		$filter = "(uid=".$username.")";
-		$attributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress','employeetype','telexNumber');
+		$attributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress','employeetype','telexNumber','facsimiletelephonenumber');
 		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 		if($result['count']>0){
 			$this->name = $result[0]['cn'][0];
@@ -770,6 +800,9 @@ class user {
 			$this->uidnumber = $result[0]['uidnumber'][0];
 			if(isset($result[0]['sambapwdlastset'])){
 				$this->passwordSet = $result[0]['sambapwdlastset'][0];
+			}
+			if(isset($result[0]['facsimiletelephonenumber'][0])){
+				$this->passwordExpiration = $result[0]['facsimiletelephonenumber'][0];
 			}
 			if(isset($result[0]['employeetype'])){
 				$this->leftcampus = ($result[0]['employeetype'][0]=='leftcampus');

@@ -54,6 +54,11 @@
 					<td colspan="2" class="text-danger">User is locked</td>
 				</tr>
 			<?php	} ?>
+			<?php if($user->is_password_expired()) { ?>
+				<tr class="danger">
+					<td colspan="2" class="text-danger">Password has expired</td>
+				</tr>
+			<?php	} ?>
 			<?php if($user->get_leftcampus()) { ?>
 				<tr class="warning">
 					<td colspan="2" class="text-warning">User has left UIUC</td>

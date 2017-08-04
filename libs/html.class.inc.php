@@ -104,6 +104,9 @@ class html {
 				if($users[$i]['crashplan']){
 					$users_html .= " <span class='glyphicon glyphicon-hdd smallsuccess' title='User has Crashplan'></span>";
 				}
+				if($users[$i]['passwordexpired']){
+					$users_html .= " <span class='glyphicon glyphicon-lock smalldanger' title='Password expired'></span>";
+				}
 				$users_html .= "</td>";
                 $users_html .= "<td>" . $users[$i]['name']. "</td>";
 				$users_html .= "<td>" . $users[$i]['email']. "</td>";

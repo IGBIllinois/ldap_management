@@ -105,7 +105,7 @@
 						// Fetch field
 						$field = '';
 						if(isset($attributes[$attr]['field'])){
-							if($user->get_attribute($attributes[$attr]['field'])==NULL && $attributes[$attr]['button']['type']!='edit'){
+							if($user->get_attribute($attributes[$attr]['field'])==NULL && isset($attributes[$attr]['button']) && $attributes[$attr]['button']['type']!='edit'){
 								continue;
 							}
 							// LDAP field given, fetch it.

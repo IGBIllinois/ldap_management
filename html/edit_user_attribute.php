@@ -48,14 +48,27 @@
 					if(isset($fields[0]['options']) && !in_array($_POST[$fields[0]['name']],$fields[0]['options'])){
 						$message .= html::error_message("Invalid option given for ".$fields[0]['fullname'].".");
 					} else {
-						// Finally do the edit
-						$result = $user->set_attribute($attr['field'],$_POST[$fields[0]['name']]);
-						if($result['RESULT']){
-							header("Location: user.php?uid=".$result['uid']);
-							unset($_POST);
-							exit;
-						} else {
-							$message .= html::error_message($result['MESSAGE']);
+						// If the attribute has a format set, parse the input
+						if(isset($attr['format'])){
+							if($attr['format'] == 'timestamp'){
+								if(!strtotime($_POST[$fields[0]['name']])){
+									$message .= html::error_message("Invalid date format");
+								} else {
+									$_POST[$fields[0]['name']] = strtotime($_POST[$fields[0]['name']]);
+								}
+							}
+						}
+						
+						if($message == ""){
+							// Finally do the edit
+							$result = $user->set_attribute($attr['field'],$_POST[$fields[0]['name']]);
+							if($result['RESULT']){
+								header("Location: user.php?uid=".$result['uid']);
+								unset($_POST);
+								exit;
+							} else {
+								$message .= html::error_message($result['MESSAGE']);
+							}
 						}
 					}
 				} else {

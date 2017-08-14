@@ -55,6 +55,7 @@ class extensions{
 	}
 	
 	function format($value,$format){
+		if($value=='')return $value;
 		if($format == "date"){
 			return strftime('%m/%d/%Y %I:%M:%S %p', strtotime($value));
 		}

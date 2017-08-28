@@ -544,7 +544,7 @@ class user {
 		$attributes = array("userPassword");
 		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 		if($result['count']>0){
-			if(substr($result[0]['userpassword'][0],0,1) == '!'){
+			if(isset($result[0]['userpassword']) && substr($result[0]['userpassword'][0],0,1) == '!'){
 				return true;
 			} else {
 				return false;

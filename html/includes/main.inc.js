@@ -248,13 +248,13 @@ function check_passwords(){
 	var passworda = document.getElementById('passworda_input').value;
 	var passwordb = document.getElementById('passwordb_input').value;
 	
-	var rule1 = ( passworda.length >= 8 && passworda.length <= 12 );
+	var rule1 = ( passworda.length >= 8 && passworda.length <= 127 );
 	var rule2 = ( passworda.match(/[A-Z]/) );
 	var rule3 = ( passworda.match(/[a-z]/) );
 	var rule4 = ( passworda.match(/[^A-Za-z]/) && !passworda.match(/[\s]/) );
 	var rule5 = ( passworda == passwordb );
 	
-	showPasswordError(1,rule1,"Password must be between 8 and 12 characters in length");
+	showPasswordError(1,rule1,"Password must be between 8 and 127 characters in length");
 	showPasswordError(2,rule2,"Password must contain at least 1 uppercase letter");
 	showPasswordError(3,rule3,"Password must contain at least 1 lowercase letter");
 	showPasswordError(4,rule4,"Password must contain at least 1 number or special character (no spaces)");

@@ -75,7 +75,7 @@
 				</div>
 			</div>
 			<div class="col-sm-6">
-				<p id="passworderror1" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Password must be between 8 and 15 characters in length</p>
+				<p id="passworderror1" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Password must be between 8 and 127 characters in length</p>
 				<p id="passworderror2" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Password must contain at least 1 uppercase letter</p>
 				<p id="passworderror3" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Password must contain at least 1 lowercase letter</p>
 				<p id="passworderror4" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Password must contain at least 1 number or special character (no spaces)</p>

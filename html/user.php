@@ -41,6 +41,16 @@
 		$groupshtml .= "</td></tr>";
 	}
 
+// 	Next/prev buttons
+	if(isset($_COOKIE['lastUserSearchFilter']) and isset($_COOKIE['lastUserSearchSort']) and isset($_COOKIE['lastUserSearchAsc'])){
+		// Cookies are set, let's do this.
+		$filter = $_COOKIE['lastUserSearchFilter'];
+		$sort =   $_COOKIE['lastUserSearchSort'];
+		$asc =    $_COOKIE['lastUserSearchAsc'] == 'true';
+		$search = isset($_COOKIE['lastUserSearch'])?$_COOKIE['lastUserSearch']:'';
+		$prevUid = user::get_previous_user($ldap,$adldap,$username,$search,$sort,$asc,$filter);
+		$nextUid = user::get_next_user($ldap,$adldap,$username,$search,$sort,$asc,$filter);
+	}
 	?>
 	<style>
 		tr.topborder {
@@ -48,6 +58,22 @@
 		}	
 	</style>
 	<div class="panel panel-default">
+		<?php if(isset($prevUid) && ($prevUid!=null || $nextUid!=null)){ ?>
+		<div class="row">
+			<div class="col-sm-2">
+				<a <?php if($prevUid==null){echo "disabled";} else { echo 'href="user.php?uid='.$prevUid.'"';} ?> class="btn btn-default btn-prev btn-block">
+					&lt; Previous
+				</a>
+			</div>
+			<div class="col-sm-8">
+			</div>
+			<div class="col-sm-2">
+				<a <?php if($nextUid==null){echo "disabled";} else { echo 'href="user.php?uid='.$nextUid.'"';} ?> class="btn btn-default btn-next btn-block">
+					Next &gt;
+				</a>
+			</div>
+		</div>
+		<?php } ?>
 		<table class="table table-bordered table-striped">
 			<?php if($user->islocked()) { ?>
 				<tr class="danger">

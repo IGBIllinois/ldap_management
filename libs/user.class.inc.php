@@ -696,6 +696,34 @@ class user {
 		return count(self::$lastSearch);
 	}
 	
+	public static function get_previous_user($ldap,$adldap,$uid,$search,$sort,$asc,$userfilter='none'){
+		if(count(self::$lastSearch) == 0){
+			self::get_search_users($ldap,$adldap,$search,0,30,$sort,$asc,$userfilter);
+		}
+		for($i=0; $i<count(self::$lastSearch); $i++){
+			if(self::$lastSearch[$i]['username'] == $uid){
+				if($i==0){
+					return null;
+				}
+				return self::$lastSearch[$i-1]['username'];
+			}
+		}
+	}
+	
+	public static function get_next_user($ldap,$adldap,$uid,$search,$sort,$asc,$userfilter='none'){
+		if(count(self::$lastSearch) == 0){
+			self::get_search_users($ldap,$adldap,$search,0,30,$sort,$asc,$userfilter);
+		}
+		for($i=0; $i<count(self::$lastSearch); $i++){
+			if(self::$lastSearch[$i]['username'] == $uid){
+				if($i==count(self::$lastSearch)-1){
+					return null;
+				}
+				return self::$lastSearch[$i+1]['username'];
+			}
+		}
+	}
+	
 	public static function is_ldap_user($ldap, $username) {
 		$username = trim(rtrim($username));
 		$filter = "(uid=" . $username . ")";

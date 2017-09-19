@@ -34,6 +34,10 @@
 		$filter = $_GET['filter'];
 		$get_array['filter'] = $filter;
 	}
+	setcookie("lastUserSearchSort",$sort);
+	setcookie("lastUserSearchAsc",$asc);
+	setcookie("lastUserSearchFilter",$filter);
+	setcookie("lastUserSearch",$search);
 	$all_users = user::get_search_users($ldap,$adldap,$search,$start,$count,$sort,$asc,$filter);
 	$num_users = user::get_search_users_count($ldap,$adldap,$search,$filter);
 	$pages_url = $_SERVER['PHP_SELF']."?".http_build_query($get_array);

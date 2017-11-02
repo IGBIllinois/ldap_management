@@ -24,4 +24,8 @@ if(scalar(@ARGV)==1){
 	print "Cleaning up $netid biocluster\n";
 # 	Emptying biocluster directory
 	ssh('root@biocluster.igb.illinois.edu',"mv -f /home/$homesub/$netid /home/$homesub/old_users/no_backup/$netid-$datestr");
+	
+	print "Cleaning up $netid biocluster2\n";
+# 	Emptying biocluster directory
+	ssh('root@biocluster2.igb.illinois.edu',"mv -f /home/$homesub/$netid /home/$homesub/old_users/no_backup/$netid-$datestr");
 }

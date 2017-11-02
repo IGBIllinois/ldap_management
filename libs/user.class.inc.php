@@ -410,7 +410,7 @@ class user {
 		if(host::is_ldap_host($this->ldap,$host) || ($this->get_machinerights() && in_array($host, $this->get_machinerights()))){
 			$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
 			$data = array("host"=>$host);
-			if($this->ldap->mod_del($dn,$data)){
+			if(@$this->ldap->mod_del($dn,$data)){
 				log::log_message("Removed host access to ".$host." from ".$this->get_username());
 				return array('RESULT'=>true,
 				'MESSAGE'=>'Machine rights successfully removed.',

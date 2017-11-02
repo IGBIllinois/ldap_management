@@ -1,6 +1,7 @@
 <?php
 	require_once 'includes/main.inc.php';
 	require_once 'includes/session.inc.php';
+	ob_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">

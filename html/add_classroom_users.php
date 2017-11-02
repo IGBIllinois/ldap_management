@@ -53,7 +53,7 @@
 					}
 				}
 				// Give user biocluster access
-				$user->give_biocluster_access();
+				$user->set_loginShell('/usr/local/bin/system-specific');
 				$user->add_machinerights('biocluster2.igb.illinois.edu');
 
 				// Add user to classroom queue

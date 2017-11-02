@@ -596,17 +596,6 @@ class user {
 				'uid'=>$this->get_username());
 		}
 	}
-	
-	public function give_biocluster_access(){
-		$result = $this->set_loginShell('/usr/local/bin/system-specific');
-		if($result['RESULT']){
-			$result = $this->add_machinerights("biocluster.igb.illinois.edu");
-		}
-		if($result['RESULT']){
-			$result['MESSAGE'] == "Biocluster access given";
-		}
-		return $result;
-	}
 
 	public function authenticate($password) {
 		$rdn = $this->get_user_rdn();

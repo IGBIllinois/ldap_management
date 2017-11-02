@@ -411,7 +411,7 @@ class user {
 			$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
 			$data = array("host"=>$host);
 			if($this->ldap->mod_del($dn,$data)){
-				log::log_message("Removed host access to ".$_POST['host']." from ".$this->get_username());
+				log::log_message("Removed host access to ".$host." from ".$this->get_username());
 				return array('RESULT'=>true,
 				'MESSAGE'=>'Machine rights successfully removed.',
 				'uid'=>$this->get_username());

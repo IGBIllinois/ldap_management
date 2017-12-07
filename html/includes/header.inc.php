@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<script type="text/javascript" src="includes/select2/js/select2.full.js"></script>
 		<script type="text/javascript" src="includes/main.inc.js"></script>
+		<script type="text/javascript" src="includes/searchbar.js"></script>
 	</head>
 	<body>
 		<nav class="navbar navbar-inverse navbar-static-top">
@@ -36,6 +37,12 @@
 				</div>
 				<div class="collapse navbar-collapse" id="archive-accounting-nav-collapse">
 					<a type="button" class="btn btn-danger btn-sm navbar-btn navbar-right hidden-xs" style="margin-right:0" href="logout.php">Logout</a>
+					<form class="navbar-form navbar-right">
+						<div class="form-group" id="searchbar-container">
+							<input type="search" class="form-control" name="searchbar" id="searchbar" placeholder="Search"/>
+							<div id="searchbar-results"></div>
+						</div>
+					</form>
 					<a type="button" class="btn btn-danger btn-sm btn-block visible-xs" style="margin-bottom:7px" href="logout.php">Logout</a>
 				</div>
 			</div>

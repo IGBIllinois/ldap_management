@@ -6,13 +6,14 @@
 					<hr>
 					<li><a href="list_users.php">List Users</a></li>
 					<li><a href="list_groups.php">List Groups</a></li>
-					<li><a href="list_computers.php">List Domain Computers</a></li>
 					<li><a href="list_hosts.php">List Hosts</a></li>
 					<hr>
 					<li><a href="add_user.php">Add User</a></li>
 					<li><a href="add_group.php">Add Group</a></li>
-					<li><a href="add_computer.php">Add Domain Computer</a></li>
 					<li><a href="add_host.php">Add Host</a></li>
+					<hr>
+					<li><a href="list_computers.php">List Domain Computers</a></li>
+					<li><a href="add_computer.php">Add Domain Computer</a></li>
 					<hr>
 					<li><a href="add_classroom_users.php">Add Classroom Users</a></li>
 					<li><a href="remove_classroom_users.php">Remove Classroom Users</a></li>

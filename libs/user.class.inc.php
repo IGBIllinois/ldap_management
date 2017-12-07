@@ -639,7 +639,7 @@ class user {
 		return $users_array;
 	}
 
-	public static function get_search_users($ldap,$adldap,$search,$start,$count,$sort="username",$asc="true",$userfilter='none'){
+	public static function get_search_users($ldap,$adldap,$search,$start=0,$count=30,$sort="username",$asc="true",$userfilter='none'){
 		if($search == ""){
 			$filter = "(uid=*)";
 		} else {
@@ -682,6 +682,7 @@ class user {
 	}
 	
 	public static function get_search_users_count($ldap,$adldap,$search,$userfilter='none'){
+		// TODO this is dumb
 		return count(self::$lastSearch);
 	}
 	

@@ -63,3 +63,30 @@ div.panel td, div.panel th {
 .copy-text {
 	width: 100%;
 }
+
+/* Searchbar styles */
+#searchbar-results {
+	position: absolute;
+	background-color: white;
+	display: none;
+	overflow: auto;
+	box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.4);
+	border-radius: 3px;
+	padding: 4px 0px;
+	max-height: 300px;
+}
+.searchbar-heading {
+    padding: 4px 4px 1px 4px;
+}
+.searchbar-heading:first-of-type {
+	padding: 1px 4px;
+}
+a.searchbar-result {
+	padding: 1px 4px 1px 8px;
+	cursor: pointer;
+	display: block;
+}
+a.searchbar-result:hover {
+	background-color: #eee;
+	text-decoration: none;
+}

@@ -18,19 +18,19 @@
 	for($i=0; $i<count($users);$i++){
 		$usershtml .= "<tr><td><a href='user.php?uid=".$users[$i]."'>".$users[$i]."</a>";
 		if(!user::is_ldap_user($ldap,$users[$i])){
-			$usershtml .= " <span class='glyphicon glyphicon-alert smallwarning' title='User does not exist'></span>";
+			$usershtml .= " <span class='fa fa-exclamation-triangle smallwarning' title='User does not exist'></span>";
 		}
 		$userobj = new user($ldap,$users[$i]);
 		if($userobj->is_expired()){
-			$usershtml .= " <span class='glyphicon glyphicon-time smalldanger' title='User has expired'></span>";
+			$usershtml .= " <span class='fa fa-clock-o smalldanger' title='User has expired'></span>";
 		}
 		if($userobj->is_expiring()){
-			$usershtml .= " <span class='glyphicon glyphicon-time smallwarning' title='User is expiring'></span>";
+			$usershtml .= " <span class='fa fa-clock-o smallwarning' title='User is expiring'></span>";
 		}
 		if($userobj->get_leftcampus()){
-			$usershtml .= " <span class='glyphicon glyphicon-education smallwarning' title='User has left UIUC'></span>";
+			$usershtml .= " <span class='fa fa-graduation-cap smallwarning' title='User has left UIUC'></span>";
 		}
-		$usershtml .= " <a href='remove_machinerights.php?uid=".$users[$i]."&hid=$hostname' class='btn btn-danger btn-xs pull-right'><span class='glyphicon glyphicon-remove'></span> Revoke access</a></td></tr>";
+		$usershtml .= " <a href='remove_machinerights.php?uid=".$users[$i]."&hid=$hostname' class='btn btn-danger btn-xs pull-right'><span class='fa fa-times'></span> Revoke access</a></td></tr>";
 		$copytext .= $users[$i]."\n";
 	}
 
@@ -44,11 +44,11 @@
 		<table class="table table-bordered table-condensed table-striped">
 			<tr>
 				<th>Hostname:</th>
-				<td><?php echo $host->get_name(); ?> <a href="change_host_name.php?hid=<?php echo $host->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span> Change Hostname</a></td>
+				<td><?php echo $host->get_name(); ?> <a href="change_host_name.php?hid=<?php echo $host->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="fa fa-pencil"></span> Change Hostname</a></td>
 			</tr>
 			<tr>
 				<th>IP:</th>
-				<td><?php echo $host->get_ip(); ?> <a href="change_ip.php?hid=<?php echo $host->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="glyphicon glyphicon-pencil"></span> Change IP</a></td>
+				<td><?php echo $host->get_ip(); ?> <a href="change_ip.php?hid=<?php echo $host->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="fa fa-pencil"></span> Change IP</a></td>
 			</tr>
 			<tr>
 				<th>Created By:</th>
@@ -68,14 +68,14 @@
 			</tr>
 		</table>
 		<div class="panel-body">
-			<a href="remove_host.php?hid=<?php echo $hostname; ?>" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Remove Host</a>
+			<a href="remove_host.php?hid=<?php echo $hostname; ?>" class="btn btn-danger"><span class="fa fa-times"></span> Remove Host</a>
 		</div>
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="btn-group btn-group-xs pull-right">
-				<a class='btn btn-success btn-xs' href='add_machinerights.php?hid=<?php echo $hostname; ?>'><span class='glyphicon glyphicon-plus'></span> Add user</a>
-				<button class='btn btn-default btn-xs copy-button'><span class='glyphicon glyphicon-copy'></span> Copy</button>
+				<a class='btn btn-success btn-xs' href='add_machinerights.php?hid=<?php echo $hostname; ?>'><span class='fa fa-plus'></span> Add user</a>
+				<button class='btn btn-default btn-xs copy-button'><span class='fa fa-clipboard'></span> Copy</button>
 			</div>
 			<h3 class="panel-title">Users</h3>
 		</div>

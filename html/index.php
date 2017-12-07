@@ -21,10 +21,10 @@
 	<div class="col-sm-4">
 		<div class="panel panel-default">
 			<div class="panel-body">
-				<h1><center><span class="glyphicon glyphicon-user"> </span><br/>Users</center></h1>
+				<h1><center><span class="fa fa-user"> </span><br/>Users</center></h1>
 				<p><div class="btn-group btn-group-justified">
-					<a class="btn btn-info" href="list_users.php"><span class="glyphicon glyphicon-menu-hamburger"></span> List</a>
-					<a class="btn btn-success" href="add_user.php"><span class="glyphicon glyphicon-plus-sign"></span> Add</a>
+					<a class="btn btn-info" href="list_users.php"><span class="fa fa-list"></span> List</a>
+					<a class="btn btn-success" href="add_user.php"><span class="fa fa-plus-circle"></span> Add</a>
 				</div></p>
 			</div>
 		</div>
@@ -32,10 +32,10 @@
 	<div class="col-sm-4">
 		<div class="panel panel-default">
 			<div class="panel-body">
-				<h1><center><span class="glyphicon glyphicon-th-large"> </span><br/>Groups</center></h1>
+				<h1><center><span class="fa fa-users"> </span><br/>Groups</center></h1>
 				<p><div class="btn-group btn-group-justified">
-					<a class="btn btn-info" href="list_groups.php"><span class="glyphicon glyphicon-menu-hamburger"></span> List</a>
-					<a class="btn btn-success" href="add_group.php"><span class="glyphicon glyphicon-plus-sign"></span> Add</a>
+					<a class="btn btn-info" href="list_groups.php"><span class="fa fa-list"></span> List</a>
+					<a class="btn btn-success" href="add_group.php"><span class="fa fa-plus-circle"></span> Add</a>
 				</div></p>
 			</div>
 		</div>
@@ -43,11 +43,24 @@
 	<div class="col-sm-4">
 		<div class="panel panel-default">
 			<div class="panel-body">
-				<h1><center><span class="glyphicon glyphicon-blackboard"> </span><br/>Classroom Users</center></h1>
+				<h1><center><span class="fa fa-server"> </span><br/>Hosts</center></h1>
 				<p><div class="btn-group btn-group-justified">
-<!-- 					<a class="btn btn-info" href="#"><span class="glyphicon glyphicon-menu-hamburger"></span> List</a> -->
-					<a class="btn btn-success" href="add_classroom_users.php"><span class="glyphicon glyphicon-plus-sign"></span> Add</a>
-					<a class="btn btn-danger" href="remove_classroom_users.php"><span class="glyphicon glyphicon-minus-sign"></span> Delete</a>
+					<a class="btn btn-info" href="list_hosts.php"><span class="fa fa-list"></span> List</a>
+					<a class="btn btn-success" href="add_host.php"><span class="fa fa-plus-circle"></span> Add</a>
+				</div></p>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-4">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<h1><center><span class="fa fa-book"> </span><br/>Classroom Users</center></h1>
+				<p><div class="btn-group btn-group-justified">
+<!-- 					<a class="btn btn-info" href="#"><span class="fa fa-list"></span> List</a> -->
+					<a class="btn btn-success" href="add_classroom_users.php"><span class="fa fa-plus-circle"></span> Add</a>
+					<a class="btn btn-danger" href="remove_classroom_users.php"><span class="fa fa-minus-circle"></span> Delete</a>
 				</div></p>
 			</div>
 		</div>

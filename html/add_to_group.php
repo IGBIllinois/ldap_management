@@ -96,7 +96,7 @@
 	<fieldset>
 		<legend>Add User to Group</legend>
 		<?php if($uid != "" && count($usertoadd->get_groups()) > 15){
-			echo html::warning_message('<span class="glyphicon glyphicon-alert"> </span> After this operation, '.$uid.' will be a member of >16 groups. This may cause issues with NFS.');
+			echo html::warning_message('<span class="fa fa-exclamation-triangle"> </span> After this operation, '.$uid.' will be a member of >16 groups. This may cause issues with NFS.');
 		} ?>
 		<div class="form-group">
 			<label class="col-sm-2 control-label" for="username-input">Username:</label>

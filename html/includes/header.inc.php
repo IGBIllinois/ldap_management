@@ -12,6 +12,7 @@
 		<title><?php echo __TITLE__.(isset($title)?" - $title":''); ?></title>
 		<link rel="stylesheet" href="includes/bootstrap/css/bootstrap.min.css" type="text/css"/>
 		<link rel="stylesheet" href="includes/select2/css/select2.css" type="text/css" />
+		<link rel="stylesheet" href="includes/font-awesome/css/font-awesome.css" type="text/css" />
 		<link rel="stylesheet" href="includes/main.inc.css" type="text/css"/>
 		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -36,14 +37,14 @@
 					</div>
 				</div>
 				<div class="collapse navbar-collapse" id="archive-accounting-nav-collapse">
-					<a type="button" class="btn btn-danger btn-sm navbar-btn navbar-right hidden-xs" style="margin-right:0" href="logout.php">Logout</a>
+					<a type="button" class="btn btn-danger btn-sm navbar-btn navbar-right hidden-xs" style="margin-right:0" href="logout.php"><span class="fa fa-sign-out"></span> Logout</a>
 					<form class="navbar-form navbar-right">
 						<div class="form-group" id="searchbar-container">
 							<input type="search" class="form-control" name="searchbar" id="searchbar" placeholder="Search"/>
 							<div id="searchbar-results"></div>
 						</div>
 					</form>
-					<a type="button" class="btn btn-danger btn-sm btn-block visible-xs" style="margin-bottom:7px" href="logout.php">Logout</a>
+					<a type="button" class="btn btn-danger btn-sm btn-block visible-xs" style="margin-bottom:7px" href="logout.php"><span class="fa fa-sign-out"></span> Logout</a>
 				</div>
 			</div>
 		</nav>

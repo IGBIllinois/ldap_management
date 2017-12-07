@@ -21,9 +21,9 @@
 		for($i=0; $i<count($machinerights);$i++){
 			$machinerightshtml .= "<tr><td><a href='host.php?hid=".$machinerights[$i]."'>".$machinerights[$i]."</a>";
 			if(!host::is_ldap_host($ldap,$machinerights[$i])){
-				$machinerightshtml .= " <span class='glyphicon glyphicon-alert smallwarning' title='Host does not exist'></span>";
+				$machinerightshtml .= " <span class='fa fa-exclamation-triangle smallwarning' title='Host does not exist'></span>";
 			}
-			$machinerightshtml .= " <a class='btn btn-danger btn-xs pull-right' href='remove_machinerights.php?uid=$username&hid=".$machinerights[$i]."&from=user'><span class='glyphicon glyphicon-remove'> </span> Remove host</a></td></tr>";
+			$machinerightshtml .= " <a class='btn btn-danger btn-xs pull-right' href='remove_machinerights.php?uid=$username&hid=".$machinerights[$i]."&from=user'><span class='fa fa-times'> </span> Remove host</a></td></tr>";
 			$machinecopytext .= $machinerights[$i]."\n";
 		}
 	}
@@ -35,7 +35,7 @@
 	for($i=0; $i<count($groups);$i++){
 		$groupshtml .= "<tr><td><a href='group.php?gid=".$groups[$i]."'>".$groups[$i]."</a>";
 		if($username != $groups[$i]){
-			$groupshtml .= " <a class='btn btn-danger btn-xs pull-right' href='remove_from_group.php?uid=$username&gid=".$groups[$i]."&from=user'><span class='glyphicon glyphicon-remove'> </span> Remove from group</a>";
+			$groupshtml .= " <a class='btn btn-danger btn-xs pull-right' href='remove_from_group.php?uid=$username&gid=".$groups[$i]."&from=user'><span class='fa fa-times'> </span> Remove from group</a>";
 		}
 		$groupcopytext .= $groups[$i]."\n";
 		$groupshtml .= "</td></tr>";
@@ -62,14 +62,14 @@
 		<div class="row">
 			<div class="col-sm-2">
 				<a <?php if($prevUid==null){echo "disabled";} else { echo 'href="user.php?uid='.$prevUid.'"';} ?> class="btn btn-default btn-prev btn-block">
-					<span class="glyphicon glyphicon-chevron-left"></span> Previous
+					<span class="fa fa-chevron-left"></span> Previous
 				</a>
 			</div>
 			<div class="col-sm-8">
 			</div>
 			<div class="col-sm-2">
 				<a <?php if($nextUid==null){echo "disabled";} else { echo 'href="user.php?uid='.$nextUid.'"';} ?> class="btn btn-default btn-next btn-block">
-					Next <span class="glyphicon glyphicon-chevron-right"></span>
+					Next <span class="fa fa-chevron-right"></span>
 				</a>
 			</div>
 		</div>
@@ -109,13 +109,13 @@
 							$url = '';
 							if(isset($attributes[$attr]['button']['type']) && $attributes[$attr]['button']['type'] == 'edit'){
 								$color = 'btn-info';
-								$icon = '<span class="glyphicon glyphicon-pencil"></span>';
+								$icon = '<span class="fa fa-pencil"></span>';
 								$text = "Change ".$attributes[$attr]['fullname'];
 								$url = 'edit_user_attribute.php';
 							}
 							if(isset($attributes[$attr]['button']['type']) && $attributes[$attr]['button']['type'] == 'remove'){
 								$color = 'btn-danger';
-								$icon = '<span class="glyphicon glyphicon-remove-circle"></span>';
+								$icon = '<span class="fa fa-times-circle"></span>';
 								$text = "Remove ".$attributes[$attr]['fullname'];
 								$url = 'remove_user_attribute.php';
 							}
@@ -123,7 +123,7 @@
 								$color = 'btn-'.$attributes[$attr]['button']['color'];
 							}
 							if(isset($attributes[$attr]['button']['icon'])){
-								$icon = '<span class="glyphicon glyphicon-'.$attributes[$attr]['button']['icon'].'"></span>';
+								$icon = '<span class="fa fa-'.$attributes[$attr]['button']['icon'].'"></span>';
 							}
 							if(isset($attributes[$attr]['button']['text'])){
 								$text = $attributes[$attr]['button']['text'];
@@ -158,27 +158,27 @@
 		</table>
 
 		<div class="panel-body">
-			<a href="change_password.php?uid=<?php echo $username; ?>" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span> Change Password</a>
-			<a href="expire_user.php?uid=<?php echo $username; ?>" class="btn btn-warning"><span class="glyphicon glyphicon-time"></span> Set Expiration</a>
+			<a href="change_password.php?uid=<?php echo $username; ?>" class="btn btn-info"><span class="fa fa-pencil"></span> Change Password</a>
+			<a href="expire_user.php?uid=<?php echo $username; ?>" class="btn btn-warning"><span class="fa fa-clock-o"></span> Set Expiration</a>
 			<?php if($user->islocked()){ ?>
-			<a href="unlock_user.php?uid=<?php echo $username; ?>" class="btn btn-warning"><span class="glyphicon glyphicon-lock"></span> Unlock User</a>
+			<a href="unlock_user.php?uid=<?php echo $username; ?>" class="btn btn-warning"><span class="fa fa-unlock-alt"></span> Unlock User</a>
 			<?php } else { ?>
-			<a href="lock_user.php?uid=<?php echo $username; ?>" class="btn btn-danger"><span class="glyphicon glyphicon-lock"></span> Lock User</a>
+			<a href="lock_user.php?uid=<?php echo $username; ?>" class="btn btn-danger"><span class="fa fa-lock"></span> Lock User</a>
 			<?php } ?>
-			<a href="remove_user.php?uid=<?php echo $username; ?>" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Remove User</a>
+			<a href="remove_user.php?uid=<?php echo $username; ?>" class="btn btn-danger"><span class="fa fa-trash"></span> Remove User</a>
 		</div>
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="btn-group btn-group-xs pull-right">
-				<a class='btn btn-success btn-xs' href='add_to_group.php?uid=<?php echo $username; ?>'><span class='glyphicon glyphicon-plus'></span> Add to group</a>
-				<button class='btn btn-default btn-xs copy-button'><span class='glyphicon glyphicon-copy'></span> Copy</button>
+				<a class='btn btn-success btn-xs' href='add_to_group.php?uid=<?php echo $username; ?>'><span class='fa fa-plus'></span> Add to group</a>
+				<button class='btn btn-default btn-xs copy-button'><span class='fa fa-clipboard'></span> Copy</button>
 			</div>
 			<h3 class="panel-title">Groups</h3>
 		</div>
 		<textarea class='hidden copy-text'><?php echo $groupcopytext; ?></textarea>
 		<?php if(count($groups) > 16){
-			echo '<div class="panel-body bg-warning"><span class="glyphicon glyphicon-alert"> </span> User is a member of >16 groups. This may cause issues with NFS.</div>';	
+			echo '<div class="panel-body bg-warning"><span class="fa fa-exclamation-triangle"> </span> User is a member of >16 groups. This may cause issues with NFS.</div>';	
 		} ?>
 		<table class="table table-bordered table-striped">
 			<?php echo $groupshtml; ?>
@@ -187,8 +187,8 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="btn-group btn-group-xs pull-right">
-				<a class='btn btn-success btn-xs' href='add_machinerights.php?uid=<?php echo $username; ?>'><span class='glyphicon glyphicon-plus'></span> Add machine rights</a>
-				<button class='btn btn-default btn-xs copy-button'><span class='glyphicon glyphicon-copy'></span> Copy</button>
+				<a class='btn btn-success btn-xs' href='add_machinerights.php?uid=<?php echo $username; ?>'><span class='fa fa-plus'></span> Add machine rights</a>
+				<button class='btn btn-default btn-xs copy-button'><span class='fa fa-clipboard'></span> Copy</button>
 			</div>
 			<h3 class="panel-title">Machine Rights</h3>
 		</div>

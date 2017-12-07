@@ -45,7 +45,7 @@
 			</tr>
 		</table>
 		<div class="panel-body">
-			<a href="remove_computer.php?uid=<?php echo $uid; ?>" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Remove Computer</a>
+			<a href="remove_computer.php?uid=<?php echo $uid; ?>" class="btn btn-danger"><span class="fa fa-times"></span> Remove Computer</a>
 		</div>
 	</div>
 	

@@ -64,9 +64,9 @@
 				</div>
 			</div>
 			<div class="col-sm-6">
-				<p id="groupnameerror1" class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="text">Name not in use</span></p>
-				<p id="groupnameerror2" class="text-danger"><span class="glyphicon glyphicon-remove"></span> <span class="text">Name must begin with a lowercase letter</span></p>
-				<p id="groupnameerror3" class="text-danger"><span class="glyphicon glyphicon-remove"></span> Name must be alphanumeric (letters, numbers, underscore)</p>
+				<p id="groupnameerror1" class="text-success"><span class="fa fa-check"></span> <span class="text">Name not in use</span></p>
+				<p id="groupnameerror2" class="text-danger"><span class="fa fa-times"></span> <span class="text">Name must begin with a lowercase letter</span></p>
+				<p id="groupnameerror3" class="text-danger"><span class="fa fa-times"></span> Name must be alphanumeric (letters, numbers, underscore)</p>
 			</div>
 		</div>
 	</fieldset>

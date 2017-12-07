@@ -154,10 +154,10 @@ function copy_panel(event){
 function showPasswordError(rulenum,valid,text){
 	if(valid){
 		$('#passworderror'+rulenum).removeClass('text-danger').addClass('text-success');
-		$('#passworderror'+rulenum+' .glyphicon').removeClass('glyphicon-remove').addClass('glyphicon-ok');
+		$('#passworderror'+rulenum+' .fa').removeClass('fa-times').addClass('fa-check');
 	} else {
 		$('#passworderror'+rulenum).removeClass('text-success').addClass('text-danger');
-		$('#passworderror'+rulenum+' .glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
+		$('#passworderror'+rulenum+' .fa').removeClass('fa-check').addClass('fa-times');
 	}
 	$('#passworderror'+rulenum+' .text').html(text);
 }
@@ -165,10 +165,10 @@ function showPasswordError(rulenum,valid,text){
 function showUsernameWarning(warnnum,valid,text){
 	if(valid){
 		$('#usernamewarning'+warnnum).removeClass('text-warning').addClass('text-success');
-		$('#usernamewarning'+warnnum+' .glyphicon').removeClass('glyphicon-alert').addClass('glyphicon-ok');
+		$('#usernamewarning'+warnnum+' .fa').removeClass('fa-exclamation-triangle').addClass('fa-check');
 	} else {
 		$('#usernamewarning'+warnnum).removeClass('text-success').addClass('text-warning');
-		$('#usernamewarning'+warnnum+' .glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-alert');
+		$('#usernamewarning'+warnnum+' .fa').removeClass('fa-check').addClass('fa-exclamation-triangle');
 	}
 	$('#usernamewarning'+warnnum+' .text').html(text);
 }
@@ -176,10 +176,10 @@ function showUsernameWarning(warnnum,valid,text){
 function showUsernameError(errornum,valid,text){
 	if(valid){
 		$('#usernameerror'+errornum).removeClass('text-danger').addClass('text-success');
-		$('#usernameerror'+errornum+' .glyphicon').removeClass('glyphicon-remove').addClass('glyphicon-ok');
+		$('#usernameerror'+errornum+' .fa').removeClass('fa-times').addClass('fa-check');
 	} else {
 		$('#usernameerror'+errornum).removeClass('text-success').addClass('text-danger');
-		$('#usernameerror'+errornum+' .glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
+		$('#usernameerror'+errornum+' .fa').removeClass('fa-check').addClass('fa-times');
 	}
 	$('#usernameerror'+errornum+' .text').html(text);
 }
@@ -187,10 +187,10 @@ function showUsernameError(errornum,valid,text){
 function showGroupnameError(errornum,valid,text){
 	if(valid){
 		$('#groupnameerror'+errornum).removeClass('text-danger').addClass('text-success');
-		$('#groupnameerror'+errornum+' .glyphicon').removeClass('glyphicon-remove').addClass('glyphicon-ok');
+		$('#groupnameerror'+errornum+' .fa').removeClass('fa-times').addClass('fa-check');
 	} else {
 		$('#groupnameerror'+errornum).removeClass('text-success').addClass('text-danger');
-		$('#groupnameerror'+errornum+' .glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
+		$('#groupnameerror'+errornum+' .fa').removeClass('fa-check').addClass('fa-times');
 	}
 	$('#groupnameerror'+errornum+' .text').html(text);
 }
@@ -198,10 +198,10 @@ function showGroupnameError(errornum,valid,text){
 function showGroupdescriptionError(errornum,valid,text){
 	if(valid){
 		$('#groupdescriptionerror'+errornum).removeClass('text-danger').addClass('text-success');
-		$('#groupdescriptionerror'+errornum+' .glyphicon').removeClass('glyphicon-remove').addClass('glyphicon-ok');
+		$('#groupdescriptionerror'+errornum+' .fa').removeClass('fa-times').addClass('fa-check');
 	} else {
 		$('#groupdescriptionerror'+errornum).removeClass('text-success').addClass('text-danger');
-		$('#groupdescriptionerror'+errornum+' .glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
+		$('#groupdescriptionerror'+errornum+' .fa').removeClass('fa-check').addClass('fa-times');
 	}
 	$('#groupdescriptionerror'+errornum+' .text').html(text);
 }
@@ -209,37 +209,37 @@ function showGroupdescriptionError(errornum,valid,text){
 function showEmailError(errornum,valid,text){
 	if(valid){
 		$('#emailerror'+errornum).removeClass('text-danger').addClass('text-success');
-		$('#emailerror'+errornum+' .glyphicon').removeClass('glyphicon-remove').addClass('glyphicon-ok');
+		$('#emailerror'+errornum+' .fa').removeClass('fa-times').addClass('fa-check');
 	} else {
 		$('#emailerror'+errornum).removeClass('text-success').addClass('text-danger');
-		$('#emailerror'+errornum+' .glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
+		$('#emailerror'+errornum+' .fa').removeClass('fa-check').addClass('fa-times');
 	}
 	$('#emailerror'+errornum+' .text').html(text);
 }
 
 function showValidateError(field,errornum,valid,text){
 	if( !($('#validation p#'+field+'error'+errornum).length) ){
-		$('#validation').append('<p id='+field+'error'+errornum+'><span class="glyphicon"></span> <span class="text"></span></p>');
+		$('#validation').append('<p id='+field+'error'+errornum+'><span class="fa"></span> <span class="text"></span></p>');
 	}
 	if(valid){
 		$('#'+field+'error'+errornum).removeClass('text-danger').addClass('text-success');
-		$('#'+field+'error'+errornum+' .glyphicon').removeClass('glyphicon-remove').addClass('glyphicon-ok');
+		$('#'+field+'error'+errornum+' .fa').removeClass('fa-times').addClass('fa-check');
 	} else {
 		$('#'+field+'error'+errornum).removeClass('text-success').addClass('text-danger');
-		$('#'+field+'error'+errornum+' .glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-remove');
+		$('#'+field+'error'+errornum+' .fa').removeClass('fa-check').addClass('fa-times');
 	}
 	$('#'+field+'error'+errornum+' .text').html(text);
 }
 function showValidateWarning(field,warnnum,valid,text){
 	if( !($('#validation p#'+field+'warning'+warnnum).length) ){
-		$('#validation').append('<p id='+field+'warning'+warnnum+'><span class="glyphicon"></span> <span class="text"></span></p>');
+		$('#validation').append('<p id='+field+'warning'+warnnum+'><span class="fa"></span> <span class="text"></span></p>');
 	}
 	if(valid){
 		$('#'+field+'warning'+warnnum).removeClass('text-warning').addClass('text-success');
-		$('#'+field+'warning'+warnnum+' .glyphicon').removeClass('glyphicon-alert').addClass('glyphicon-ok');
+		$('#'+field+'warning'+warnnum+' .fa').removeClass('fa-exclamation-triangle').addClass('fa-check');
 	} else {
 		$('#'+field+'warning'+warnnum).removeClass('text-success').addClass('text-warning');
-		$('#'+field+'warning'+warnnum+' .glyphicon').removeClass('glyphicon-ok').addClass('glyphicon-alert');
+		$('#'+field+'warning'+warnnum+' .fa').removeClass('fa-check').addClass('fa-exclamation-triangle');
 	}
 	$('#'+field+'warning'+warnnum+' .text').html(text);
 }

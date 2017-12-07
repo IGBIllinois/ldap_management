@@ -90,22 +90,22 @@ class html {
 				$users_html .= $users[$i]['username'] . "</a>";
 				if($users[$i]['shadowexpire']!=''){
 					if($users[$i]['shadowexpire'] <= time()){
-						$users_html .= " <span class='glyphicon glyphicon-time smalldanger' title='User expired'></span>";
+						$users_html .= " <span class='fa fa-clock-o smalldanger' title='User expired'></span>";
 					} else {
-						$users_html .= " <span class='glyphicon glyphicon-time smallwarning' title='User set to expire'></span>";
+						$users_html .= " <span class='fa fa-clock-o smallwarning' title='User set to expire'></span>";
 					}
 				}
 				if($users[$i]['leftcampus']){
-					$users_html .= " <span class='glyphicon glyphicon-education smallwarning' title='User left UIUC'></span>";
+					$users_html .= " <span class='fa fa-graduation-cap smallwarning' title='User left UIUC'></span>";
 				}
 				if($users[$i]['noncampus']){
-					$users_html .= " <span class='glyphicon glyphicon-education smallinfo' title='User not from UIUC'></span>";
+					$users_html .= " <span class='fa fa-graduation-cap smallinfo' title='User not from UIUC'></span>";
 				}
 				if($users[$i]['crashplan']){
-					$users_html .= " <span class='glyphicon glyphicon-hdd smallsuccess' title='User has Crashplan'></span>";
+					$users_html .= " <span class='fa fa-hdd-o smallsuccess' title='User has Crashplan'></span>";
 				}
 				if($users[$i]['passwordexpired']){
-					$users_html .= " <span class='glyphicon glyphicon-lock smalldanger' title='Password expired'></span>";
+					$users_html .= " <span class='fa fa-lock smalldanger' title='Password expired'></span>";
 				}
 				$users_html .= "</td>";
                 $users_html .= "<td>" . $users[$i]['name']. "</td>";
@@ -199,7 +199,7 @@ class html {
 	
 	public static function sort_icon($column,$sort,$asc){
 		if($sort==$column){
-			return " <span class='glyphicon glyphicon-sort-by-attributes".($asc=="false"?'-alt':'')."'> </span>";
+			return " <span class='fa fa-sort-amount-".($asc=="false"?'desc':'asc')."'> </span>";
 		}
 		return '';
 	}

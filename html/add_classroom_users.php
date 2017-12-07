@@ -115,7 +115,7 @@
 				</div>
 			</div>
 			<div class="col-sm-6">
-				<p id="usernameerror1" class="text-success"><span class="glyphicon glyphicon-ok"></span> <span class="text">Users do not exist</span></p>
+				<p id="usernameerror1" class="text-success"><span class="fa fa-check"></span> <span class="text">Users do not exist</span></p>
 			</div>
 		</div>
 	</fieldset>

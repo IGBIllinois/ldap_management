@@ -64,10 +64,10 @@
 						<input type="submit" class="btn btn-primary" value="Go" />
 						
 						<div class="btn-group pull-right">
-							<button type="button" class="btn btn-default<?php if($filter=='expiring'){echo ' active btn-warning';} ?>" id="expiring-button" onclick="filter_table('expiring')"><span class="glyphicon glyphicon-time"></span> Expiring</button>
-							<button type="button" class="btn btn-default<?php if($filter=='expired'){echo ' active btn-danger';} ?>" id="expired-button" onclick="filter_table('expired')"><span class="glyphicon glyphicon-time"></span> Expired</button>
-							<button type="button" class="btn btn-default<?php if($filter=='left'){echo ' active btn-warning';} ?>" id="ad-button" onclick="filter_table('left')"><span class="glyphicon glyphicon-education"></span> Left Campus</button>
-							<button type="button" class="btn btn-default<?php if($filter=='noncampus'){echo ' active btn-info';} ?>" id="noncampus-button" onclick="filter_table('noncampus')"><span class="glyphicon glyphicon-education"></span> Non-Campus</button>
+							<button type="button" class="btn btn-default<?php if($filter=='expiring'){echo ' active btn-warning';} ?>" id="expiring-button" onclick="filter_table('expiring')"><span class="fa fa-clock-o"></span> Expiring</button>
+							<button type="button" class="btn btn-default<?php if($filter=='expired'){echo ' active btn-danger';} ?>" id="expired-button" onclick="filter_table('expired')"><span class="fa fa-clock-o"></span> Expired</button>
+							<button type="button" class="btn btn-default<?php if($filter=='left'){echo ' active btn-warning';} ?>" id="ad-button" onclick="filter_table('left')"><span class="fa fa-graduation-cap"></span> Left Campus</button>
+							<button type="button" class="btn btn-default<?php if($filter=='noncampus'){echo ' active btn-info';} ?>" id="noncampus-button" onclick="filter_table('noncampus')"><span class="fa fa-graduation-cap"></span> Non-Campus</button>
 						</div>
 <!-- 					</div> -->
 				</form>
@@ -91,12 +91,12 @@
 		</table>
 	</div>
 	<p>
-		<span class="glyphicon glyphicon-time smallwarning"> </span>=expiration set &nbsp;
-		<span class="glyphicon glyphicon-time smalldanger"> </span>=expired &nbsp;
-		<span class="glyphicon glyphicon-education smallwarning"> </span>=left campus &nbsp;
-		<span class="glyphicon glyphicon-education smallinfo"> </span>=non-campus &nbsp;
-		<span class='glyphicon glyphicon-hdd smallsuccess' title='User has Crashplan'></span>=has crashplan &nbsp;
-		<span class='glyphicon glyphicon-lock smalldanger' title='Password Expired'></span>=password expired
+		<span class="fa fa-clock-o smallwarning"> </span>=expiration set &nbsp;
+		<span class="fa fa-clock-o smalldanger"> </span>=expired &nbsp;
+		<span class="fa fa-graduation-cap smallwarning"> </span>=left campus &nbsp;
+		<span class="fa fa-graduation-cap smallinfo"> </span>=non-campus &nbsp;
+		<span class='fa fa-hdd-o smallsuccess' title='User has Crashplan'></span>=has crashplan &nbsp;
+		<span class='fa fa-lock smalldanger' title='Password Expired'></span>=password expired
 	</p>
 	<?php echo $pages_html; ?>
 	<script type="text/javascript">

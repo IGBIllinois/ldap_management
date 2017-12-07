@@ -59,6 +59,8 @@ if (isset($_POST['login'])) {
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title><?php echo __TITLE__; ?></title>
 		<link rel="stylesheet" href="includes/bootstrap/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="includes/font-awesome/css/font-awesome.css" type="text/css" />
+		<link rel="stylesheet" href="includes/main.inc.css" type="text/css"/>
 		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 	</head>
 	<body OnLoad="document.login.username.focus();">
@@ -81,17 +83,17 @@ if (isset($_POST['login'])) {
 							<label for="username">Username: </label>
 							<div class="input-group">
 								<input class='form-control' type='text' name='username' id="username" tabindex='1' placeholder='Username' value='<?php if (isset($username)) { echo $username; } ?>'> 
-								<span class="input-group-addon"><span class='glyphicon glyphicon-user'></span></span>
+								<span class="input-group-addon"><span class='fa fa-user'></span></span>
 							</div>
 						</div>
 						<div class="form-group">
 							<label>Password: </label>
 							<div class="input-group">
 								<input class='form-control' type='password' name='password' placeholder='Password' tabindex='2'>
-								<span class="input-group-addon"><span class='glyphicon glyphicon-lock'></span></span>
+								<span class="input-group-addon"><span class='fa fa-lock'></span></span>
 							</div>
 						</div>
-						<button type='submit' name='login' class='btn btn-primary'>Login</button>
+						<button type='submit' name='login' class='btn btn-primary'><span class="fa fa-sign-in"></span> Login</button>
 					</form>
 	
 	

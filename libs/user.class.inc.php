@@ -639,7 +639,7 @@ class user {
 		return $users_array;
 	}
 
-	public static function get_search_users($ldap,$adldap,$search,$start=0,$count=30,$sort="username",$asc="true",$userfilter='none'){
+	public static function get_search_users($ldap,$search,$start=0,$count=30,$sort="username",$asc="true",$userfilter='none'){
 		if($search == ""){
 			$filter = "(uid=*)";
 		} else {
@@ -681,14 +681,14 @@ class user {
 		return array_slice($users,$start,$count);
 	}
 	
-	public static function get_search_users_count($ldap,$adldap,$search,$userfilter='none'){
+	public static function get_search_users_count($ldap,$search,$userfilter='none'){
 		// TODO this is dumb
 		return count(self::$lastSearch);
 	}
 	
-	public static function get_previous_user($ldap,$adldap,$uid,$search,$sort,$asc,$userfilter='none'){
+	public static function get_previous_user($ldap,$uid,$search,$sort,$asc,$userfilter='none'){
 		if(count(self::$lastSearch) == 0){
-			self::get_search_users($ldap,$adldap,$search,0,30,$sort,$asc,$userfilter);
+			self::get_search_users($ldap,$search,0,30,$sort,$asc,$userfilter);
 		}
 		for($i=0; $i<count(self::$lastSearch); $i++){
 			if(self::$lastSearch[$i]['username'] == $uid){
@@ -700,9 +700,9 @@ class user {
 		}
 	}
 	
-	public static function get_next_user($ldap,$adldap,$uid,$search,$sort,$asc,$userfilter='none'){
+	public static function get_next_user($ldap,$uid,$search,$sort,$asc,$userfilter='none'){
 		if(count(self::$lastSearch) == 0){
-			self::get_search_users($ldap,$adldap,$search,0,30,$sort,$asc,$userfilter);
+			self::get_search_users($ldap,$search,0,30,$sort,$asc,$userfilter);
 		}
 		for($i=0; $i<count(self::$lastSearch); $i++){
 			if(self::$lastSearch[$i]['username'] == $uid){

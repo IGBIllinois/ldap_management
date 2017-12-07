@@ -78,7 +78,7 @@ class html {
 	}
 
 	// Returns trs for the given users list
-	public static function get_users_rows($adldap,$users,$showexpiration=false) {
+	public static function get_users_rows($users,$showexpiration=false) {
 		$i_start = 0;
 		$i_count = count($users);
 		

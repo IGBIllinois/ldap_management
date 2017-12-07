@@ -48,8 +48,8 @@
 		$sort =   $_COOKIE['lastUserSearchSort'];
 		$asc =    $_COOKIE['lastUserSearchAsc'] == 'true';
 		$search = isset($_COOKIE['lastUserSearch'])?$_COOKIE['lastUserSearch']:'';
-		$prevUid = user::get_previous_user($ldap,$adldap,$username,$search,$sort,$asc,$filter);
-		$nextUid = user::get_next_user($ldap,$adldap,$username,$search,$sort,$asc,$filter);
+		$prevUid = user::get_previous_user($ldap,$username,$search,$sort,$asc,$filter);
+		$nextUid = user::get_next_user($ldap,$username,$search,$sort,$asc,$filter);
 	}
 	?>
 	<style>

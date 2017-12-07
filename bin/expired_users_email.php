@@ -35,7 +35,6 @@ if ($sapi_type != 'cli') {
 	
 	// Connect to ldap
 	$ldap = new ldap(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__);
-	$adldap = new ldap(__AD_LDAP_HOST__,false,__AD_LDAP_PORT__,__AD_LDAP_PEOPLE_OU__);
 	$users = user::get_all_users($ldap);
 	$nocontact = array();
 	$igbmail = array();

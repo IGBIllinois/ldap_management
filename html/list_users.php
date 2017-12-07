@@ -38,14 +38,14 @@
 	setcookie("lastUserSearchAsc",$asc);
 	setcookie("lastUserSearchFilter",$filter);
 	setcookie("lastUserSearch",$search);
-	$all_users = user::get_search_users($ldap,$adldap,$search,$start,$count,$sort,$asc,$filter);
-	$num_users = user::get_search_users_count($ldap,$adldap,$search,$filter);
+	$all_users = user::get_search_users($ldap,$search,$start,$count,$sort,$asc,$filter);
+	$num_users = user::get_search_users_count($ldap,$search,$filter);
 	$pages_url = $_SERVER['PHP_SELF']."?".http_build_query($get_array);
 	$pages_html = html::get_pages_html($pages_url,$num_users,$start,$count);
 	$users_html = "";
 	$user_count = 0;
 	
-	$users_html = html::get_users_rows($adldap,$all_users,($filter=='expiring'||$filter=='expired'));
+	$users_html = html::get_users_rows($all_users,($filter=='expiring'||$filter=='expired'));
 	?>
 	
 	<h3>List of Users</h3>

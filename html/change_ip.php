@@ -1,5 +1,6 @@
 <?php
 	$title = "Set Host IP";
+	$sitearea = "hosts";
 	require_once 'includes/header.inc.php';
 	
 	$message="";

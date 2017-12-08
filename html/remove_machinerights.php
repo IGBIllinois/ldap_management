@@ -1,5 +1,6 @@
 <?php
 	$title = "Remove Host Access";
+	$sitearea = "hosts";
 	require_once 'includes/header.inc.php';
 	
 	$message="";

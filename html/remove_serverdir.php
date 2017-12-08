@@ -1,5 +1,6 @@
 <?php
 	$title = "Add Server Directory";
+	$sitearea = "groups";
 	require_once 'includes/header.inc.php';
 
 	$message="";

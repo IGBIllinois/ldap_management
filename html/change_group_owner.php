@@ -1,5 +1,6 @@
 <?php
-	$title = "Add to Group";
+	$title = "Change Group Owner";
+	$sitearea = "groups";
 	require_once 'includes/header.inc.php';
 	
 	$message="";

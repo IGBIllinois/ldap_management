@@ -1,5 +1,6 @@
 <?php
 	$title = "Group Info";
+	$sitearea = "groups";
 	require_once 'includes/header.inc.php';
 		
 	if (isset($_GET['gid'])) {

@@ -1,5 +1,6 @@
 <?php
 	$title = "Remove Group";
+	$sitearea = "groups";
 	require_once 'includes/header.inc.php';
 	
 	$message="";

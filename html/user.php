@@ -1,5 +1,6 @@
 <?php
 	$title = "User Info: ".$_GET['uid'];
+	$sitearea = "users";
 	require_once 'includes/header.inc.php';
 	
 	$username = $login_user->get_username();

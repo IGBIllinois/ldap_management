@@ -1,5 +1,6 @@
 <?php
 	$title = "Domain Computer List";
+	$sitearea = "domain";
 	require_once 'includes/header.inc.php';
 
 	$get_array = array();

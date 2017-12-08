@@ -1,5 +1,6 @@
 <?php
 	$title = "Remove User";
+	$sitearea = "users";
 	require_once 'includes/header.inc.php';
 	
 	$message="";

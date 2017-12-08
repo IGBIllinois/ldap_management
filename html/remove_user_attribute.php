@@ -3,6 +3,7 @@
 	require_once "includes/main.inc.php";
 	$attr = extensions::get_attribute('user',$_REQUEST['attr']);
 	$title = "Remove ".$attr['fullname'];
+	$sitearea = "users";
 	require_once 'includes/header.inc.php';
 	
 	$fields = array();

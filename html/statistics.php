@@ -1,5 +1,6 @@
 <?php
 	$title = "Statistics";
+	$sitearea = "statistics";
 	require 'includes/header.inc.php';
 ?>
 	<h3>Statistics</h3>

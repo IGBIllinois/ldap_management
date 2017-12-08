@@ -1,5 +1,6 @@
 <?php
 	$title = "Add User";
+	$sitearea = "users";
 	require_once 'includes/header.inc.php';
 	
 	$message="";

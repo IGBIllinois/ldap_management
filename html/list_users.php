@@ -1,5 +1,6 @@
 <?php
 	$title = "User List";
+	$sitearea = "users";
 	require_once 'includes/header.inc.php';
 
 	$get_array = array();

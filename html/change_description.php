@@ -1,5 +1,6 @@
 <?php
 	$title = "Set Group Description";
+	$sitearea = "groups";
 	require_once 'includes/header.inc.php';
 	
 	$message="";

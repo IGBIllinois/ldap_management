@@ -1,5 +1,6 @@
 <?php
 	$title = "Domain Computer Info";
+	$sitearea = "domain";
 	require_once 'includes/header.inc.php';
 		
 	if (isset($_GET['uid'])) {

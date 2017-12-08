@@ -1,5 +1,6 @@
 <?php
 	$title = "Set Expiration";
+	$sitearea = "users";
 	require_once 'includes/header.inc.php';
 
 	$message="";

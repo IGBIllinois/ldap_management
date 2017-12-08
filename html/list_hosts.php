@@ -1,5 +1,6 @@
 <?php
 	$title = "Host List";
+	$sitearea = "hosts";
 	require_once 'includes/header.inc.php';
 
 	$get_array = array();

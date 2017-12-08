@@ -1,5 +1,6 @@
 <?php
 	$title = "Group List";
+	$sitearea = "groups";
 	require_once 'includes/header.inc.php';
 	$get_array = array();
 	$start = 0;

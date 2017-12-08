@@ -1,5 +1,6 @@
 <?php
 	$title = "Add Domain Computer";
+	$sitearea = "domain";
 	require_once 'includes/header.inc.php';
 
 	$message="";

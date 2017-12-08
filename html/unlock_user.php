@@ -1,5 +1,6 @@
 <?php
-	$title = "Remove User";
+	$title = "Unlock User";
+	$sitearea = "users";
 	require_once 'includes/header.inc.php';
 	
 	$message="";

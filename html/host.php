@@ -1,5 +1,6 @@
 <?php
 	$title = "Host Info";
+	$sitearea = "users";
 	require_once 'includes/header.inc.php';
 		
 	if (isset($_GET['hid'])) {

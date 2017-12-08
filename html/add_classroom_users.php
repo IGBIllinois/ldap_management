@@ -1,5 +1,6 @@
 <?php
 	$title = "Add Classroom Users";
+	$sitearea = "classroom";
 	require_once 'includes/header.inc.php';
 	
 	$message="";

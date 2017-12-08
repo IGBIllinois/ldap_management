@@ -26,7 +26,7 @@ function searchbarResultsProcessor(searchtext){
 					showingResults = true;
 					$searchresults.append('<div class="searchbar-heading">Users</div>');
 					for(var i=0; i<results.users.results.length; i++){
-						$searchresults.append('<a class="searchbar-result" href="user.php?uid='+results.users.results[i].username+'">'+results.users.results[i].name+"</a>");
+						$searchresults.append('<a class="searchbar-result" href="user.php?uid='+results.users.results[i].username+'">'+results.users.results[i].name+" ("+results.users.results[i].username+")</a>");
 					}
 					if(results.users.count > results.users.results.length){
 						$searchresults.append('<a class="searchbar-result" href="list_users.php?search='+searchtext+'">See all '+results.users.count+' users...</a>');

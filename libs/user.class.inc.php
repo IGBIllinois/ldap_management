@@ -148,7 +148,8 @@ class user {
 				'sambaSID' => __SAMBA_ID__."-".$uidnumber,
 				'sambaLMPassword' => $lmpasswd,
 				'sambaNTPassword' => $ntpasswd,
-				'SambaPwdLastSet' => time()
+				'SambaPwdLastSet' => time(),
+				'facsimiletelephonenumber' => time()+60*60*24*365
 			);
 			if(!$this->ldap->add($dn, $data)){
 				return array(
@@ -491,6 +492,10 @@ class user {
 		'sambaLMPassword'=>$lmpasswd,
 		'sambaNTPassword'=>$ntpasswd,
 		'sambaPwdLastSet'=>time());
+		if($this->get_password_expiration() != null){
+			// If user is not exempt, set password expiration date to one year hence
+			$data['facsimiletelephonenumber'] = time()+60*60*24*365;
+		}
 		if($this->ldap->modify($dn,$data)){
 			log::log_message("Changed password for ".$this->get_username());
 			return array('RESULT'=>true,

@@ -59,17 +59,17 @@
 		}	
 	</style>
 	<div class="card mt-4">
-		<?php if(isset($prevUid) && ($prevUid!=null || $nextUid!=null)){ ?>
+		<?php if($prevUid!=null || $nextUid!=null){ ?>
 		<div class="row">
 			<div class="col-sm-3 col-lg-2">
-				<a <?php if($prevUid==null){echo "disabled";} else { echo 'href="user.php?uid='.$prevUid.'"';} ?> class="btn btn-light btn-prev btn-block">
+				<a <?php if($prevUid!=null){echo 'href="user.php?uid='.$prevUid.'"';} ?> class="btn btn-light btn-prev btn-block<?php if($prevUid==null){echo " disabled";}?>">
 					<span class="fa fa-chevron-left"></span> Previous
 				</a>
 			</div>
 			<div class="col-sm-6 col-lg-8">
 			</div>
 			<div class="col-sm-3 col-lg-2">
-				<a <?php if($nextUid==null){echo "disabled";} else { echo 'href="user.php?uid='.$nextUid.'"';} ?> class="btn btn-light btn-next btn-block">
+				<a <?php if($nextUid!=null){echo 'href="user.php?uid='.$nextUid.'"';} ?> class="btn btn-light btn-next btn-block<?php if($nextUid==null){echo " disabled";}?>">
 					Next <span class="fa fa-chevron-right"></span>
 				</a>
 			</div>

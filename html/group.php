@@ -18,7 +18,7 @@
 	$users = $group->get_users();
 	sort($users);
 	for($i=0; $i<count($users);$i++){
-		$usershtml .= "<tr><td><a href='user.php?uid=".$users[$i]."'>".$users[$i]."</a>";
+		$usershtml .= "<tr><td class='pl-2'><a class='align-middle' href='user.php?uid=".$users[$i]."'>".$users[$i]."</a>";
 		if(!user::is_ldap_user($ldap,$users[$i])){
 			$usershtml .= " <span class='fa fa-exclamation-triangle smallwarning' title='User does not exist'></span>";
 		}
@@ -33,7 +33,7 @@
 			$usershtml .= " <span class='fa fa-graduation-cap smallwarning' title='User has left UIUC'></span>";
 		}
 		if($group->get_name()!=$users[$i]){
-			$usershtml .= " <a href='remove_from_group.php?uid=".$users[$i]."&gid=$gid' class='btn btn-danger btn-xs pull-right'><span class='fa fa-times'></span> Remove from group</a></td></tr>";
+			$usershtml .= " <a href='remove_from_group.php?uid=".$users[$i]."&gid=$gid' class='btn btn-danger btn-sm pull-right'><span class='fa fa-times'></span> Remove from group</a></td></tr>";
 		}
 		$userscopytext .= $users[$i]."\n";
 	}
@@ -43,7 +43,7 @@
 	$dircopytext = "";
 	for($i=0; $i<count($serverdirs); $i++){
 		$dir = explode(':', $serverdirs[$i]);
-		$dirhtml .= "<tr><td>".$dir[0]."</td><td>".$dir[1]." <a href='remove_serverdir.php?gid=$gid&serverdir=".urlencode($serverdirs[$i])."' class='btn btn-danger btn-xs pull-right'><span class='fa fa-times'></span> Remove directory</a></td></tr>";
+		$dirhtml .= "<tr><td class='pl-2'>".$dir[0]."</td><td>".$dir[1]." <a href='remove_serverdir.php?gid=$gid&serverdir=".urlencode($serverdirs[$i])."' class='btn btn-danger btn-sm pull-right'><span class='fa fa-times'></span> Remove directory</a></td></tr>";
 		$dircopytext .= $serverdirs[$i]."\n";
 	}
 
@@ -53,23 +53,23 @@
 			border-top: 2px solid darkgrey;
 		}	
 	</style>
-	<div class="panel panel-default">
-		<table class="table table-bordered table-condensed table-striped">
+	<div class="card mt-4">
+		<table class="table table-striped table-igb-bordered mb-0">
 			<tr>
-				<th>Name:</th>
-				<td><?php echo $group->get_name(); if(!$isusergroup){ ?> <a href="change_group_name.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="fa fa-pencil"></span> Change Name</a><?php } ?></td>
+				<th><span class='align-middle'>Name:</span></th>
+				<td><span class='align-middle'><?php echo $group->get_name(); if(!$isusergroup){ ?></span> <a href="change_group_name.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-sm pull-right"><span class="fa fa-pencil"></span> Change Name</a><?php } ?></td>
 			</tr>
 			<tr>
-				<th>Description:</th>
-				<td><?php echo $group->get_description(); if(!$isusergroup){ ?> <a href="change_description.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="fa fa-pencil"></span> Change Description</a><?php } ?></td>
+				<th><span class='align-middle'>Description:</span></th>
+				<td><span class='align-middle'><?php echo $group->get_description(); if(!$isusergroup){ ?></span> <a href="change_description.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-sm pull-right"><span class="fa fa-pencil"></span> Change Description</a><?php } ?></td>
 			</tr>
 			<tr>
 				<th>GID Number:</th>
 				<td><?php echo $group->get_gidnumber(); ?></td>
 			</tr>
 			<tr>
-				<th>Owner:</th>
-				<td><?php echo $group->get_owner(); if(!$isusergroup){ ?> <a href="change_group_owner.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="fa fa-pencil"></span> Change Owner</a><?php } ?></td>
+				<th><span class='align-middle'>Owner:</span></th>
+				<td><span class='align-middle'><?php echo $group->get_owner(); if(!$isusergroup){ ?></span> <a href="change_group_owner.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-sm pull-right"><span class="fa fa-pencil"></span> Change Owner</a><?php } ?></td>
 			</tr>
 			<tr>
 				<th>Created By:</th>
@@ -88,35 +88,36 @@
 				<td><?php echo strftime('%m/%d/%Y %I:%M:%S %p',$group->get_modifyTime()); ?></td>
 			</tr>
 		</table>
-		<div class="panel-body">
+		<hr class="my-0">
+		<div class="card-body">
 			<a href="remove_group.php?gid=<?php echo $gid; ?>" class="btn btn-danger"><span class="fa fa-times"></span> Remove Group</a>
 		</div>
 	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<div class="btn-group btn-group-xs pull-right">
-				<a class="btn btn-success btn-xs" href="add_serverdir.php?gid=<?php echo $gid; ?>"><span class='fa fa-plus'></span> Add directory</a>
-				<button class='btn btn-default btn-xs copy-button'><span class='fa fa-clipboard'></span> Copy</button>
+	<div class="card mt-3">
+		<div class="card-header d-flex align-items-center">
+			<h3 class='mr-auto'>Managed Directories</h3>
+			<div class="btn-group btn-group-sm">
+				<a class="btn btn-success btn-sm" href="add_serverdir.php?gid=<?php echo $gid; ?>"><span class='fa fa-plus'></span> Add directory</a>
+				<button class='btn btn-light btn-sm copy-button'><span class='fa fa-clipboard'></span> Copy</button>
 			</div>
-			<h3 class='panel-title'>Managed Directories</h3>
 		</div>
-		<textarea class='hidden copy-text'><?php echo $dircopytext; ?></textarea>
-		<table class="table table-bordered table-striped">
+		<textarea class='d-none copy-text'><?php echo $dircopytext; ?></textarea>
+		<table class="table table-sm table-striped mb-0">
 			<?php echo $dirhtml; ?>
 		</table>
 	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading">
+	<div class="card mt-3">
+		<div class="card-header d-flex align-items-center">
+			<h3 class="mr-auto">Members</h3>
 			<?php if(!$isusergroup){ ?>
-			<div class="btn-group btn-group-xs pull-right">
-				<a class='btn btn-success btn-xs' href='add_to_group.php?gid=<?php echo $gid; ?>'><span class='fa fa-plus'></span> Add member</a>
-				<button class='btn btn-default btn-xs copy-button'><span class='fa fa-clipboard'></span> Copy</button>
+			<div class="btn-group btn-group-sm">
+				<a class='btn btn-success btn-sm' href='add_to_group.php?gid=<?php echo $gid; ?>'><span class='fa fa-plus'></span> Add member</a>
+				<button class='btn btn-light btn-sm copy-button'><span class='fa fa-clipboard'></span> Copy</button>
 			</div>
 			<?php } ?>
-			<h3 class="panel-title">Members</h3>
 		</div>
-		<textarea class='hidden copy-text'><?php echo $userscopytext; ?></textarea>
-		<table class="table table-bordered table-striped">
+		<textarea class='d-none copy-text'><?php echo $userscopytext; ?></textarea>
+		<table class="table table-sm table-striped mb-0">
 			<?php echo $usershtml; ?>
 		</table>
 	</div>

@@ -8,87 +8,67 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title><?php echo __TITLE__.(isset($title)?" - $title":''); ?></title>
 		<link rel="stylesheet" href="includes/bootstrap/css/bootstrap.min.css" type="text/css"/>
 		<link rel="stylesheet" href="includes/select2/css/select2.css" type="text/css" />
 		<link rel="stylesheet" href="includes/font-awesome/css/font-awesome.css" type="text/css" />
 		<link rel="stylesheet" href="includes/main.inc.css" type="text/css"/>
 		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
-		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-		<script type="text/javascript" src="includes/select2/js/select2.full.js"></script>
-		<script type="text/javascript" src="includes/main.inc.js"></script>
-		<script type="text/javascript" src="includes/searchbar.js"></script>
+		
+		<script src="includes/jquery-3.2.1.js"></script>
 	</head>
 	<body>
-		<nav class="navbar navbar-inverse navbar-static-top">
+		<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
 			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#archive-accounting-nav-collapse" aria-expanded="false">
-				        <span class="sr-only">Toggle navigation</span>
-				        <span class="icon-bar"></span>
-				        <span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-				    </button>
-					<a class="navbar-brand" href="index.php">
-						<?php echo __TITLE__; ?>
-					</a>
-				</div>
-				<div class="collapse navbar-collapse" id="archive-accounting-nav-collapse">
-					<ul class="nav navbar-nav">
-						<li <?php if($sitearea=='users' || $sitearea=='classroom'){echo 'class="active"';} ?> class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span class="fa fa-user"></span> Users <span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="list_users.php"><span class="fa fa-list"></span> List Users</a></li>
-								<li><a href="add_user.php"><span class="fa fa-plus"></span> Add User</a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="add_classroom_users.php"><span class="fa fa-plus"></span> Add Classroom Users</a></li>
-								<li><a href="remove_classroom_users.php"><span class="fa fa-minus"></span> Remove Classroom Users</a></li>
-							</ul>
+				<a class="navbar-brand" href="index.php">
+					<?php echo __TITLE__; ?>
+				</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#igblam-nav-collapse" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+					
+				<div class="collapse navbar-collapse" id="igblam-nav-collapse">
+					<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+						<li class="nav-item dropdown<?php if($sitearea=='users' || $sitearea=='classroom'){echo ' active';} ?>">
+							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button"><span class="fa fa-user"></span> Users</a>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" href="list_users.php"><span class="fa fa-list"></span> List Users</a>
+								<a class="dropdown-item" href="add_user.php"><span class="fa fa-plus"></span> Add User</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="add_classroom_users.php"><span class="fa fa-plus"></span> Add Classroom Users</a>
+								<a class="dropdown-item" href="remove_classroom_users.php"><span class="fa fa-minus"></span> Remove Classroom Users</a>
+							</div>
 						</li>
-						<li <?php if($sitearea=='groups'){echo 'class="active"';} ?> class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span class="fa fa-users"></span> Groups <span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="list_groups.php"><span class="fa fa-list"></span> List Groups</a></li>
-								<li><a href="add_group.php"><span class="fa fa-plus"></span> Add Group</a></li>
-							</ul>
+						<li class="nav-item dropdown<?php if($sitearea=='groups'){echo ' active';} ?>">
+							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button"><span class="fa fa-users"></span> Groups <span class="caret"></span></a>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" href="list_groups.php"><span class="fa fa-list"></span> List Groups</a>
+								<a class="dropdown-item" href="add_group.php"><span class="fa fa-plus"></span> Add Group</a>
+							</div>
 						</li>
-						<li <?php if($sitearea=='hosts'){echo 'class="active"';} ?> class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span class="fa fa-server"></span> Hosts <span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="list_hosts.php"><span class="fa fa-list"></span> List Hosts</a></li>
-								<li><a href="add_host.php"><span class="fa fa-plus"></span> Add Host</a></li>
-							</ul>
+						<li class="nav-item dropdown<?php if($sitearea=='hosts'){echo ' active';} ?>">
+							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button"><span class="fa fa-server"></span> Hosts <span class="caret"></span></a>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" href="list_hosts.php"><span class="fa fa-list"></span> List Hosts</a>
+								<a class="dropdown-item" href="add_host.php"><span class="fa fa-plus"></span> Add Host</a>
+							</div>
 						</li>
-<!--
-						<li <?php if($sitearea=='classroom'){echo 'class="active"';} ?> class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span class="fa fa-book"></span> Classroom <span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="add_classroom_users.php"><span class="fa fa-plus"></span> Add Classroom Users</a></li>
-								<li><a href="remove_classroom_users.php"><span class="fa fa-minus"></span> Remove Classroom Users</a></li>
-							</ul>
+						<li class="nav-item dropdown<?php if($sitearea=='domain'){echo ' active';} ?>">
+							<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button"><span class="fa fa-desktop"></span> Domain <span class="caret"></span></a>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" href="list_computers.php"><span class="fa fa-list"></span> List Domain Computers</a>
+								<a class="dropdown-item" href="add_computer.php"><span class="fa fa-plus"></span> Add Domain Computer</a>
+							</div>
 						</li>
--->
-						<li <?php if($sitearea=='domain'){echo 'class="active"';} ?> class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span class="fa fa-desktop"></span> Domain <span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="list_computers.php"><span class="fa fa-list"></span> List Domain Computers</a></li>
-								<li><a href="add_computer.php"><span class="fa fa-plus"></span> Add Domain Computer</a></li>
-							</ul>
-						</li>
-						<li <?php if($sitearea=='statistics'){echo 'class="active"';} ?>><a href="statistics.php"><span class="fa fa-bar-chart"></span> Statistics</a></li>
+						<li class="nav-item<?php if($sitearea=='statistics'){echo ' active';} ?>"><a href="statistics.php" class="nav-link"><span class="fa fa-bar-chart"></span> Statistics</a></li>
 					</ul>
 					
-					<a type="button" class="btn btn-danger btn-sm navbar-btn navbar-right hidden-xs" style="margin-right:0" href="logout.php"><span class="fa fa-sign-out"></span> Logout</a>
-					<form class="navbar-form navbar-right">
-						<div class="form-group" id="searchbar-container">
-							<input type="search" class="form-control" name="searchbar" id="searchbar" placeholder="Search"/>
-							<div id="searchbar-results"></div>
-						</div>
+					<form class="form-inline mt-2 mt-lg-0" id="searchbar-container">
+						<input type="search" class="form-control" name="searchbar" id="searchbar" placeholder="Search"/>
+						<div id="searchbar-results"></div>
 					</form>
-					<a type="button" class="btn btn-danger btn-sm btn-block visible-xs" style="margin-bottom:7px" href="logout.php"><span class="fa fa-sign-out"></span> Logout</a>
+					<a class="btn btn-outline-secondary my-2 my-lg-0 ml-lg-1" style="margin-right:0" href="logout.php"><span class="fa fa-sign-out"></span> Logout</a>
 				</div>
 			</div>
 		</nav>

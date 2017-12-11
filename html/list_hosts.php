@@ -37,10 +37,12 @@
 	
 	?>
 	
-	<h3>List of Hosts</h3>
+	<h3 class="mt-4">List of Hosts</h3>
 	
-	<table class="table table-bordered table-condensed table-striped">
-		<?php echo $hosts_html; ?>
-	</table>
+	<div class="card">
+		<table class="table table-sm table-striped table-igb-bordered table-responsive-md mb-0">
+			<?php echo $hosts_html; ?>
+		</table>
+	</div>
 <?php
 	require_once 'includes/footer.inc.php';

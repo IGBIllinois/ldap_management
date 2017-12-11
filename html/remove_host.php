@@ -39,25 +39,26 @@
 		header('location: index.php');
 	}
 ?>
-<form class="form-horizontal" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
+<form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
 		<legend>Remove host</legend>
-		<div class="form-group">
-			<label class="col-sm-2 control-label">Hostname:</label>
-			<div class="col-sm-4">
-				<input type="hidden" name="host" value="<?php echo $hid; ?>" autofocus /><label class="control-label"><?php echo $hid; ?></label>
+		<hr>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label">Hostname:</label>
+			<div class="col-sm-5">
+				<input type="hidden" name="host" value="<?php echo $hid; ?>" autofocus /><label class="col-form-label"><?php echo $hid; ?></label>
 			</div>
 		</div>
-		<div class="form-group">
-			<div class="col-sm-2"></div>
-			<div class="col-sm-4">
+		<div class="form-group row">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-5">
 				Are you sure you want to remove this host? Access to this host will be revoked for all users. This operation cannot be undone.
 			</div>
 		</div>
-		<div class="form-group">
-			<div class="col-sm-4 col-sm-offset-2">
+		<div class="form-group row">
+			<div class="col-sm-5 offset-sm-3">
 				<div class="btn-group">
-					<input class="btn btn-danger" type="submit" name="remove_host" value="Remove host" /> <input class="btn btn-default" type="submit" name="cancel_host" value="Cancel" />
+					<input class="btn btn-danger" type="submit" name="remove_host" value="Remove host" /> <input class="btn btn-light" type="submit" name="cancel_host" value="Cancel" />
 				</div>
 			</div>
 		</div>

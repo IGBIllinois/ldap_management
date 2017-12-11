@@ -3,7 +3,7 @@
 	$sitearea = "statistics";
 	require 'includes/header.inc.php';
 ?>
-	<h3>Statistics</h3>
+	<h3 class="mt-4">Statistics</h3>
 	<table class='table table-condensed table-striped table-bordered'>
 		<tr>
 			<td># of Users</td>

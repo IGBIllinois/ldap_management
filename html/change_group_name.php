@@ -39,32 +39,33 @@
 		header('location: index.php');
 	}
 ?>
-<form class="form-horizontal" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
+<form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
 		<legend>Change Group Name</legend>
+		<hr>
 		<div class="row">
-			<div class="col-sm-6">
-				<div class="form-group">
-					<label class="col-xs-4 control-label" for="name-input">Group:</label>
-					<div class="col-xs-8">
-						<input type="hidden" name="name" value="<?php echo $gid; ?>" /><label class="control-label"><?php echo $gid; ?></label>
+			<div class="col-sm-8">
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="name-input">Group:</label>
+					<div class="col-sm-8">
+						<input type="hidden" name="name" value="<?php echo $gid; ?>" /><label class="col-form-label"><?php echo $gid; ?></label>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-sm-4 control-label" for="name-input">New Group Name:</label>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="name-input">New Group Name:</label>
 					<div class="col-sm-8">
 						<input class="form-control" type="text" name="new_name" id="name_input" value="<?php if (isset($_POST['new_name'])){echo $_POST['new_name'];}?>" oninput="change_groupname_errors();" autofocus />
 					</div>
 				</div>
-				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-4">
+				<div class="form-group row">
+					<div class="col-sm-8 offset-sm-4">
 						<div class="btn-group">
-							<input class="btn btn-info" type="submit" name="change_name" value="Change name" id="group_submit" /> <input class="btn btn-default" type="submit" name="cancel_group" value="Cancel" />
+							<input class="btn btn-info" type="submit" name="change_name" value="Change name" id="group_submit" /> <input class="btn btn-light" type="submit" name="cancel_group" value="Cancel" />
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-6">
+			<div class="col-sm-4">
 				<p id="groupnameerror1" class="text-success"><span class="fa fa-check"></span> <span class="text">Name not in use</span></p>
 				<p id="groupnameerror2" class="text-danger"><span class="fa fa-times"></span> <span class="text">Name must begin with a lowercase letter</span></p>
 				<p id="groupnameerror3" class="text-danger"><span class="fa fa-times"></span> Name must be alphanumeric (letters, numbers, underscore)</p>

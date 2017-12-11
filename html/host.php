@@ -1,6 +1,6 @@
 <?php
 	$title = "Host Info";
-	$sitearea = "users";
+	$sitearea = "hosts";
 	require_once 'includes/header.inc.php';
 		
 	if (isset($_GET['hid'])) {
@@ -17,7 +17,7 @@
 	$users = $host->get_users();
 	sort($users);
 	for($i=0; $i<count($users);$i++){
-		$usershtml .= "<tr><td><a href='user.php?uid=".$users[$i]."'>".$users[$i]."</a>";
+		$usershtml .= "<tr><td class='pl-2'><a class='align-middle' href='user.php?uid=".$users[$i]."'>".$users[$i]."</a>";
 		if(!user::is_ldap_user($ldap,$users[$i])){
 			$usershtml .= " <span class='fa fa-exclamation-triangle smallwarning' title='User does not exist'></span>";
 		}
@@ -31,7 +31,7 @@
 		if($userobj->get_leftcampus()){
 			$usershtml .= " <span class='fa fa-graduation-cap smallwarning' title='User has left UIUC'></span>";
 		}
-		$usershtml .= " <a href='remove_machinerights.php?uid=".$users[$i]."&hid=$hostname' class='btn btn-danger btn-xs pull-right'><span class='fa fa-times'></span> Revoke access</a></td></tr>";
+		$usershtml .= " <a href='remove_machinerights.php?uid=".$users[$i]."&hid=$hostname' class='btn btn-danger btn-sm pull-right'><span class='fa fa-times'></span> Revoke access</a></td></tr>";
 		$copytext .= $users[$i]."\n";
 	}
 
@@ -41,15 +41,15 @@
 			border-top: 2px solid darkgrey;
 		}	
 	</style>
-	<div class="panel panel-default">
-		<table class="table table-bordered table-condensed table-striped">
+	<div class="card mt-4">
+		<table class="table table-sm table-striped table-igb-bordered mb-0">
 			<tr>
-				<th>Hostname:</th>
-				<td><?php echo $host->get_name(); ?> <a href="change_host_name.php?hid=<?php echo $host->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="fa fa-pencil"></span> Change Hostname</a></td>
+				<th><span class='align-middle'>Hostname:</span></th>
+				<td><span class='align-middle'><?php echo $host->get_name(); ?></span> <a href="change_host_name.php?hid=<?php echo $host->get_name(); ?>" class="btn btn-info btn-sm pull-right"><span class="fa fa-pencil"></span> Change Hostname</a></td>
 			</tr>
 			<tr>
-				<th>IP:</th>
-				<td><?php echo $host->get_ip(); ?> <a href="change_ip.php?hid=<?php echo $host->get_name(); ?>" class="btn btn-info btn-xs pull-right"><span class="fa fa-pencil"></span> Change IP</a></td>
+				<th><span class='align-middle'>IP:</span></th>
+				<td><span class='align-middle'><?php echo $host->get_ip(); ?></span> <a href="change_ip.php?hid=<?php echo $host->get_name(); ?>" class="btn btn-info btn-sm pull-right"><span class="fa fa-pencil"></span> Change IP</a></td>
 			</tr>
 			<tr>
 				<th>Created By:</th>
@@ -68,20 +68,21 @@
 				<td><?php echo strftime('%m/%d/%Y %I:%M:%S %p',$host->get_modifyTime()); ?></td>
 			</tr>
 		</table>
-		<div class="panel-body">
+		<hr class="my-0">
+		<div class="card-body">
 			<a href="remove_host.php?hid=<?php echo $hostname; ?>" class="btn btn-danger"><span class="fa fa-times"></span> Remove Host</a>
 		</div>
 	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<div class="btn-group btn-group-xs pull-right">
-				<a class='btn btn-success btn-xs' href='add_machinerights.php?hid=<?php echo $hostname; ?>'><span class='fa fa-plus'></span> Add user</a>
-				<button class='btn btn-default btn-xs copy-button'><span class='fa fa-clipboard'></span> Copy</button>
+	<div class="card mt-3">
+		<div class="card-header d-flex align-items-center">
+			<h3 class="mr-auto">Users</h3>
+			<div class="btn-group btn-group-sm">
+				<a class='btn btn-success btn-sm' href='add_machinerights.php?hid=<?php echo $hostname; ?>'><span class='fa fa-plus'></span> Add user</a>
+				<button class='btn btn-light btn-sm copy-button'><span class='fa fa-clipboard'></span> Copy</button>
 			</div>
-			<h3 class="panel-title">Users</h3>
 		</div>
-		<textarea class='hidden copy-text'><?php echo $copytext; ?></textarea>
-		<table class="table table-bordered table-striped">
+		<textarea class='d-none copy-text'><?php echo $copytext; ?></textarea>
+		<table class="table table-sm table-striped mb-0">
 			<?php echo $usershtml; ?>
 		</table>
 	</div>

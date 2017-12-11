@@ -19,34 +19,53 @@ class html {
         	        $url .= "?start=";
 	        }
 
-        	$pages_html = "<nav><ul class='pagination pagination-centered'>";
+        	$pages_html = "<nav class='mt-2'><ul class='pagination justify-content-center'>";
 
 	        if ($current_page > 1) {
         	        $start_record = $start - $count;
-                	$pages_html .= "<li><a href='" . $url . $start_record . "'>&laquo;</a></li> ";
+        	        $pages_html .= "<li class='page-item'><a class='page-link' href='".$url."0'><span class='fa fa-angle-double-left'></span></a></li> ";
+                	$pages_html .= "<li class='page-item'><a class='page-link' href='" . $url . $start_record . "'><span class='fa fa-angle-left'></span></a></li> ";
 	        }
         	else {
-                	$pages_html .= "<li class='disabled'><a href='#'>&laquo;</a></li>";
+	        		$pages_html .= "<li class='page-item disabled'><a class='page-link' href='#'><span class='fa fa-angle-double-left'></span></a></li> ";
+                	$pages_html .= "<li class='page-item disabled'><a class='page-link' href='#'><span class='fa fa-angle-left'></span></a></li>";
 	        }
 
-        	for ($i=0; $i<$num_pages; $i++) {
+			$pages_to_show = 10;
+			$pages_to_pad = 5;
+
+			$start_page = max(0,$current_page-$pages_to_pad);
+			$end_page = min($num_pages, $start_page+$pages_to_show);
+			if($end_page - $start_page < $pages_to_show){
+				$start_page = max(0,$current_page-$pages_to_show);
+			}
+			if($start_page>0){
+				$pages_html .= "<li class='page-item disabled'><a class='page-link' href='#'>...</a></li>";
+			}
+        	for ($i=$start_page; $i<$end_page; $i++) {
                 	$start_record = $count * $i;
 	                if ($i == $current_page - 1) {
-        	                $pages_html .= "<li class='active'>";
+        	                $pages_html .= "<li class='page-item active'>";
                 	}
 	                else {
-        	                $pages_html .= "<li>";
+        	                $pages_html .= "<li class='page-item'>";
                 	}
 	                $page_number = $i + 1;
-        	        $pages_html .= "<a href='" . $url . $start_record . "'>" . $page_number . "</a></li>";
+        	        $pages_html .= "<a class='page-link' href='" . $url . $start_record . "'>" . $page_number . "</a></li>";
+        	}
+        	
+        	if ($num_pages > $end_page){
+	        	$pages_html .= "<li class='page-item disabled'><a class='page-link' href='#'>...</a></li>";
         	}
 
 	        if ($current_page < $num_pages) {
         	        $start_record = $start + $count;
-                	$pages_html .= "<li><a href='" . $url . $start_record . "'>&raquo;</a></li> ";
+                	$pages_html .= "<li class='page-item'><a class='page-link' href='" . $url . $start_record . "'><span class='fa fa-angle-right'></span></a></li> ";
+                	$pages_html .= "<li class='page-item'><a class='page-link' href='".$url.(($num_pages-1)*$count)."'><span class='fa fa-angle-double-right'></span></a></li> ";
 	        }
         	else {
-                	$pages_html .= "<li class='disabled'><a href='#'>&raquo;</a></li>";
+                	$pages_html .= "<li class='page-item disabled'><a class='page-link' href='#'><span class='fa fa-angle-right'></span></a></li>";
+                	$pages_html .= "<li class='page-item disabled'><a class='page-link' href='#'><span class='fa fa-angle-double-right'></span></a></li> ";
 	        }
         	$pages_html .= "</ul></nav>";
 	        return $pages_html;
@@ -86,26 +105,26 @@ class html {
 		for ($i=$i_start;$i<$i_count;$i++) {
 	        if (array_key_exists($i,$users)) {
         		$users_html .= "<tr>";
-            	$users_html .= "<td><a href='user.php?uid=" . $users[$i]['username'] . "'>";
+            	$users_html .= "<td class='pl-2 d-flex'><a class='mr-auto' href='user.php?uid=" . $users[$i]['username'] . "'>";
 				$users_html .= $users[$i]['username'] . "</a>";
 				if($users[$i]['shadowexpire']!=''){
 					if($users[$i]['shadowexpire'] <= time()){
-						$users_html .= " <span class='fa fa-clock-o smalldanger' title='User expired'></span>";
+						$users_html .= " <span class='ml-1 fa fa-clock-o smalldanger' title='User expired'></span>";
 					} else {
-						$users_html .= " <span class='fa fa-clock-o smallwarning' title='User set to expire'></span>";
+						$users_html .= " <span class='ml-1 fa fa-clock-o smallwarning' title='User set to expire'></span>";
 					}
 				}
 				if($users[$i]['leftcampus']){
-					$users_html .= " <span class='fa fa-graduation-cap smallwarning' title='User left UIUC'></span>";
+					$users_html .= " <span class='ml-1 fa fa-graduation-cap smallwarning' title='User left UIUC'></span>";
 				}
 				if($users[$i]['noncampus']){
-					$users_html .= " <span class='fa fa-graduation-cap smallinfo' title='User not from UIUC'></span>";
+					$users_html .= " <span class='ml-1 fa fa-graduation-cap smallinfo' title='User not from UIUC'></span>";
 				}
 				if($users[$i]['crashplan']){
-					$users_html .= " <span class='fa fa-hdd-o smallsuccess' title='User has Crashplan'></span>";
+					$users_html .= " <span class='ml-1 fa fa-hdd-o smallsuccess' title='User has Crashplan'></span>";
 				}
 				if($users[$i]['passwordexpired']){
-					$users_html .= " <span class='fa fa-lock smalldanger' title='Password expired'></span>";
+					$users_html .= " <span class='ml-1 fa fa-lock smalldanger' title='Password expired'></span>";
 				}
 				$users_html .= "</td>";
                 $users_html .= "<td>" . $users[$i]['name']. "</td>";
@@ -129,7 +148,7 @@ class html {
 		for ($i=$i_start;$i<$i_count;$i++) {
 		        if (array_key_exists($i,$groups)) {			        
             		$groups_html .= "<tr>";
-                	$groups_html .= "<td><a href='group.php?gid=" . $groups[$i]['name'] . "'>";
+                	$groups_html .= "<td class='pl-2'><a href='group.php?gid=" . $groups[$i]['name'] . "'>";
 					$groups_html .= $groups[$i]['name'] . "</a></td>";
 	                $groups_html .= "<td>" . $groups[$i]['description']. "</td>";
 	                $groups_html .= "<td>" . $groups[$i]['owner'] . "</td>";
@@ -149,7 +168,7 @@ class html {
 		for ($i=$i_start;$i<$i_count;$i++) {
 		        if (array_key_exists($i,$computers)) {
                 		$computers_html .= "<tr>";
-	                	$computers_html .= "<td>";
+	                	$computers_html .= "<td class='pl-2'>";
 	                	$computers_html .= "<a href='computer.php?uid=" . $computers[$i]['name'] . "'>";
 						$computers_html .= $computers[$i]['name'];
 						$computers_html .= "</a>";
@@ -177,20 +196,20 @@ class html {
 		sort($biotech);
 		sort($other);
 		
-		$hostshtml = "<tr><th>IGB Hosts</th><th>IP</th><th># of users</th></tr>";
+		$hostshtml = "<tr><th class='pl-2'>IGB Hosts</th><th>IP</th><th># of users</th></tr>";
 		foreach($igb as $host){
-			$hostshtml .= "<tr><td><a href='host.php?hid=".$host['name']."'>".$host['name']."</a></td><td>".$host['ip']."</td><td>".$host['numusers']."</td></tr>";
+			$hostshtml .= "<tr><td class='pl-2'><a href='host.php?hid=".$host['name']."'>".$host['name']."</a></td><td>".$host['ip']."</td><td>".$host['numusers']."</td></tr>";
 		}
 
-		$hostshtml .= "<tr><th>Biotech Hosts</th><th>IP</th><th># of users</th></tr>";
+		$hostshtml .= "<tr><th class='pl-2'>Biotech Hosts</th><th>IP</th><th># of users</th></tr>";
 		foreach($biotech as $host){
-			$hostshtml .= "<tr><td><a href='host.php?hid=".$host['name']."'>".$host['name']."</a></td><td>".$host['ip']."</td><td>".$host['numusers']."</td></tr>";
+			$hostshtml .= "<tr><td class='pl-2'><a href='host.php?hid=".$host['name']."'>".$host['name']."</a></td><td>".$host['ip']."</td><td>".$host['numusers']."</td></tr>";
 		}
 
 		if(count($other)!=0){
-			$hostshtml .= "<tr><th>Other Hosts</th><th>IP</th><th># of users</th></tr>";
+			$hostshtml .= "<tr><th class='pl-2'>Other Hosts</th><th>IP</th><th># of users</th></tr>";
 			foreach($other as $host){
-				$hostshtml .= "<tr><td><a href='host.php?hid=".$host['name']."'>".$host['name']."</a></td><td>".$host['ip']."</td><td>".$host['numusers']."</td></tr>";
+				$hostshtml .= "<tr><td class='pl-2'><a href='host.php?hid=".$host['name']."'>".$host['name']."</a></td><td>".$host['ip']."</td><td>".$host['numusers']."</td></tr>";
 			}
 		}
 		

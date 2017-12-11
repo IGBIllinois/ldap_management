@@ -56,7 +56,7 @@
 
 	$groupshtml = "";
 	if($gid != ""){
-		$groupshtml = "<input type='hidden' name='group' value='$gid'/><label class='control-label'>$gid</label>";
+		$groupshtml = "<input type='hidden' name='group' value='$gid'/><label class='col-form-label'>$gid</label>";
 	}
 	
 	$serverdir = "";
@@ -70,33 +70,34 @@
 		exit();
 	}
 ?>
-<form class="form-horizontal" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
+<form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
 		<legend>Remove Server Directory from Group</legend>
-		<div class="form-group">
-			<label class="col-sm-2 control-label" for="group-input">Group:</label>
-			<div class="col-sm-4">
+		<hr>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="group-input">Group:</label>
+			<div class="col-sm-5">
 				<?php echo $groupshtml; ?>
 			</div>
 		</div>
-		<div class="form-group">
-			<label class="col-sm-2 control-label" for="username-input">Server:</label>
-			<div class="col-sm-4">
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="username-input">Server:</label>
+			<div class="col-sm-5">
 				<input type="hidden" name="serverdir" value="<?php echo $serverdir; ?>"/>
-				<label class="control-label"><?php echo $serverarr[0]; ?></label>
+				<label class="col-form-label"><?php echo $serverarr[0]; ?></label>
 			</div>
 		</div>
-		<div class="form-group">
-			<label class="col-sm-2 control-label" for="username-input">Directory:</label>
-			<div class="col-sm-4">
-				<label class="control-label"><?php echo $serverarr[1]; ?></label>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="username-input">Directory:</label>
+			<div class="col-sm-5">
+				<label class="col-form-label"><?php echo $serverarr[1]; ?></label>
 			</div>
 		</div>
-		<div class="form-group">
-			<div class="col-sm-4 col-sm-offset-2">
+		<div class="form-group row">
+			<div class="col-sm-5 offset-sm-3">
 				<input type="hidden" name="from" value="<?php echo $from; ?>"/>
 				<div class="btn-group">
-					<input class="btn btn-danger" type="submit" name="remove_dir" value="Remove directory" /> <input class="btn btn-default" type="submit" name="cancel_dir" value="Cancel" />
+					<input class="btn btn-danger" type="submit" name="remove_dir" value="Remove directory" /> <input class="btn btn-light" type="submit" name="cancel_dir" value="Cancel" />
 				</div>
 			</div>
 		</div>

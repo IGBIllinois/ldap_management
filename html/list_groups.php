@@ -42,38 +42,40 @@
 	$groups_html = html::get_groups_rows($all_groups);
 	?>
 	
-	<h3>List of Groups</h3>
-	<div class="row" style="margin-bottom:15px;">
-		<form method="get" action='<?php echo $_SERVER['PHP_SELF']; ?>' class="form-inline">
-			<div class="col-md-6">
-				<div class="form-group">
-					<input type="text" name="search" class="form-control" value="<?php if (isset($search)){echo $search; } ?>" placeholder="Search" />
-				</div>
+	<h3 class="mt-4">List of Groups</h3>
+	<div class="card">
+		<div class="card-body">
+			<form method="get" action='<?php echo $_SERVER['PHP_SELF']; ?>' class="form-inline">
+				<input type="text" name="search" class="form-control mb-2 mr-sm-2 mb-sm-0" value="<?php if (isset($search)){echo $search; } ?>" placeholder="Search" />
 				
 				<input type="hidden" name="sort" value="<?php echo $sort; ?>" />
 				<input type="hidden" name="asc" value="<?php echo $asc; ?>" />
-				<input type="submit" class="btn btn-primary" value="Go" />
-				<div class="checkbox">
-					<label for="filterusers"><input type="checkbox" name="filterusers" <?php if($filterusers == 0)echo "checked='checked'"; ?>> Show User Groups</label>
+				<div class="form-check mb-2 mr-sm-2 mb-sm-0">
+					<label for="filterusers" class="form-check-label">
+						<input type="checkbox" name="filterusers" class="form-check-input" <?php if($filterusers == 0)echo "checked='checked'"; ?>>
+						Show User Groups
+					</label>
 				</div>
-			</div>
-		</form>
-	</div>
+				<input type="submit" class="btn btn-primary" value="Go" />
+				
+			</form>
+		</div>
 	
-	<table class="table table-bordered table-condensed table-striped">
-		<thead>
-			<tr>
-				<th class="sortable-th" onclick="sort_table('name')">Name<?php echo html::sort_icon('name', $sort, $asc); ?></th>
-				<th class="sortable-th" onclick="sort_table('description')">Description<?php echo html::sort_icon('description', $sort, $asc); ?></th>
-				<th class="sortable-th" onclick="sort_table('owner')">Owner<?php echo html::sort_icon('owner',$sort,$asc); ?></th>
-				<th>Managed Directories</th>
-				<th class="sortable-th" onclick="sort_table('members')">Members<?php echo html::sort_icon('members', $sort, $asc); ?></th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php echo $groups_html; ?>
-		</tbody>
-	</table>
+		<table class="table table-sm table-striped table-igb-bordered table-responsive-md mb-0">
+			<thead>
+				<tr>
+					<th class="sortable-th pl-2" onclick="sort_table('name')">Name<?php echo html::sort_icon('name', $sort, $asc); ?></th>
+					<th class="sortable-th" onclick="sort_table('description')">Description<?php echo html::sort_icon('description', $sort, $asc); ?></th>
+					<th class="sortable-th" onclick="sort_table('owner')">Owner<?php echo html::sort_icon('owner',$sort,$asc); ?></th>
+					<th>Managed Directories</th>
+					<th class="sortable-th" onclick="sort_table('members')">Members<?php echo html::sort_icon('members', $sort, $asc); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php echo $groups_html; ?>
+			</tbody>
+		</table>
+	</div>
 	
 	<?php echo $pages_html; ?>
 <?php

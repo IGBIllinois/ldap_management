@@ -71,7 +71,7 @@
 	}
 	
 	?>
-<form class="form-horizontal" method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>" name="form">
+<form class="mt-4" method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>" name="form">
 	<fieldset>
 		<legend>
 		<?php
@@ -83,12 +83,13 @@
 			echo $title;
 		?>
 		</legend>
+		<hr>
 		<div class="row">
-			<div class="col-sm-6">
-				<div class="form-group">
-					<label class="col-sm-4 control-label">Username:</label>
+			<div class="col-sm-8">
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label">Username:</label>
 					<div class="col-sm-8">
-						<label class="control-label"><?php echo $user->get_username(); ?></label>
+						<label class="col-form-label"><?php echo $user->get_username(); ?></label>
 						<input type="hidden" name="uid" value="<?php echo $_REQUEST['uid']; ?>"/>
 						<input type="hidden" name="attr" value="<?php echo $_REQUEST['attr']; ?>"/>
 					</div>
@@ -96,8 +97,8 @@
 				<?php
 					for($i=0; $i<count($fields); $i++){
 				?>
-				<div class="form-group">
-					<label class="col-sm-4 control-label"><?php if(isset($fields[$i]['fullname'])){ echo $fields[$i]['fullname'].':'; } ?></label>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label"><?php if(isset($fields[$i]['fullname'])){ echo $fields[$i]['fullname'].':'; } ?></label>
 					<div class="col-sm-8">
 						<?php
 							if (isset($fields[$i]['type']) && $fields[$i]['type']=='text'){
@@ -105,15 +106,15 @@
 								echo $fields[$i]['text'];
 							} else {
 								?>
-						<label class="control-label"><?php echo extensions::format($user->get_attribute($fields[$i]['field']),isset($fields[$i]['format'])?$fields[$i]['format']:''); ?></label>
+						<label class="col-form-label"><?php echo extensions::format($user->get_attribute($fields[$i]['field']),isset($fields[$i]['format'])?$fields[$i]['format']:''); ?></label>
 						<?php } ?>
 					</div>
 				</div>
 					<?php
 					}
 					?>
-				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-4">
+				<div class="form-group row">
+					<div class="col-sm-8 offset-sm-4">
 						<div class="btn-group">
 							<?php 
 							$color = "btn-danger";
@@ -127,12 +128,12 @@
 								}
 							} ?>
 							<input class="btn <?php echo $color; ?>" type="submit" name="remove_<?php echo $attr['name'];?>" id="change_<?php echo $attr['name'];?>_submit" value="<?php echo $text;?>"/>
-							<input class="btn btn-default" type="submit" name="cancel_remove" value="Cancel"/>
+							<input class="btn btn-light" type="submit" name="cancel_remove" value="Cancel"/>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-6" id="validation">
+			<div class="col-sm-4" id="validation">
 				
 			</div>
 		</div>

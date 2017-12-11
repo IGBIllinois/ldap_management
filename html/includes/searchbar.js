@@ -2,7 +2,6 @@ var searchbar_seqnum = 0;
 var showingResults;
 function searchbar_search(){
 	var searchtext = $('#searchbar').val();
-	console.log("Searching: '"+searchtext+"'");
 	$.ajax('searchbar_data.php',{
 		method: 'GET',
 		data: {'searchtext':searchtext},
@@ -14,10 +13,8 @@ function searchbarResultsProcessor(searchtext){
 	searchbar_seqnum++;
 	var seqnum = searchbar_seqnum;
 	return function(data){
-		console.log(searchbar_seqnum, seqnum);
 			if(searchbar_seqnum == seqnum){
 				var results = JSON.parse(data);
-				console.log(results);
 				var $searchbar = $('#searchbar');
 				var $searchresults = $('#searchbar-results');
 				$searchresults.empty();
@@ -54,7 +51,6 @@ function searchbarResultsProcessor(searchtext){
 }
 
 function searchbar_show(e){
-	console.log(e);
 	if(showingResults){
 		$('#searchbar-results').show();
 	}

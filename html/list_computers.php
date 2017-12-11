@@ -40,31 +40,31 @@
 	
 	?>
 	
-	<h3>List of Domain Computers</h3>
-	<div class="row" style="margin-bottom:15px;">
-		<form method="get" action='<?php echo $_SERVER['PHP_SELF']; ?>' class="form-inline">
-			<div class="col-md-6">
-				<div class="form-group">
-					<input type="text" name="search" class="form-control" value="<?php if (isset($search)){echo $search; } ?>" placeholder="Search" />
+	<h3 class="mt-4">List of Domain Computers</h3>
+	<div class="card">
+		<div class="card-body">
+			<form method="get" action='<?php echo $_SERVER['PHP_SELF']; ?>' class="form-inline">
+				<div class="col-md-6">
+					<input type="text" name="search" class="form-control mb-2 mr-sm-2 mb-sm-0" value="<?php if (isset($search)){echo $search; } ?>" placeholder="Search" />
+					
+					<input type="hidden" name="sort" value="<?php echo $sort; ?>" />
+					<input type="hidden" name="asc" value="<?php echo $asc; ?>" />
+					<input type="submit" class="btn btn-primary" value="Go" />
 				</div>
-				
-				<input type="hidden" name="sort" value="<?php echo $sort; ?>" />
-				<input type="hidden" name="asc" value="<?php echo $asc; ?>" />
-				<input type="submit" class="btn btn-primary" value="Go" />
-			</div>
-		</form>
-	</div>
+			</form>
+		</div>
 	
-	<table class="table table-bordered table-condensed table-striped">
-		<thead>
-			<tr>
-				<th class="sortable-th" onclick="sort_table('name')">Name<?php echo html::sort_icon('name', $sort, $asc); ?></th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php echo $computers_html; ?>
-		</tbody>
-	</table>
+		<table class="table table-sm table-striped mb-0">
+			<thead>
+				<tr>
+					<th class="sortable-th pl-2" onclick="sort_table('name')">Name<?php echo html::sort_icon('name', $sort, $asc); ?></th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php echo $computers_html; ?>
+			</tbody>
+		</table>
+	</div>
 	
 	<?php echo $pages_html; ?>
 <?php

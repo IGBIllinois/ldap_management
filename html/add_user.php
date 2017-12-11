@@ -37,56 +37,57 @@
 	}
 ?>
 
-<form class="form-horizontal" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
+<form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
 		<legend>Add User</legend>
+		<hr>
 		<div class="row">
-			<div class="col-sm-6">
-				<div class="form-group">
-					<label class="col-sm-4 control-label" for="username_input">Username:</label>
+			<div class="col-sm-8">
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="username_input">Username:</label>
 					<div class="col-sm-8">
 						<input class="form-control" type="text" name="new_username" id="username_input" value="<?php if (isset($_POST['new_username'])){echo $_POST['new_username'];}?>" oninput="[username_errors,password_errors,email_errors]=add_user_errors(null,password_errors,email_errors);" autofocus />
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-sm-4 control-label" for="emailforward_input">Forwarding Email:</label>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="emailforward_input">Forwarding Email:</label>
 					<div class="col-sm-8">
 						<input class="form-control" type="text" name="new_emailforward" id="emailforward_input" value="<?php if (isset($_POST['new_emailforward'])){echo $_POST['new_emailforward'];}?>" oninput="[username_errors,password_errors,email_errors]=add_user_errors(username_errors,password_errors,null);" />
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-sm-4 control-label" for="name-input">First Name:</label>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="name-input">First Name:</label>
 					<div class="col-sm-8">
 						<input class="form-control" type="text" name="new_firstname" id="name-input" value="<?php if (isset($_POST['new_firstname'])){echo $_POST['new_firstname'];}?>" />
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-sm-4 control-label" for="lastname-input">Last Name:</label>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="lastname-input">Last Name:</label>
 					<div class="col-sm-8">
 						<input class="form-control" type="text" name="new_lastname" id="lastname-input" value="<?php if(isset($_POST['new_lastname'])){echo $_POST['new_lastname'];}?>" />
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-sm-4 control-label" for="passworda-input">Password:</label>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="passworda-input">Password:</label>
 					<div class="col-sm-8">
 						<input class="form-control" type="password" name="new_passworda" id="passworda_input" value="<?php if (isset($_POST['new_passworda'])){echo $_POST['new_passworda'];}?>" oninput="[username_errors,password_errors,email_errors]=add_user_errors(username_errors,null,email_errors);" />
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-sm-4 control-label" for="passwordb-input">Confirm Password:</label>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="passwordb-input">Confirm Password:</label>
 					<div class="col-sm-8">
 						<input class="form-control" type="password" name="new_passwordb" id="passwordb_input" value="<?php if (isset($_POST['new_passwordb'])){echo $_POST['new_passwordb'];}?>" oninput="[username_errors,password_errors,email_errors]=add_user_errors(username_errors,null,email_errors);" />
 					</div>
 				</div>
-				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-4">
+				<div class="form-group row">
+					<div class="col-sm-8 offset-sm-4">
 						<div class="btn-group">
-							<input class="btn btn-success" type="submit" name="add_user" value="Add user" id="add_user_submit" /> <input class="btn btn-default" type="submit" name="cancel_user" value="Cancel" />
+							<input class="btn btn-success" type="submit" name="add_user" value="Add user" id="add_user_submit" /> <input class="btn btn-light" type="submit" name="cancel_user" value="Cancel" />
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-6">
+			<div class="col-sm-4">
 				<p id="usernameerror1" class="text-success"><span class="fa fa-check"></span> <span class="text">Username not in use</span></p>
 				<p id="usernamewarning1" class="text-warning"><span class="fa fa-exclamation-triangle"></span> <span class="text">Username does not match a UIUC netid</span></p>
 				<p id="usernameerror2" class="text-danger"><span class="fa fa-times"></span> <span class="text">Username must begin with a lowercase letter</span></p>
@@ -97,7 +98,7 @@
 				<p id="passworderror3" class="text-danger"><span class="fa fa-times"></span> <span class="text">Password must contain at least 1 lowercase letter</span></p>
 				<p id="passworderror4" class="text-danger"><span class="fa fa-times"></span> <span class="text">Password must contain at least 1 number or special character (no spaces)</span></p>
 				<p id="passworderror5" class="text-danger"><span class="fa fa-times"></span> <span class="text">Password and confirm password must match</span></p>
-				<p><button class="btn btn-default" id="password-button" type="button">Generate Password</button> <span id="password-text"></span></p>
+				<p><button class="btn btn-light" id="password-button" type="button">Generate Password</button> <span id="password-text"></span></p>
 			</div>
 		</div>
 	</fieldset>

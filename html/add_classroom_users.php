@@ -84,38 +84,39 @@
 
 <?php } else { ?>
 
-<form class="form-horizontal" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
+<form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
 		<legend>Add Classroom Users</legend>
+		<hr>
 		<div class="row">
-			<div class="col-sm-6">
-				<div class="form-group">
-					<label class="col-sm-4 control-label" for="prefix-input">Prefix:</label>
+			<div class="col-sm-8">
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="prefix-input">Prefix</label>
 					<div class="col-sm-8">
 						<input class="form-control" type="text" name="new_prefix" id="prefix-input" value="<?php if (isset($_POST['new_prefix'])){echo $_POST['new_prefix'];}?>" oninput="show_add_classroom_text()" autofocus />
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-sm-4 control-label" for="start-input">Range start:</label>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="start-input">Range start</label>
 					<div class="col-sm-8">
 						<input class="form-control" type="text" name="new_start" id="start-input" value="<?php if (isset($_POST['new_start'])){echo $_POST['new_start'];} else { echo 1; }?>" oninput="show_add_classroom_text()" />
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-sm-4 control-label" for="end-input">Range end:</label>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="end-input">Range end</label>
 					<div class="col-sm-8">
 						<input class="form-control" type="text" name="new_end" id="end-input" value="<?php if (isset($_POST['new_end'])){echo $_POST['new_end'];}?>" oninput="show_add_classroom_text()" />
 					</div>
 				</div>
-				<div class="form-group">
-					<div class="col-sm-8 col-sm-offset-4">
+				<div class="form-group row">
+					<div class="col-sm-8 offset-sm-4">
 						<div class="btn-group">
-							<input class="btn btn-success" type="submit" name="classroom_users" value="Add classroom users" id="add_user_submit" /> <input class="btn btn-default" type="submit" name="cancel_user" value="Cancel" />
+							<input class="btn btn-success" type="submit" name="classroom_users" value="Add classroom users" id="add_user_submit" /> <input class="btn btn-light" type="submit" name="cancel_user" value="Cancel" />
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-6">
+			<div class="col-sm-4">
 				<p id="usernameerror1" class="text-success"><span class="fa fa-check"></span> <span class="text">Users do not exist</span></p>
 			</div>
 		</div>

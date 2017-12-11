@@ -129,11 +129,12 @@ function show_remove_classroom_text(){
 
 function copy_panel(event){
 	var $this = $(this);
-	var $textarea = $this.parents('.panel').find('.copy-text');
+	var $textarea = $this.parents('.card').find('.copy-text');
 	var showTextArea = true;
 	if(document.queryCommandSupported('copy')){
 		showTextArea = false;
-		$textarea.removeClass('hidden');
+		console.log($textarea);
+		$textarea.removeClass('d-none');
 		$textarea[0].select();
 		
 		try {
@@ -142,11 +143,11 @@ function copy_panel(event){
 			showTextArea = true;
 		}
 	
-		$textarea.addClass('hidden');
+		$textarea.addClass('d-none');
 		window.getSelection().removeAllRanges();
 	}
 	if(showTextArea){
-		$textarea.removeClass('hidden');
+		$textarea.removeClass('d-none');
 	}
 }
 

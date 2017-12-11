@@ -16,7 +16,7 @@
 			if(self::has_biocluster2_access($ldap,$uid)){
 				return '';
 			} else {
-				return "<a href='edit_user_attribute.php?attr=biocluster2access&uid=$uid' class='btn btn-primary btn-xs pull-right'><span class='fa fa-plus-sign'></span> Give Biocluster2 Access</a>";
+				return "<a href='edit_user_attribute.php?attr=biocluster2access&uid=$uid' class='btn btn-primary btn-sm pull-right'><span class='fa fa-plus-circle'></span> Give Biocluster2 Access</a>";
 			}
 		}
 		public static function biocluster2access_edit($ldap,$uid,$inputs){

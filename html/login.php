@@ -58,50 +58,63 @@ if (isset($_POST['login'])) {
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title><?php echo __TITLE__; ?></title>
-		<link rel="stylesheet" href="includes/bootstrap/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="includes/bootstrap/css/bootstrap.css" type="text/css">
 		<link rel="stylesheet" href="includes/font-awesome/css/font-awesome.css" type="text/css" />
 		<link rel="stylesheet" href="includes/main.inc.css" type="text/css"/>
 		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 	</head>
 	<body OnLoad="document.login.username.focus();">
-		<nav class="navbar navbar-inverse navbar-static-top">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<div class="navbar-brand">
-						<?php echo __TITLE__; ?>
-					</div>
+		<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+			<div class="container">
+				<div class="navbar-brand">
+					<?php echo __TITLE__; ?>
 				</div>
 			</div>
 		</nav>
-		
-		<div class="container-fluid">
-
+		</div>
+		<div class='jumbotron jumbotron-fluid'>
+			<div class="container">
+				<h1 class="display-3 igb-jumbo">
+					<img src="images/imark_bw.gif" class="mx-2 align-text-top mt-2">
+					IGB LDAP Account Management
+				</h1>
+				<p class="lead">View and manage IGB User Accounts</p>
+			</div>
+		</div>
+		<div class="container">
+		<div class="container">
 			<div class='row'>
-				<div class='col-md-3 col-md-offset-4'>
-					<form action='login.php' method='post' name='login'>
-						<div class="form-group">
-							<label for="username">Username: </label>
-							<div class="input-group">
-								<input class='form-control' type='text' name='username' id="username" tabindex='1' placeholder='Username' value='<?php if (isset($username)) { echo $username; } ?>'> 
-								<span class="input-group-addon"><span class='fa fa-user'></span></span>
+				<div class='col-md-6 offset-md-3'>
+					<form action='login.php' method='post' name='login' class="mx-auto">
+						<div class="form-group row">
+							<label for="username" class="col-sm-3 col-form-label">Username</label>
+							<div class="col-sm-9">
+								<div class="input-group">
+									<input class='form-control' type='text' name='username' id="username" tabindex='1' placeholder='Username' value='<?php if (isset($username)) { echo $username; } ?>'> 
+									<span class="input-group-addon"><span class='fa fa-user'></span></span>
+								</div>
 							</div>
 						</div>
-						<div class="form-group">
-							<label>Password: </label>
-							<div class="input-group">
-								<input class='form-control' type='password' name='password' placeholder='Password' tabindex='2'>
-								<span class="input-group-addon"><span class='fa fa-lock'></span></span>
+						<div class="form-group row">
+							<label for="password" class="col-sm-3 col-form-label">Password</label>
+							<div class="col-sm-9">
+								<div class="input-group">
+									<input class='form-control' type='password' name='password' placeholder='Password' tabindex='2'>
+									<span class="input-group-addon"><span class='fa fa-lock'></span></span>
+								</div>
 							</div>
 						</div>
-						<button type='submit' name='login' class='btn btn-primary'><span class="fa fa-sign-in"></span> Login</button>
+						<div class="row">
+							<div class="col-sm-9 offset-sm-3">
+								<button type='submit' name='login' class='btn btn-primary'><span class="fa fa-sign-in"></span> Login</button>
+							</div>
+						</div>
 					</form>
 	
 	
 					<?php if (isset($message)) { 
 						echo $message;
 	} ?>
-	<br>
-					<em>&copy 2015 University of Illinois Board of Trustees</em>
 				</div>
 			</div>
-		</div>
+<?php include("includes/footer.inc.php");

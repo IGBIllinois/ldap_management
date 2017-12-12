@@ -75,7 +75,7 @@
 	</div>
 	<div class="card mt-3">
 		<div class="card-header d-flex align-items-center">
-			<h3 class="mr-auto">Users</h3>
+			<h3 class="mr-auto">Users <small class="text-muted">(<?php echo count($users); ?>)</small></h3>
 			<div class="btn-group btn-group-sm">
 				<a class='btn btn-success btn-sm' href='add_machinerights.php?hid=<?php echo $hostname; ?>'><span class='fa fa-plus'></span> Add user</a>
 				<button class='btn btn-light btn-sm copy-button'><span class='fa fa-clipboard'></span> Copy</button>

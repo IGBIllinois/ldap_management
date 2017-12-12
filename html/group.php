@@ -108,7 +108,7 @@
 	</div>
 	<div class="card mt-3">
 		<div class="card-header d-flex align-items-center">
-			<h3 class="mr-auto">Members</h3>
+			<h3 class="mr-auto">Members <small class="text-muted">(<?php echo count($users); ?>)</small></h3>
 			<?php if(!$isusergroup){ ?>
 			<div class="btn-group btn-group-sm">
 				<a class='btn btn-success btn-sm' href='add_to_group.php?gid=<?php echo $gid; ?>'><span class='fa fa-plus'></span> Add member</a>

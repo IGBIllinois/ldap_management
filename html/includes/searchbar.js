@@ -1,5 +1,7 @@
 var searchbar_seqnum = 0;
 var showingResults;
+var searchbar_selected = -1;
+var searchbar_max = 0;
 function searchbar_search(){
 	var searchtext = $('#searchbar').val();
 	$.ajax('searchbar_data.php',{
@@ -19,30 +21,35 @@ function searchbarResultsProcessor(searchtext){
 				var $searchresults = $('#searchbar-results');
 				$searchresults.empty();
 				showingResults = false;
+				var index = 0;
 				if(results.hasOwnProperty('users') && results.users.count > 0){
 					showingResults = true;
-					$searchresults.append('<div class="searchbar-heading">Users</div>');
+					$searchresults.append('<h6 class="dropdown-header">Users</h6>');
 					for(var i=0; i<results.users.results.length; i++){
-						$searchresults.append('<a class="searchbar-result" href="user.php?uid='+results.users.results[i].username+'">'+results.users.results[i].name+" ("+results.users.results[i].username+")</a>");
+						$searchresults.append('<a class="searchbar-result dropdown-item" data-searchbarindex="'+index+'" href="user.php?uid='+results.users.results[i].username+'">'+results.users.results[i].name+" ("+results.users.results[i].username+")</a>");
+						index++;
 					}
 					if(results.users.count > results.users.results.length){
-						$searchresults.append('<a class="searchbar-result" href="list_users.php?search='+searchtext+'">See all '+results.users.count+' users...</a>');
+						$searchresults.append('<a class="searchbar-result dropdown-item" data-searchbarindex="'+index+'" href="list_users.php?search='+searchtext+'">See all '+results.users.count+' users...</a>');
+						index++;
 					}
 				}
 				if(results.hasOwnProperty('groups') && results.groups.count > 0){
 					showingResults = true;
-					$searchresults.append('<div class="searchbar-heading">Groups</div>');
+					$searchresults.append('<h6 class="dropdown-header">Groups</h6>');
 					for(var i=0; i<results.groups.results.length; i++){
-						$searchresults.append('<a class="searchbar-result" href="group.php?gid='+results.groups.results[i].name+'">'+results.groups.results[i].name+"</a>");
+						$searchresults.append('<a class="searchbar-result dropdown-item" data-searchbarindex="'+index+'" href="group.php?gid='+results.groups.results[i].name+'">'+results.groups.results[i].name+"</a>");
+						index++;
 					}
 					if(results.groups.count > results.groups.results.length){
-						$searchresults.append('<a class="searchbar-result" href="list_groups.php?search='+searchtext+'">See all '+results.groups.count+' groups...</a>');
+						$searchresults.append('<a class="searchbar-result dropdown-item" data-searchbarindex="'+index+'" href="list_groups.php?search='+searchtext+'">See all '+results.groups.count+' groups...</a>');
 					}
+					searchbar_max = index;
 				}
 				if(showingResults){
 					$searchresults.show();
 					$searchresults.css('top',$searchbar[0].offsetHeight+$searchbar[0].offsetTop);
-					$searchresults.css('width',$searchbar[0].offsetWidth);
+					$searchresults.css('min-width',$searchbar[0].offsetWidth);
 				} else {
 					$searchresults.hide();
 				}
@@ -62,8 +69,44 @@ function searchbar_hide(e){
 	}
 }
 
+function searchbar_handle_keys(e){
+	switch(e.keyCode){
+		case 38: // Up arrow
+			searchbar_selected--;
+			if(searchbar_selected<0){
+				searchbar_selected = searchbar_max;
+			}
+			$("#searchbar-results a").removeClass("selected");
+			$("#searchbar-results a[data-searchbarindex='"+searchbar_selected+"']").addClass("selected");
+			break;
+		case 40: // Down arrow
+			searchbar_selected++;
+			if(searchbar_selected>searchbar_max){
+				searchbar_selected = 0;
+			}
+			$("#searchbar-results a").removeClass("selected");
+			$("#searchbar-results a[data-searchbarindex='"+searchbar_selected+"']").addClass("selected");
+			break;
+		case 13: // Return
+			$("#searchbar-results a[data-searchbarindex='"+searchbar_selected+"']")[0].click();
+			break;
+		default: 
+			searchbar_selected = -1;
+			return true;
+	}
+	
+	e.preventDefault();
+}
+
+function searchbar_hover(e){
+	searchbar_selected = -1;
+	$("#searchbar-results a").removeClass("selected");
+}
+
 $(document).ready(function(){
 	$('#searchbar').on('input',searchbar_search);
+	$('#searchbar').on('keydown', searchbar_handle_keys);
 	$('#searchbar').on('focus', searchbar_show);
+	$('#searchbar-results').on('mouseenter','a', searchbar_hover);
 	$('body').on('click',searchbar_hide);
 });

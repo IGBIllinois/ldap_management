@@ -150,14 +150,15 @@ div.panel td, div.panel th {
 /* Searchbar styles */
 #searchbar-results {
 	position: absolute;
-	background-color: white;
+/* 	background-color: white; */
 	display: none;
 	overflow: auto;
 	box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.4);
-	border-radius: 3px;
-	padding: 4px 0px;
-	max-height: 300px;
+/* 	border-radius: 3px; */
+/* 	padding: 4px 0px; */
+/* 	max-height: 300px; */
 	z-index:1000;
+	left: unset;
 }
 @media (max-width: 767px){
 	#searchbar {
@@ -170,18 +171,9 @@ div.panel td, div.panel th {
 		max-height: none;
 	}
 }
-.searchbar-heading {
-    padding: 4px 4px 1px 4px;
-}
-.searchbar-heading:first-of-type {
-	padding: 1px 4px;
-}
-a.searchbar-result {
-	padding: 1px 4px 1px 8px;
-	cursor: pointer;
-	display: block;
-}
-a.searchbar-result:hover {
-	background-color: #eee;
+
+a.searchbar-result.selected {
+	color:#16181b;
 	text-decoration: none;
+	background-color: #f8f9fa;
 }

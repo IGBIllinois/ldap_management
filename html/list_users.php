@@ -50,6 +50,10 @@
 	?>
 	
 	<h3 class="mt-4">List of Users</h3>
+	
+	<?php if(isset($_GET['message'])){
+		echo $_GET['message'];
+	} ?>
 	<div class="card">
 		<div class="card-body">
 			<form method="get" action='<?php echo $_SERVER['PHP_SELF']; ?>' class="form-inline">
@@ -69,30 +73,40 @@
 				</div>
 			</form>
 		</div>
-		<table class="table table-sm table-striped table-responsive-md table-igb-bordered mb-0">
-			<thead class="">
-				<tr>
-					<th class="sortable-th pl-2" onclick="sort_table('username')">NetID<?php echo html::sort_icon('username', $sort, $asc); ?></th>
-					<th class="sortable-th" onclick="sort_table('name')">Name<?php echo html::sort_icon('name', $sort, $asc); ?></th>
-					<th class="sortable-th" onclick="sort_table('email')">Email<?php echo html::sort_icon('email', $sort, $asc); ?></th>
-					<th class="sortable-th" onclick="sort_table('emailforward')">Forwarding Email<?php echo html::sort_icon('emailforward', $sort, $asc); ?></th>
-					<?php if ($filter == 'expired' || $filter == 'expiring'){ ?>
-						<th class="sortable-th" onclick="sort_table('shadowexpire')">Expiration<?php echo html::sort_icon('shadowexpire',$sort,$asc); ?></th>
-					<?php } ?>
-				</tr>
-			</thead>
-			<tbody>
-				<?php echo $users_html; ?>
-			</tbody>
-		</table>
-		<div class="card-footer text-muted">
-			<span class="fa fa-clock-o smallwarning"> </span>=expiration set &nbsp;
-			<span class="fa fa-clock-o smalldanger"> </span>=expired &nbsp;
-			<span class="fa fa-graduation-cap smallwarning"> </span>=left campus &nbsp;
-			<span class="fa fa-graduation-cap smallinfo"> </span>=non-campus &nbsp;
-			<span class='fa fa-hdd-o smallsuccess' title='User has Crashplan'></span>=has crashplan &nbsp;
-			<span class='fa fa-lock smalldanger' title='Password Expired'></span>=password expired
-		</div>
+		<form action="multi_user_action.php" method="post">
+			<table class="table table-sm table-striped table-responsive-md table-igb-bordered mb-0">
+				<thead>
+					<tr>
+						<th><input type="checkbox" id="select-all"/></th>
+						<th class="sortable-th pl-2" onclick="sort_table('username')">NetID<?php echo html::sort_icon('username', $sort, $asc); ?></th>
+						<th class="sortable-th" onclick="sort_table('name')">Name<?php echo html::sort_icon('name', $sort, $asc); ?></th>
+						<th class="sortable-th" onclick="sort_table('email')">Email<?php echo html::sort_icon('email', $sort, $asc); ?></th>
+						<th class="sortable-th" onclick="sort_table('emailforward')">Forwarding Email<?php echo html::sort_icon('emailforward', $sort, $asc); ?></th>
+						<?php if ($filter == 'expired' || $filter == 'expiring'){ ?>
+							<th class="sortable-th" onclick="sort_table('shadowexpire')">Expiration<?php echo html::sort_icon('shadowexpire',$sort,$asc); ?></th>
+						<?php } ?>
+					</tr>
+				</thead>
+				<tbody>
+					<?php echo $users_html; ?>
+				</tbody>
+			</table>
+			
+			<div class="card-footer text-muted">
+				<input type="hidden" name="sort" value="<?php echo $sort; ?>" />
+				<input type="hidden" name="asc" value="<?php echo $asc; ?>" />
+				<input type="hidden" name="search" value="<?php echo $search; ?>" />
+				<input type="hidden" name="start" value="<?php echo $start; ?>" />
+				<input type="hidden" name="filter" value="<?php echo $filter; ?>" />
+				<label>All checked: </label> <select class="custom-select" name="action"><option hidden>Select an action...</option><option value="add-to-group">Add to group</option></select> <input type="submit" class="btn btn-primary"><br>
+				<span class="fa fa-clock-o smallwarning"> </span>=expiration set &nbsp;
+				<span class="fa fa-clock-o smalldanger"> </span>=expired &nbsp;
+				<span class="fa fa-graduation-cap smallwarning"> </span>=left campus &nbsp;
+				<span class="fa fa-graduation-cap smallinfo"> </span>=non-campus &nbsp;
+				<span class='fa fa-hdd-o smallsuccess' title='User has Crashplan'></span>=has crashplan &nbsp;
+				<span class='fa fa-lock smalldanger' title='Password Expired'></span>=password expired
+			</div>
+		</form>
 	</div>
 			<?php echo $pages_html; ?>
 
@@ -113,6 +127,14 @@
 			var $this = $(this);
 			toggleClasses($this,'btn-light','btn-info active');
 		});
+		$('#select-all').change(function(){
+			var $checkboxes = $(this).closest("form").find("input[type=checkbox]");
+			if(this.checked){
+				$checkboxes.prop("checked", true);
+			} else {
+				$checkboxes.prop("checked", false);
+			}
+		})
 	</script>
 <?php
 	require_once 'includes/footer.inc.php';

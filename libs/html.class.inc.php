@@ -105,6 +105,7 @@ class html {
 		for ($i=$i_start;$i<$i_count;$i++) {
 	        if (array_key_exists($i,$users)) {
         		$users_html .= "<tr>";
+        		$users_html .= "<td width='14px'><input type='checkbox' name='selected[".$users[$i]['username']."]'/></td>";
             	$users_html .= "<td class='pl-2 d-flex'><a class='mr-auto' href='user.php?uid=" . $users[$i]['username'] . "'>";
 				$users_html .= $users[$i]['username'] . "</a>";
 				if($users[$i]['shadowexpire']!=''){

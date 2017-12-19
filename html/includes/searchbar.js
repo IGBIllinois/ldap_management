@@ -44,8 +44,9 @@ function searchbarResultsProcessor(searchtext){
 					if(results.groups.count > results.groups.results.length){
 						$searchresults.append('<a class="searchbar-result dropdown-item" data-searchbarindex="'+index+'" href="list_groups.php?search='+searchtext+'">See all '+results.groups.count+' groups...</a>');
 					}
-					searchbar_max = index;
 				}
+				searchbar_max = index;
+				
 				if(showingResults){
 					$searchresults.show();
 					$searchresults.css('top',$searchbar[0].offsetHeight+$searchbar[0].offsetTop);

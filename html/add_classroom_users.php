@@ -59,6 +59,9 @@
 
 				// Add user to classroom queue
 				$classroom_queue->add_user($username);
+				
+				// Set classroom-user status
+				$user->set_classroom(true);
 			}
 			$users_html .= "</pre>";
 

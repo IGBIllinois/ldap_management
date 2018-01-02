@@ -20,6 +20,7 @@ class user {
 	private $leftcampus = false;
 	private $noncampus = false;
 	private $crashplan = false;
+	private $classroom = false;
 	
 	private $creator;
 	private $createTime;
@@ -650,12 +651,12 @@ class user {
 		} else {
 			$filter = "(|(uid=*$search*)(cn=*$search*))";
 		}
-		$attributes = array("uid","cn","mail","shadowexpire","postaladdress","employeetype",'telexnumber','facsimiletelephonenumber');
+		$attributes = array("uid","cn","mail","shadowexpire","postaladdress","employeetype",'telexnumber','facsimiletelephonenumber','description');
 		$result = $ldap->search($filter,__LDAP_PEOPLE_OU__,$attributes);
 		$users = array();
 		$time = time();
 		for($i=0; $i<$result['count']; $i++){
-			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''), "emailforward"=>(isset($result[$i]['postaladdress'])?$result[$i]['postaladdress'][0]:''),"leftcampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='leftcampus':false),"noncampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='noncampus':false),'crashplan'=>(isset($result[$i]['telexnumber'])?$result[$i]['telexnumber'][0]==1:false), "passwordexpired"=>(isset($result[$i]['facsimiletelephonenumber'])?$result[$i]['facsimiletelephonenumber'][0]<$time:false));
+			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''), "emailforward"=>(isset($result[$i]['postaladdress'])?$result[$i]['postaladdress'][0]:''),"leftcampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='leftcampus':false),"noncampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='noncampus':false),"classroom"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='classroom':false),'crashplan'=>(isset($result[$i]['telexnumber'])?$result[$i]['telexnumber'][0]==1:false), "passwordexpired"=>(isset($result[$i]['facsimiletelephonenumber'])?$result[$i]['facsimiletelephonenumber'][0]<$time:false));
 			if($userfilter != 'none'){
 				if($userfilter == 'expiring'){
 					if($user['shadowexpire'] > time()){
@@ -671,6 +672,10 @@ class user {
 					}
 				} else if($userfilter == 'noncampus'){
 					if($user['noncampus']){
+						$users[] = $user;
+					}	
+				} else if($userfilter == 'classroom'){
+					if($user['classroom']){
 						$users[] = $user;
 					}	
 				} else {
@@ -773,6 +778,21 @@ class user {
 		}
 	}
 	
+	public function get_classroom(){
+		return $this->classroom;
+	}
+	public function set_classroom($classroom){
+		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
+		$data = array("employeetype"=>($classroom?'classroom':''));
+		if($this->ldap->modify($dn,$data)){
+			$this->classroom = $classroom;
+			log::log_message("Set classroom-user for ".$this->get_username()." to ".$this->get_classroom());
+			return array('RESULT'=>true,
+				'MESSAGE'=>'Classroom-user successfully set.',
+				'uid'=>$this->get_username());
+		}
+	}
+	
 	public function serializable(){
 		$data = array(
 			'username'=>$this->username,
@@ -830,6 +850,7 @@ class user {
 			if(isset($result[0]['employeetype'])){
 				$this->leftcampus = ($result[0]['employeetype'][0]=='leftcampus');
 				$this->noncampus = ($result[0]['employeetype'][0]=='noncampus');
+				$this->classroom = ($result[0]['employeetype'][0] == 'classroom');
 			}
 			if(isset($result[0]['telexnumber'])){
 				$this->crashplan = ($result[0]['telexnumber'][0]==1);

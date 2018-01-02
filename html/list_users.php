@@ -104,7 +104,8 @@
 				<span class="fa fa-graduation-cap smallwarning"> </span>=left campus &nbsp;
 				<span class="fa fa-graduation-cap smallinfo"> </span>=non-campus &nbsp;
 				<span class='fa fa-hdd-o smallsuccess' title='User has Crashplan'></span>=has crashplan &nbsp;
-				<span class='fa fa-lock smalldanger' title='Password Expired'></span>=password expired
+				<span class='fa fa-lock smalldanger' title='Password Expired'></span>=password expired &nbsp;
+				<span class='fa fa-book smallinfo' title='Classroom User'></span>=classroom user
 			</div>
 		</form>
 	</div>

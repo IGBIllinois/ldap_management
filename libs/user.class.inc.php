@@ -22,6 +22,8 @@ class user {
 	private $crashplan = false;
 	private $classroom = false;
 	
+	private $description = "";
+	
 	private $creator;
 	private $createTime;
 	private $modifier;
@@ -602,6 +604,21 @@ class user {
 				'uid'=>$this->get_username());
 		}
 	}
+	
+	public function get_description(){
+		return $this->description;
+	}
+	public function set_description($description){
+		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
+		$data = array("description"=>$description);
+		if($this->ldap->modify($dn,$data)){
+			$this->description = $description;
+			log::log_message("Set description for ".$this->get_username()." to ".$this->get_password_expiration());
+			return array('RESULT'=>true,
+				'MESSAGE'=>'Description successfully set.',
+				'uid'=>$this->get_username());
+		}
+	}
 
 	public function authenticate($password) {
 		$rdn = $this->get_user_rdn();
@@ -656,7 +673,18 @@ class user {
 		$users = array();
 		$time = time();
 		for($i=0; $i<$result['count']; $i++){
-			$user = array("username"=>$result[$i]['uid'][0],"name"=>$result[$i]['cn'][0],"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''), "emailforward"=>(isset($result[$i]['postaladdress'])?$result[$i]['postaladdress'][0]:''),"leftcampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='leftcampus':false),"noncampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='noncampus':false),"classroom"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='classroom':false),'crashplan'=>(isset($result[$i]['telexnumber'])?$result[$i]['telexnumber'][0]==1:false), "passwordexpired"=>(isset($result[$i]['facsimiletelephonenumber'])?$result[$i]['facsimiletelephonenumber'][0]<$time:false));
+			$user = array(
+				"username"=>$result[$i]['uid'][0],
+				"name"=>$result[$i]['cn'][0],
+				"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),
+				"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''), 
+				"emailforward"=>(isset($result[$i]['postaladdress'])?$result[$i]['postaladdress'][0]:''),
+				"leftcampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='leftcampus':false),
+				"noncampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='noncampus':false),
+				"classroom"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='classroom':false),
+				'crashplan'=>(isset($result[$i]['telexnumber'])?$result[$i]['telexnumber'][0]==1:false), 
+				"passwordexpired"=>(isset($result[$i]['facsimiletelephonenumber'])?$result[$i]['facsimiletelephonenumber'][0]<$time:false), 
+				"description"=>(isset($result[$i]['description'])?$result[$i]['description'][0]:''));
 			if($userfilter != 'none'){
 				if($userfilter == 'expiring'){
 					if($user['shadowexpire'] > time()){
@@ -810,7 +838,7 @@ class user {
 
 	public function load_by_username($username) {
 		$filter = "(uid=".$username.")";
-		$attributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress','employeetype','telexNumber','facsimiletelephonenumber');
+		$attributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress','employeetype','telexNumber','facsimiletelephonenumber','description');
 		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 		if($result['count']>0){
 			$this->name = $result[0]['cn'][0];
@@ -827,6 +855,9 @@ class user {
 			$this->emailforward = isset($result[0]['postaladdress'][0])?$result[0]['postaladdress'][0]:null; // Yes, postalAddress holds the forwarding email. 
 			if(isset($result[0]['shadowexpire'])){
 				$this->expiration = $result[0]['shadowexpire'][0];
+			}
+			if(isset($result[0]['description'])){
+				$this->description = $result[0]['description'][0];
 			}
 			if( preg_match("/uid=(.*?),/um", $result[0]['creatorsname'][0], $matches) ){
 				$this->creator = $matches[1];

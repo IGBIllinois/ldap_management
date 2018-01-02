@@ -42,6 +42,14 @@
 				"field": "uidnumber"
 			},
 			{
+				"name": "description",
+				"fullname": "Description",
+				"field": "description",
+				"button": {
+					"type": "edit"
+				}
+			},
+			{
 				"name": "mail",
 				"fullname": "Email",
 				"field": "mail"

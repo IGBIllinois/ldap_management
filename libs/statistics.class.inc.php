@@ -41,6 +41,16 @@
 			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, array(''));
 			return $result['count'];
 		}
+		public static function noncampus_users($ldap){
+			$filter = "(employeeType=noncampus)";
+			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, array(''));
+			return $result['count'];
+		}
+		public static function classroom_users($ldap){
+			$filter = "(employeeType=classroom)";
+			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, array(''));
+			return $result['count'];
+		}
 
 		public static function groups($ldap){
 			$filter = "(cn=*)";

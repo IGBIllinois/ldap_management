@@ -16,7 +16,7 @@
 	$usershtml = "";
 	$userscopytext = "";
 	$users = $group->get_users();
-	sort($users);
+	usort($users,"html::username_cmp");
 	for($i=0; $i<count($users);$i++){
 		$usershtml .= "<tr><td class='pl-2'><a class='align-middle' href='user.php?uid=".$users[$i]."'>".$users[$i]."</a>";
 		if(!user::is_ldap_user($ldap,$users[$i])){

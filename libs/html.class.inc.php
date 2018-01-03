@@ -143,6 +143,25 @@ class html {
 		return $users_html;
 	}
 	
+	public static function get_classroom_users_rows($users){
+		$users_html = "";
+		for($i=0; $i<count($users);$i++){
+			if(array_key_exists($i,$users)){
+				usort($users[$i]['groups'],'html::username_cmp');
+				$users_html .= "<tr>";
+				$users_html .= "<td width='14px'><input type='checkbox' name='selected[".$users[$i]['username']."]'/></td>";
+            	$users_html .= "<td class='pl-2'><a class='mr-auto' href='user.php?uid=" . $users[$i]['username'] . "'>";
+				$users_html .= $users[$i]['username'] . "</a>";
+				$users_html .= "</td>";
+				$users_html .= "<td>" . $users[$i]['description']. "</td>";
+				$users_html .= "<td>" . implode(', ', $users[$i]['groups']). "</td>";
+				$users_html .= "<td>" . ($users[$i]['shadowexpire']!=''?date('m/d/Y',$users[$i]['shadowexpire']):'') . "</td>";
+				$users_html .="</tr>";
+			}
+		}
+		return $users_html;
+	}
+	
 	// Returns trs for the given users list
 	public static function get_groups_rows($groups) {
 		$i_start = 0;
@@ -225,6 +244,22 @@ class html {
 			return " <span class='fa fa-sort-amount-".($asc=="false"?'desc':'asc')."'> </span>";
 		}
 		return '';
+	}
+	
+	public static function username_cmp($a,$b){
+		$aalpha = strcspn($a,'0123456789');
+		$balpha = strcspn($b,'0123456789');
+		if($aalpha==$balpha && substr($a, 0, $aalpha)==substr($b,0,$balpha)){
+			$anum = substr($a,$aalpha);
+			$bnum = substr($b,$balpha);
+			if(is_numeric($anum) && is_numeric($bnum)){
+				return intval($anum)<intval($bnum)?-1:(intval($anum)==intval($bnum)?0:1);
+			} else {
+				return strcasecmp($a,$b);
+			}
+		} else {
+			return strcasecmp($a,$b);
+		}
 	}
 
 	// Takes a date given as 'YYYYmmdd' and returns 'mm/dd/YYYY'

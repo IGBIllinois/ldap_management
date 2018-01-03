@@ -385,6 +385,18 @@ class user {
 		}
 		return $this->groups;
 	}
+	
+	public static function get_groups_for_uid($ldap, $uid){
+		$filter = "(&(cn=*)(memberUid=" . $uid . "))";
+		$attributes = array('cn');
+		$result = $ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
+		unset($result['count']);
+		$groups = array();
+		foreach ($result as $row) {
+			array_push($groups, $row['cn'][0]);
+		}
+		return $groups;
+	}
 
 	public function add_machinerights($host) {
 		if(host::is_ldap_host($this->ldap,$host) && (!$this->get_machinerights() || !in_array($host, $this->get_machinerights()))){
@@ -658,7 +670,7 @@ class user {
 		for ($i=0; $i<$result['count']; $i++) {
 			array_push($users_array, $result[$i]['uid'][0]);
 		}
-		sort($users_array);
+		usort($users_array,'html::username_cmp');
 		return $users_array;
 	}
 
@@ -704,6 +716,7 @@ class user {
 					}	
 				} else if($userfilter == 'classroom'){
 					if($user['classroom']){
+						$user['groups'] = self::get_groups_for_uid($ldap,$user['username']);
 						$users[] = $user;
 					}	
 				} else {
@@ -920,11 +933,11 @@ class user {
 	private static function sorter($key,$asc){
 		if($asc == "true"){
 			return function ($a,$b) use ($key) {
-				return strcasecmp($a[$key], $b[$key]);
+				return html::username_cmp($a[$key], $b[$key]);
 			};
 		} else {
 			return function ($a,$b) use ($key) {
-				return strcasecmp($b[$key], $a[$key]);
+				return html::username_cmp($b[$key], $a[$key]);
 			};
 		}
 	}

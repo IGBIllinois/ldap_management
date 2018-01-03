@@ -472,11 +472,11 @@ class group {
 	private static function strsorter($key, $asc) {
 		if ($asc == "true") {
 			return function ($a, $b) use ($key) {
-				return strcasecmp($a[$key], $b[$key]);
+				return html::username_cmp($a[$key], $b[$key]);
 			};
 		} else {
 			return function ($a, $b) use ($key) {
-				return strcasecmp($b[$key], $a[$key]);
+				return html::username_cmp($b[$key], $a[$key]);
 			};
 		}
 

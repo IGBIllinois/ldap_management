@@ -19,17 +19,17 @@
 	for($i=0; $i<count($users);$i++){
 		$usershtml .= "<tr><td class='pl-2'><a class='align-middle' href='user.php?uid=".$users[$i]."'>".$users[$i]."</a>";
 		if(!user::is_ldap_user($ldap,$users[$i])){
-			$usershtml .= " <span class='fa fa-exclamation-triangle smallwarning' title='User does not exist'></span>";
+			$usershtml .= " <span class='fa fa-exclamation-triangle text-warning' title='User does not exist'></span>";
 		}
 		$userobj = new user($ldap,$users[$i]);
 		if($userobj->is_expired()){
-			$usershtml .= " <span class='fa fa-clock-o smalldanger' title='User has expired'></span>";
+			$usershtml .= " <span class='fa fa-clock-o text-danger' title='User has expired'></span>";
 		}
 		if($userobj->is_expiring()){
-			$usershtml .= " <span class='fa fa-clock-o smallwarning' title='User is expiring'></span>";
+			$usershtml .= " <span class='fa fa-clock-o text-warning' title='User is expiring'></span>";
 		}
 		if($userobj->get_leftcampus()){
-			$usershtml .= " <span class='fa fa-graduation-cap smallwarning' title='User has left UIUC'></span>";
+			$usershtml .= " <span class='fa fa-graduation-cap text-warning' title='User has left UIUC'></span>";
 		}
 		$usershtml .= " <a href='remove_machinerights.php?uid=".$users[$i]."&hid=$hostname' class='btn btn-danger btn-sm pull-right'><span class='fa fa-times'></span> Revoke access</a></td></tr>";
 		$copytext .= $users[$i]."\n";

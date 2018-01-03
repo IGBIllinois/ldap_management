@@ -4,41 +4,41 @@
 	require 'includes/header.inc.php';
 ?>
 	<h3 class="mt-4">Statistics</h3>
-	<table class='table table-condensed table-striped table-bordered'>
+	<table class='table table-condensed table-striped table-bordered table-igb-bordered'>
 		<tr>
-			<td>Users</td>
+			<td class="d-flex"><span class="mr-auto">Users</span> <i class="my-auto fa fa-user text-dark"></i></td>
 			<td><?php echo statistics::users($ldap); ?></td>
 		</tr>
 		<tr>
-			<td>Expired Passwords</td>
+			<td class="d-flex"><span class="mr-auto">Expired Passwords</span> <i class="my-auto fa fa-lock text-danger"></i></td>
 			<td><?php echo statistics::password_expired_users($ldap); ?></td>
 		</tr>
 		<tr>
-			<td>Expiring Users</td>
+			<td class="d-flex"><span class="mr-auto">Expiring Users</span> <i class="my-auto fa fa-clock-o text-warning"></i></td>
 			<td><?php echo statistics::expiring_users($ldap)-statistics::expired_users($ldap); ?></td>
 		</tr>
 		<tr>
-			<td>Expired Users</td>
+			<td class="d-flex"><span class="mr-auto">Expired Users</span> <i class="my-auto fa fa-clock-o text-danger"></i></td>
 			<td><?php echo statistics::expired_users($ldap); ?></td>
 		</tr>
 		<tr>
-			<td>Users who have left UIUC</td>
+			<td class="d-flex"><span class="mr-auto">Users who have left UIUC</span> <i class="my-auto fa fa-graduation-cap text-warning"></i></td>
 			<td><?php echo statistics::leftcampus_users($ldap); ?></td>
 		</tr>
 		<tr>
-			<td>Non-UIUC Users</td>
+			<td class="d-flex"><span class="mr-auto">Non-UIUC Users</span> <i class="my-auto fa fa-graduation-cap text-info"></i></td>
 			<td><?php echo statistics::noncampus_users($ldap); ?></td>
 		</tr>
 		<tr>
-			<td>Classroom Users</td>
+			<td class="d-flex"><span class="mr-auto">Classroom Users</span> <i class="my-auto fa fa-book text-info"></i></td>
 			<td><?php echo statistics::classroom_users($ldap); ?></td>
 		</tr>
 		<tr>
-			<td>Groups</td>
+			<td class="d-flex"><span class="mr-auto">Groups</span> <i class="my-auto fa fa-users text-dark"></i></td>
 			<td><?php echo statistics::groups($ldap); ?></td>
 		</tr>
 		<tr>
-			<td>Empty Groups</td>
+			<td class="d-flex"><span class="mr-auto">Empty Groups</span> <i class="my-auto fa fa-users text-muted"></i></td>
 			<td><?php echo statistics::empty_groups($ldap); ?></td>
 		</tr>
 	</table>

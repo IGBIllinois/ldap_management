@@ -99,13 +99,13 @@
 				<input type="hidden" name="start" value="<?php echo $start; ?>" />
 				<input type="hidden" name="filter" value="<?php echo $filter; ?>" />
 				<label>All checked: </label> <select class="custom-select" name="action"><option hidden>Select an action...</option><option value="add-to-group">Add to group</option></select> <input type="submit" class="btn btn-primary"><br>
-				<span class="fa fa-clock-o smallwarning"> </span>=expiration set &nbsp;
-				<span class="fa fa-clock-o smalldanger"> </span>=expired &nbsp;
-				<span class="fa fa-graduation-cap smallwarning"> </span>=left campus &nbsp;
-				<span class="fa fa-graduation-cap smallinfo"> </span>=non-campus &nbsp;
-				<span class='fa fa-hdd-o smallsuccess' title='User has Crashplan'></span>=has crashplan &nbsp;
-				<span class='fa fa-lock smalldanger' title='Password Expired'></span>=password expired &nbsp;
-				<span class='fa fa-book smallinfo' title='Classroom User'></span>=classroom user
+				<span class="fa fa-clock-o text-warning"> </span>=expiration set &nbsp;
+				<span class="fa fa-clock-o text-danger"> </span>=expired &nbsp;
+				<span class="fa fa-graduation-cap text-warning"> </span>=left campus &nbsp;
+				<span class="fa fa-graduation-cap text-info"> </span>=non-campus &nbsp;
+				<span class='fa fa-hdd-o text-success' title='User has Crashplan'></span>=has crashplan &nbsp;
+				<span class='fa fa-lock text-danger' title='Password Expired'></span>=password expired &nbsp;
+				<span class='fa fa-book text-info' title='Classroom User'></span>=classroom user
 			</div>
 		</form>
 	</div>

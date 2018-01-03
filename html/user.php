@@ -22,7 +22,7 @@
 		for($i=0; $i<count($machinerights);$i++){
 			$machinerightshtml .= "<tr><td class='pl-2'><a class='align-middle' href='host.php?hid=".$machinerights[$i]."'>".$machinerights[$i]."</a>";
 			if(!host::is_ldap_host($ldap,$machinerights[$i])){
-				$machinerightshtml .= " <span class='fa fa-exclamation-triangle smallwarning' title='Host does not exist'></span>";
+				$machinerightshtml .= " <span class='fa fa-exclamation-triangle text-warning' title='Host does not exist'></span>";
 			}
 			$machinerightshtml .= " <a class='btn btn-danger btn-sm pull-right' href='remove_machinerights.php?uid=$username&hid=".$machinerights[$i]."&from=user'><span class='fa fa-times'> </span> Remove host</a></td></tr>";
 			$machinecopytext .= $machinerights[$i]."\n";

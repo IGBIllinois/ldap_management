@@ -110,25 +110,25 @@ class html {
 				$users_html .= $users[$i]['username'] . "</a>";
 				if($users[$i]['shadowexpire']!='' && !$users[$i]['classroom']){ // Don't show expiration warnings for classroom users
 					if($users[$i]['shadowexpire'] <= time()){
-						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o smalldanger' title='User expired'></span>";
+						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o text-danger' title='User expired'></span>";
 					} else {
-						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o smallwarning' title='User set to expire'></span>";
+						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o text-warning' title='User set to expire'></span>";
 					}
 				}
 				if($users[$i]['leftcampus']){
-					$users_html .= " <span class='my-auto ml-1 fa fa-graduation-cap smallwarning' title='User left UIUC'></span>";
+					$users_html .= " <span class='my-auto ml-1 fa fa-graduation-cap text-warning' title='User left UIUC'></span>";
 				}
 				if($users[$i]['noncampus']){
-					$users_html .= " <span class='my-auto ml-1 fa fa-graduation-cap smallinfo' title='User not from UIUC'></span>";
+					$users_html .= " <span class='my-auto ml-1 fa fa-graduation-cap text-info' title='User not from UIUC'></span>";
 				}
 				if($users[$i]['crashplan']){
-					$users_html .= " <span class='my-auto ml-1 fa fa-hdd-o smallsuccess' title='User has Crashplan'></span>";
+					$users_html .= " <span class='my-auto ml-1 fa fa-hdd-o text-success' title='User has Crashplan'></span>";
 				}
 				if($users[$i]['passwordexpired']){
-					$users_html .= " <span class='my-auto ml-1 fa fa-lock smalldanger' title='Password expired'></span>";
+					$users_html .= " <span class='my-auto ml-1 fa fa-lock text-danger' title='Password expired'></span>";
 				}
 				if($users[$i]['classroom']){
-					$users_html .= " <span class='my-auto ml-1 fa fa-book smallinfo' title='Classroom User'></span>";
+					$users_html .= " <span class='my-auto ml-1 fa fa-book text-info' title='Classroom User'></span>";
 				}
 				$users_html .= "</td>";
                 $users_html .= "<td>" . $users[$i]['name']. "</td>";
@@ -154,7 +154,7 @@ class html {
 				$users_html .= $users[$i]['username'] . "</a>";
 				if($users[$i]['shadowexpire']!=''){ 
 					if($users[$i]['shadowexpire'] <= time()){
-						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o smalldanger' title='User expired'></span>";
+						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o text-danger' title='User expired'></span>";
 					}
 				}
 				$users_html .= "</td>";

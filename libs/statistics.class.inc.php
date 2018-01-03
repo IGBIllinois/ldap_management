@@ -6,13 +6,13 @@
 			return count($result);
 		}
 		public static function expiring_users($ldap){
-			$filter = "(shadowExpire=*)";
+			$filter = "(&(shadowExpire=*)(!(employeetype=classroom)))";
 			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, array(''));
 			return $result['count'];
 		}
 		
 		public static function expired_users($ldap){
-			$filter = "(shadowExpire=*)";
+			$filter = "(&(shadowExpire=*)(!(employeetype=classroom)))";
 			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, array('shadowExpire'));
 			$count = 0;
 			$time = time();

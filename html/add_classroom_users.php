@@ -27,6 +27,11 @@
 			$classroom_queue = new group($ldap,'classroom_queue');
 			$show_users = true;
 			$users_html = "<pre>";
+			$grouptoadd = null;
+			if(isset($_POST['new_group']) && $_POST['new_group']!=""){
+				// Initialize group object, if we're adding a group
+				$grouptoadd = new group($ldap, $_POST['new_group']);
+			}
 			for($i=$_POST['new_start']; $i<=$_POST['new_end']; $i++){
 				$paddednum = str_pad($i,$padlength,"0",STR_PAD_LEFT);
 				$username = $_POST['new_prefix'].$paddednum;
@@ -36,6 +41,7 @@
 				$user = new user($ldap,$username);
 				
 				if(user::is_ldap_user($ldap,$username)){
+					// User already exists, clean it out
 					// clear out the biocluster/file-server home folder, if it exists
 					if(__RUN_SHELL_SCRIPTS__){
 						$safeusername = escapeshellarg($username);
@@ -44,6 +50,16 @@
 					}
 					// Set the password
 					$user->set_password($password);
+					
+					// Clear out any extraneous groups the user is in
+					$groups = $user->get_groups();
+					$grouptoremove = new group($ldap);
+					for($j=0;$j<count($groups);$j++){
+						if($groups[$j]!=$username && $groups[$j]!='classroom_queue'){
+							$grouptoremove->load_by_name($groups[$j]);
+							$grouptoremove->remove_user($username);
+						}
+					}
 				} else {
 					// Create user with random password
 					$user->create($username,$username,$username,$password);
@@ -62,6 +78,20 @@
 				
 				// Set classroom-user status
 				$user->set_classroom(true);
+				
+				// Set description
+				$user->set_description($_POST['new_desc']);
+				
+				// Set expiration
+				if(isset($_POST['new_exp']) && $_POST['new_exp']!=""){
+					$user->set_expiration(strtotime($_POST['new_exp']));
+				}
+				
+				// Set extra group
+				if($grouptoadd != null){
+					echo "adding $username to group";
+					$grouptoadd->add_user($username);
+				}
 			}
 			$users_html .= "</pre>";
 
@@ -80,12 +110,21 @@
 	}
 
 	if($show_users){
-		echo "<legend>Add Classroom Users</legend><p>The following classroom users have been added. This list has also been emailed to you for your records.";
+		echo "<div class='mt-4'><legend>Add Classroom Users</legend><p>The following classroom users have been added. This list has also been emailed to you for your records.</p></div>";
 		echo $users_html;
 		echo $message;
 ?>
 
-<?php } else { ?>
+<?php } else { 
+	
+	$groupshtml = "";
+	$groups = group::get_search_groups($ldap,"",-1,-1,'name',"true",1);
+	$groupshtml .= "<select name='new_group' class='form-control group-select'><option></option>";
+	foreach($groups as $group){
+		$groupshtml .= "<option value='".$group['name']."'>".$group['name']."</option>";
+	}
+	$groupshtml .= "</select>";
+?>
 
 <form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
@@ -112,6 +151,24 @@
 					</div>
 				</div>
 				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="desc-input">Description</label>
+					<div class="col-sm-8">
+						<input class="form-control" type="text" name="new_desc" id="desc-input" placeholder="e.g. MCB 529 Spring 2018" value="<?php if(isset($_POST['new_desc'])){echo $_POST['new_desc'];}?>" oninput="show_add_classroom_text()" />
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="exp-input">Expiration</label>
+					<div class="col-sm-8">
+						<input class="form-control" type="text" name="new_exp" id="exp-input" placeholder="MM/DD/YYYY" value="<?php if(isset($_POST['new_exp'])){echo $_POST['new_exp'];}?>" oninput="show_add_classroom_text()" />
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="group-input">Group</label>
+					<div class="col-sm-8">
+						<?php echo $groupshtml; ?>
+					</div>
+				</div>
+				<div class="form-group row">
 					<div class="col-sm-8 offset-sm-4">
 						<div class="btn-group">
 							<input class="btn btn-success" type="submit" name="classroom_users" value="Add classroom users" id="add_user_submit" /> <input class="btn btn-light" type="submit" name="cancel_user" value="Cancel" />
@@ -127,7 +184,13 @@
 </form>
 	
 <script type="text/javascript">
-	$(document).ready(function(){show_add_classroom_text();});
+	$(document).ready(function(){
+		show_add_classroom_text();
+		$(".group-select").select2({
+			placeholder: "Please select a group",
+			width: 'element'
+		});
+	});
 </script>
 <?php
 		if(isset($message))echo $message;

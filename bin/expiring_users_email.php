@@ -38,24 +38,26 @@ if ($sapi_type != 'cli') {
 	$digestexpired = "";
 	foreach($users as $uid){
 		$user = new user($ldap,$uid);
-		if($user->is_expiring() && $user->get_email()!=null){
-			$expiration = $user->get_expiration();
-			$timetoexp = intval(($expiration-time())/(60*60*24));
-
-			if( $timetoexp == 6 ){
-				$oneweek[] = $user;
-			} else if( $timetoexp == 29 ){
-				$onemonth[] = $user;
-			} else if( $timetoexp == 7 || $timetoexp == 30 ){
-				$emailtomorrow[] = $user;
-			}
-
-		} else if ($user->is_expired()){
-			$expiration = $user->get_expiration();
-			$timetoexp = intval(($expiration-time())/(60*60*24));
-			
-			if($timetoexp == 0){
-				$digestexpired .= $user->get_username()."<br>";	
+		if(!($user->get_classroom())){
+			if($user->is_expiring() && $user->get_email()!=null){
+				$expiration = $user->get_expiration();
+				$timetoexp = intval(($expiration-time())/(60*60*24));
+	
+				if( $timetoexp == 6 ){
+					$oneweek[] = $user;
+				} else if( $timetoexp == 29 ){
+					$onemonth[] = $user;
+				} else if( $timetoexp == 7 || $timetoexp == 30 ){
+					$emailtomorrow[] = $user;
+				}
+	
+			} else if ($user->is_expired()){
+				$expiration = $user->get_expiration();
+				$timetoexp = intval(($expiration-time())/(60*60*24));
+				
+				if($timetoexp == 0){
+					$digestexpired .= $user->get_username()."<br>";	
+				}
 			}
 		}
 	}

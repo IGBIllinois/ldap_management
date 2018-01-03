@@ -699,11 +699,11 @@ class user {
 				"description"=>(isset($result[$i]['description'])?$result[$i]['description'][0]:''));
 			if($userfilter != 'none'){
 				if($userfilter == 'expiring'){
-					if($user['shadowexpire'] > time()){
+					if($user['shadowexpire'] > time() && !$user['classroom']){
 						$users[] = $user;
 					}
 				} else if($userfilter == 'expired'){
-					if($user['shadowexpire']!='' && $user['shadowexpire'] <= time()){
+					if($user['shadowexpire']!='' && $user['shadowexpire'] <= time() && !$user['classroom']){
 						$users[] = $user;
 					}
 				} else if($userfilter == 'left'){

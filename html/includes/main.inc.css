@@ -147,6 +147,9 @@ div.panel td, div.panel th {
 .table-igb-bordered td:last-child, .table-igb-bordered th:last-child {
 	border-right: 0px;
 }
+.table-igb-bordered td.d-flex {
+	border-right: 0px;
+}
 /* Searchbar styles */
 #searchbar-results {
 	position: absolute;

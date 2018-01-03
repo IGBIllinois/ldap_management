@@ -108,7 +108,7 @@ class html {
         		$users_html .= "<td width='14px'><input type='checkbox' name='selected[".$users[$i]['username']."]'/></td>";
             	$users_html .= "<td class='pl-2 d-flex'><a class='mr-auto' href='user.php?uid=" . $users[$i]['username'] . "'>";
 				$users_html .= $users[$i]['username'] . "</a>";
-				if($users[$i]['shadowexpire']!=''){
+				if($users[$i]['shadowexpire']!='' && !$users[$i]['classroom']){ // Don't show expiration warnings for classroom users
 					if($users[$i]['shadowexpire'] <= time()){
 						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o smalldanger' title='User expired'></span>";
 					} else {
@@ -150,8 +150,13 @@ class html {
 				usort($users[$i]['groups'],'html::username_cmp');
 				$users_html .= "<tr>";
 				$users_html .= "<td width='14px'><input type='checkbox' name='selected[".$users[$i]['username']."]'/></td>";
-            	$users_html .= "<td class='pl-2'><a class='mr-auto' href='user.php?uid=" . $users[$i]['username'] . "'>";
+            	$users_html .= "<td class='pl-2 d-flex'><a class='mr-auto' href='user.php?uid=" . $users[$i]['username'] . "'>";
 				$users_html .= $users[$i]['username'] . "</a>";
+				if($users[$i]['shadowexpire']!=''){ 
+					if($users[$i]['shadowexpire'] <= time()){
+						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o smalldanger' title='User expired'></span>";
+					}
+				}
 				$users_html .= "</td>";
 				$users_html .= "<td>" . $users[$i]['description']. "</td>";
 				$users_html .= "<td>" . implode(', ', $users[$i]['groups']). "</td>";

@@ -36,6 +36,7 @@
 								<a class="dropdown-item" href="list_users.php"><span class="fa fa-list"></span> List Users</a>
 								<a class="dropdown-item" href="add_user.php"><span class="fa fa-plus"></span> Add User</a>
 								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="list_classroom_users.php"><span class="fa fa-list"></span> List Classroom Users</a>
 								<a class="dropdown-item" href="add_classroom_users.php"><span class="fa fa-plus"></span> Add Classroom Users</a>
 								<a class="dropdown-item" href="remove_classroom_users.php"><span class="fa fa-minus"></span> Remove Classroom Users</a>
 							</div>

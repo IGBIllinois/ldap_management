@@ -19,6 +19,12 @@
 			if($_POST['new_emailforward']!=""){
 				$user->set_emailforward($_POST['new_emailforward']);
 			}
+			if(isset($_POST['new_realperson'])){
+				$group = new group($ldap, 'igb_users');
+				$group->add_user($user->get_username());
+			} else {
+				$user->cancel_password_expiration();
+			}
 		
 			if($result['RESULT'] == true){
 				// Run script to add user to file-server, mail
@@ -77,6 +83,12 @@
 					<label class="col-sm-4 col-form-label" for="passwordb-input">Confirm Password:</label>
 					<div class="col-sm-8">
 						<input class="form-control" type="password" name="new_passwordb" id="passwordb_input" value="<?php if (isset($_POST['new_passwordb'])){echo $_POST['new_passwordb'];}?>" oninput="[username_errors,password_errors,email_errors]=add_user_errors(username_errors,null,email_errors);" />
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="col-sm-4 col-form-label" for="realperson-input">Real Person:</label>
+					<div class="col-sm-8">
+							<input checked type="checkbox" id="realperson-input" name="new_realperson">
 					</div>
 				</div>
 				<div class="form-group row">

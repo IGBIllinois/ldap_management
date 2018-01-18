@@ -719,6 +719,10 @@ class user {
 						$user['groups'] = self::get_groups_for_uid($ldap,$user['username']);
 						$users[] = $user;
 					}	
+				} else if($userfilter == 'passwordexpired'){
+					if($user['passwordexpired']){
+						$users[] = $user;
+					}
 				} else {
 					$users[] = $user;
 				}

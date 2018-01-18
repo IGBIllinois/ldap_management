@@ -68,8 +68,9 @@
 				<div class="btn-group">
 					<button type="button" class="btn <?php if($filter=='expiring'){echo 'btn-warning';}else{echo 'btn-light';} ?>" id="expiring-button" onclick="filter_table('expiring')"><span class="fa fa-clock-o"></span> Expiring</button>
 					<button type="button" class="btn <?php if($filter=='expired'){echo 'btn-danger';}else{echo 'btn-light';} ?>" id="expired-button" onclick="filter_table('expired')"><span class="fa fa-clock-o"></span> Expired</button>
+					<button type="button" class="btn <?php if($filter=='passwordexpired'){echo 'btn-danger';}else{echo 'btn-light';} ?>" id="passwordexpired-button" onclick="filter_table('passwordexpired')"><span class="fa fa-key"></span> Password Expired</button>
 					<button type="button" class="btn <?php if($filter=='left'){echo 'btn-warning';}else{echo 'btn-light';} ?>" id="ad-button" onclick="filter_table('left')"><span class="fa fa-graduation-cap"></span> Left Campus</button>
-					<button type="button" class="btn <?php if($filter=='noncampus'){echo 'btn-info';}else{echo 'btn-light';} ?>" id="noncampus-button" onclick="filter_table('noncampus')"><span class="fa fa-graduation-cap"></span> Non-Campus</button>
+<!-- 					<button type="button" class="btn <?php if($filter=='noncampus'){echo 'btn-info';}else{echo 'btn-light';} ?>" id="noncampus-button" onclick="filter_table('noncampus')"><span class="fa fa-graduation-cap"></span> Non-Campus</button> -->
 				</div>
 			</form>
 		</div>

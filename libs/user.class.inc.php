@@ -559,7 +559,7 @@ class user {
 		return array('RESULT'=>false,
 		'MESSAGE'=>'Unlock failed: '.$this->ldap->get_error());
 	}
-	public function islocked(){
+	public function is_locked(){
 		$filter = "(uid=".$this->get_username().")";
 		$attributes = array("userPassword");
 		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);

@@ -29,6 +29,8 @@ if ($sapi_type != 'cli') {
 	echo "Analyzing users...";
 	// Connect to ldap
 	$ldap = new ldap(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__);
+	$ldap->set_bind_user(__LDAP_BIND_USER__);
+	$ldap->set_bind_pass(__LDAP_BIND_PASS__);
 	$users = user::get_all_users($ldap);
 	$onemonth = array();
 	$oneweek = array();
@@ -50,25 +52,22 @@ if ($sapi_type != 'cli') {
 				$emailtomorrow[] = $user;
 			}
 
-		} else if ($user->is_password_expired()){
-			$expiration = $user->get_password_expiration();
-			$timetoexp = intval(($expiration-time())/(60*60*24));
-			
-			if($timetoexp == 0){
-				$digestexpired .= $user->get_username()."<br>";	
-			}
+		} 
+		if ($user->is_password_expired() && !$user->is_locked()){
+			echo "Password expired for ".$user->get_username()."\n";
+			$user->lock();
 		}
 	}
 	
 	if(count($onemonth)>0){
 		echo "\n==== Expiring in One Month ====\n";
 		foreach($onemonth as $user){
-			echo date('Y-m-d',$user->get_expiration())."\t".$user->get_username()."  \t".$user->get_name()."\n";
+			echo date('Y-m-d',$user->get_password_expiration())."\t".$user->get_username()."  \t".$user->get_name()."\n";
 		}
 		echo "Sending mail...";
 		foreach($onemonth as $user){
 			$digestmonth .= $user->get_username()."<br>";
- 			emailmessage($user, "IGB Password Expiration", "one month");
+  			emailmessage($user, "IGB Password Expiration", "one month");
 		}
 	} else {
 		echo "\nNo users expiring in one month.\n";
@@ -77,27 +76,15 @@ if ($sapi_type != 'cli') {
 	if(count($oneweek)>0){
 		echo "\n==== Expiring in One Week ====\n";
 		foreach($oneweek as $user){
-			echo date('Y-m-d',$user->get_expiration())."\t".$user->get_username()."  \t".$user->get_name()."\n";
+			echo date('Y-m-d',$user->get_password_expiration())."\t".$user->get_username()."  \t".$user->get_name()."\n";
 		}
 		echo "Sending mail...";
 		foreach($oneweek as $user){
 			$digestweek .= $user->get_username()."<br>";
- 			emailmessage($user, "IGB Password Expiration Final Notice", "one week");
+  			emailmessage($user, "IGB Password Expiration Final Notice", "one week");
 		}
 	} else {
 		echo "\nNo users expiring in one week.\n";
-	}
-	
-	if(strlen($digestexpired)>0){
-		// Send a digest to help
-		$subject = "Expired IGB Passwords";
- 		$to = "help@igb.illinois.edu";
-		$emailmessage = "The following users' passwords expired today:<br><br>".$digestexpired;
-
-		$headers = "From: do-not-reply@igb.illinois.edu\r\n";
-		$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
- 		mail($to,$subject,$emailmessage,$headers," -f " . __ADMIN_EMAIL__);
-		echo "\nDone.\n";
 	}
 	
 	if(count($emailtomorrow)>0){
@@ -106,7 +93,7 @@ if ($sapi_type != 'cli') {
 		$to = "jleigh@illinois.edu";
 		$emailmessage = "The following users will be emailed password expiration notices tomorrow:<br><pre>";
 		for($i=0; $i<count($emailtomorrow); $i++){
-			$emailmessage .= $emailtomorrow[$i]->get_username()."\t".date('F j, Y', $emailtomorrow[$i]->get_expiration())."\n";
+			$emailmessage .= $emailtomorrow[$i]->get_username()."\t".date('F j, Y', $emailtomorrow[$i]->get_password_expiration())."\n";
 		}
 		$emailmessage .= "</pre><br><br>--IGBLAM";
 		

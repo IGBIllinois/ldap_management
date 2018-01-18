@@ -76,7 +76,7 @@
 		</div>
 		<?php } ?>
 		<table class="table table-striped table-igb-bordered table-responsive-md mb-0">
-			<?php if($user->islocked()) { ?>
+			<?php if($user->is_locked()) { ?>
 				<tr>
 					<td colspan="2" class="table-danger">User is locked</td>
 				</tr>
@@ -161,7 +161,7 @@
 		<div class="card-body">
 			<a href="change_password.php?uid=<?php echo $username; ?>" class="btn btn-info mt-1 mt-md-0"><span class="fa fa-pencil"></span> Change Password</a>
 			<a href="expire_user.php?uid=<?php echo $username; ?>" class="btn btn-warning mt-1 mt-md-0"><span class="fa fa-clock-o"></span> Set Expiration</a>
-			<?php if($user->islocked()){ ?>
+			<?php if($user->is_locked()){ ?>
 			<a href="unlock_user.php?uid=<?php echo $username; ?>" class="btn btn-warning mt-1 mt-md-0"><span class="fa fa-unlock-alt"></span> Unlock User</a>
 			<?php } else { ?>
 			<a href="lock_user.php?uid=<?php echo $username; ?>" class="btn btn-danger mt-1 mt-md-0"><span class="fa fa-lock"></span> Lock User</a>

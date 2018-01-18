@@ -125,7 +125,7 @@ class html {
 					$users_html .= " <span class='my-auto ml-1 fa fa-hdd-o text-success' title='User has Crashplan'></span>";
 				}
 				if($users[$i]['passwordexpired']){
-					$users_html .= " <span class='my-auto ml-1 fa fa-lock text-danger' title='Password expired'></span>";
+					$users_html .= " <span class='my-auto ml-1 fa fa-key text-danger' title='Password expired'></span>";
 				}
 				if($users[$i]['classroom']){
 					$users_html .= " <span class='my-auto ml-1 fa fa-book text-info' title='Classroom User'></span>";

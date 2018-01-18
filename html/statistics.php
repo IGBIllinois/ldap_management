@@ -10,7 +10,7 @@
 			<td><?php echo statistics::users($ldap); ?></td>
 		</tr>
 		<tr>
-			<td class="d-flex"><span class="mr-auto">Expired Passwords</span> <i class="my-auto fa fa-lock text-danger"></i></td>
+			<td class="d-flex"><span class="mr-auto">Expired Passwords</span> <i class="my-auto fa fa-key text-danger"></i></td>
 			<td><?php echo statistics::password_expired_users($ldap); ?></td>
 		</tr>
 		<tr>

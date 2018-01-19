@@ -3,6 +3,14 @@
     background-size: cover;
     background-blend-mode: overlay;
 }
+.uiuclogo {
+	height: 4.5rem;
+}
+@media (max-width: 575px){
+	.uiuclogo {
+		height: 3.5rem;
+	}
+}
 .sortable-th {
 	cursor: pointer;
 }

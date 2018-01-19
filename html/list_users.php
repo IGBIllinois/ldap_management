@@ -48,8 +48,8 @@
 	
 	$users_html = html::get_users_rows($all_users,($filter=='expiring'||$filter=='expired'));
 	?>
-	
-	<h3 class="mt-4">List of Users</h3>
+	<div class="minijumbo"><div class="container">Users</div></div>
+	<div class="container">
 	
 	<?php if(isset($_GET['message'])){
 		echo $_GET['message'];

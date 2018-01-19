@@ -70,11 +70,11 @@
 	}
 
 ?>
+<div class="minijumbo"><div class="container">Add Users to Group</div></div>
+<div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<input type="hidden" name="action" value="<?php echo $_POST['action']; ?>"/>
 	<fieldset>
-		<legend>Add Users to Group</legend>
-		<hr>
 		<div class="form-group row">
 			<label class="col-sm-3 align-middle" for="username-input">Usernames:</label>
 			<div class="col-sm-5">

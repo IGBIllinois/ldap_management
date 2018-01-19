@@ -45,7 +45,8 @@
 	$users_html = html::get_classroom_users_rows($all_users,($filter=='expiring'||$filter=='expired'));
 	?>
 	
-	<h3 class="mt-4">Classroom Users</h3>
+	<div class="minijumbo"><div class="container">Classroom Users</div></div>
+	<div class="container">
 	
 	<?php if(isset($_GET['message'])){
 		echo $_GET['message'];

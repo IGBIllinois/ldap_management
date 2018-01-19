@@ -37,7 +37,8 @@
 	
 	?>
 	
-	<h3 class="mt-4">List of Hosts</h3>
+	<div class="minijumbo"><div class="container">Hosts</div></div>
+	<div class="container">
 	
 	<div class="card">
 		<table class="table table-sm table-striped table-igb-bordered table-responsive-md mb-0">

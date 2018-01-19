@@ -1,8 +1,7 @@
 <?php 
 	require_once 'includes/header.inc.php';
-?>
-</div>
-<?php include 'includes/jumbotron.inc.php'; ?>
+	include 'includes/jumbotron.inc.php'; 
+	?>
 <div class="container">
 <div class="row">
 	<div class="col-md-4">

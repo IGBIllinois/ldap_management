@@ -93,10 +93,10 @@
 		$groupshtml .= "</select>";
 	}
 ?>
+<div class="minijumbo"><div class="container">Add User to Group</div></div>
+<div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
-		<legend>Add User to Group</legend>
-		<hr>
 		<?php if($uid != "" && count($usertoadd->get_groups()) > 15){
 			echo html::warning_message('<span class="fa fa-exclamation-triangle"> </span> After this operation, '.$uid.' will be a member of >16 groups. This may cause issues with NFS.');
 		} ?>

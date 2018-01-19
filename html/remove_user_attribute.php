@@ -71,17 +71,21 @@
 	}
 	
 	?>
+<div class="minijumbo"><div class="container">
+	<?php
+		if(isset($attr['button']['title'])){
+			$title = $attr['button']['title'];
+		} else {
+			$title = 'Remove '.$attr['fullname'];
+		}
+		echo $title;
+	?>
+</div></div>
+<div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>" name="form">
 	<fieldset>
 		<legend>
-		<?php
-			if(isset($attr['button']['title'])){
-				$title = $attr['button']['title'];
-			} else {
-				$title = 'Remove '.$attr['fullname'];
-			}
-			echo $title;
-		?>
+		
 		</legend>
 		<hr>
 		<div class="row">

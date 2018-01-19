@@ -42,11 +42,10 @@
 		unset($_POST);
 	}
 ?>
-
+<div class="minijumbo"><div class="container">Add User</div></div>
+<div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
-		<legend>Add User</legend>
-		<hr>
 		<div class="row">
 			<div class="col-sm-8">
 				<div class="form-group row">

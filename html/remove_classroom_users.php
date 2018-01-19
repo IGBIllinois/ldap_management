@@ -46,11 +46,10 @@
 	}
 
 ?>
-
+<div class="minijumbo"><div class="container">Remove Classroom Users</div></div>
+<div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
-		<legend>Remove Classroom Users</legend>
-		<hr>
 		<div class="row">
 			<div class="col-sm-8">
 				<div class="form-group row">

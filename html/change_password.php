@@ -44,10 +44,10 @@
 		header('location: index.php');
 	}
 ?>
+<div class="minijumbo"><div class="container">Change Password</div></div>
+<div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
-		<legend>Change Password</legend>
-		<hr>
 		<div class="row">
 			<div class="col-sm-8">
 				<div class="form-group row">

@@ -41,6 +41,8 @@
 			border-top: 2px solid darkgrey;
 		}	
 	</style>
+	<div class="minijumbo"><div class="container">Host: <?php echo $host->get_name(); ?></div></div>
+	<div class="container">
 	<div class="card mt-4">
 		<table class="table table-sm table-striped table-igb-bordered mb-0">
 			<tr>

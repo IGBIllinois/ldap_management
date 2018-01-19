@@ -58,6 +58,8 @@
 			border-top: 2px solid darkgrey;
 		}	
 	</style>
+	<div class="minijumbo"><div class="container">User: <?php echo $user->get_username(); ?></div></div>
+	<div class="container">
 	<div class="card mt-4">
 		<?php if(isset($prevUid) && isset($nextUid) && ($prevUid!=null || $nextUid!=null)){ ?>
 		<div class="row">

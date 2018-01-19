@@ -42,7 +42,8 @@
 	$groups_html = html::get_groups_rows($all_groups);
 	?>
 	
-	<h3 class="mt-4">List of Groups</h3>
+	<div class="minijumbo"><div class="container">Groups</div></div>
+	<div class="container">
 	<div class="card">
 		<div class="card-body">
 			<form method="get" action='<?php echo $_SERVER['PHP_SELF']; ?>' class="form-inline">

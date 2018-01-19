@@ -3,7 +3,9 @@
 	$sitearea = "statistics";
 	require 'includes/header.inc.php';
 ?>
-	<h3 class="mt-4">Statistics</h3>
+	</div>
+	<div class="minijumbo"><div class="container">Statistics</div></div>
+	<div class="container">
 	<table class='table table-condensed table-striped table-bordered table-igb-bordered'>
 		<tr>
 			<td class="d-flex"><span class="mr-auto">Users</span> <i class="my-auto fa fa-user text-dark"></i></td>

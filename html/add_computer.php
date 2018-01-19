@@ -24,10 +24,10 @@
 		unset($_POST);
 	}
 ?>
+<div class="minijumbo"><div class="container">Add Domain Computer</div></div>
+<div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
-		<legend>Add Domain Computer</legend>
-		<hr>
 		<div class="form-group row">
 			<label class="col-sm-3 col-form-label" for="name-input">Name:</label>
 			<div class="col-sm-6">

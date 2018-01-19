@@ -104,10 +104,10 @@
 		$hostshtml .= "</select>";
 
 ?>
+<div class="minijumbo"><div class="container">Add Server Directory to Group</div></div>
+<div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
-		<legend>Add Server Directory to Group</legend>
-		<hr>
 		<div class="form-group row">
 			<label class="col-sm-3 col-form-label" for="group-input">Group:</label>
 			<div class="col-sm-5">

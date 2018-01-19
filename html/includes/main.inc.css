@@ -3,6 +3,18 @@
     background-size: cover;
     background-blend-mode: overlay;
 }
+.minijumbo {
+    background-image: url('../images/banner.png');
+    background-size: cover;
+    background-blend-mode: overlay;
+    background-color: #e9ecef;
+    padding-top: 2.5rem;
+    padding-bottom: 1.5rem;
+    font-size: 2rem;
+    margin-bottom: .5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
 .uiuclogo {
 	height: 4.5rem;
 }

@@ -40,7 +40,8 @@
 	
 	?>
 	
-	<h3 class="mt-4">List of Domain Computers</h3>
+	<div class="minijumbo"><div class="container">Domain Computers</div></div>
+	<div class="container">
 	<div class="card">
 		<div class="card-body">
 			<form method="get" action='<?php echo $_SERVER['PHP_SELF']; ?>' class="form-inline">

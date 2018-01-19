@@ -84,10 +84,8 @@
 	}
 	
 	?>
-<form class="mt-4" method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>" name="form">
-	<fieldset>
-		<legend>
-		<?php
+<div class="minijumbo"><div class="container">
+	<?php
 			if(isset($attr['button']['title'])){
 				$title = $attr['button']['title'];
 			} else {
@@ -95,8 +93,10 @@
 			}
 			echo $title;
 		?>
-		</legend>
-		<hr>
+</div></div>
+<div class="container">
+<form class="mt-4" method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>" name="form">
+	<fieldset>
 		<div class="row">
 			<div class="col-sm-8">
 				<div class="form-group row">

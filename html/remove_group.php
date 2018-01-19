@@ -39,10 +39,10 @@
 		header('location: index.php');
 	}
 ?>
+<div class="minijumbo"><div class="container">Remove Group</div></div>
+<div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>
-		<legend>Remove group</legend>
-		<hr>
 		<div class="form-group row">
 			<label class="col-sm-3 col-form-label">Group:</label>
 			<div class="col-sm-5">

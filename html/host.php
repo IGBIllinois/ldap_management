@@ -41,7 +41,9 @@
 			border-top: 2px solid darkgrey;
 		}	
 	</style>
-	<div class="minijumbo"><div class="container">Host: <?php echo $host->get_name(); ?></div></div>
+	<div class="minijumbo"><div class="container"><?php echo $host->get_name(); ?>
+	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="list_hosts.php">Hosts</a></li><li class="breadcrumb-item active"><?php echo $host->get_name(); ?></li></ol></nav>
+	</div></div>
 	<div class="container">
 	<div class="card mt-4">
 		<table class="table table-sm table-striped table-igb-bordered mb-0">

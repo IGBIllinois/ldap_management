@@ -57,7 +57,11 @@
 	
 	
 ?>
-<div class="minijumbo"><div class="container">Set Expiration</div></div>
+<div class="minijumbo"><div class="container">Set Expiration
+	<?php if($uid != ""){ ?>
+	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="list_users.php">Users</a></li><li class="breadcrumb-item"><a href="user.php?uid=<?php echo $uid; ?>"><?php echo $uid; ?></a></li><li class="breadcrumb-item active">Set Expiration</li></ol></nav>
+	<?php } ?>
+</div></div>
 <div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>

@@ -93,6 +93,7 @@
 			}
 			echo $title;
 		?>
+		<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="list_users.php">Users</a></li><li class="breadcrumb-item"><a href="user.php?uid=<?php echo $user->get_username(); ?>"><?php echo $user->get_username(); ?></a></li><li class="breadcrumb-item active"><?php echo $title; ?></li></ol></nav>
 </div></div>
 <div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>" name="form">

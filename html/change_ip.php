@@ -39,7 +39,11 @@
 		header('location: index.php');
 	}
 ?>
-<div class="minijumbo"><div class="container">Change Host IP</div></div>
+<div class="minijumbo"><div class="container">Change Host IP
+	<?php if($hid != "") { ?>
+	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="list_hosts.php">Hosts</a></li><li class="breadcrumb-item"><a href="host.php?hid=<?php echo $hid; ?>"><?php echo $hid; ?></a></li><li class="breadcrumb-item active">Change IP</li></ol></nav>
+	<?php } ?>
+</div></div>
 <div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>

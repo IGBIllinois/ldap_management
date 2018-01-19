@@ -58,7 +58,9 @@
 			border-top: 2px solid darkgrey;
 		}	
 	</style>
-	<div class="minijumbo"><div class="container">User: <?php echo $user->get_username(); ?></div></div>
+	<div class="minijumbo"><div class="container"><?php echo $user->get_name(); ?>
+		<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="list_users.php">Users</a></li><li class="breadcrumb-item active"><?php echo $user->get_username(); ?></li></ol></nav>
+	</div></div>
 	<div class="container">
 	<div class="card mt-4">
 		<?php if(isset($prevUid) && isset($nextUid) && ($prevUid!=null || $nextUid!=null)){ ?>

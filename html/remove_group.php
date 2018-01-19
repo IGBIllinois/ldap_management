@@ -39,7 +39,11 @@
 		header('location: index.php');
 	}
 ?>
-<div class="minijumbo"><div class="container">Remove Group</div></div>
+<div class="minijumbo"><div class="container">Remove Group
+	<?php if($gid != "") { ?>
+	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="list_groups.php">Groups</a></li><li class="breadcrumb-item"><a href="group.php?gid=<?php echo $gid; ?>"><?php echo $gid; ?></a></li><li class="breadcrumb-item active">Remove</li></ol></nav>
+	<?php } ?>
+</div></div>
 <div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">
 	<fieldset>

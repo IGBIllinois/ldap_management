@@ -18,7 +18,9 @@
 			border-top: 2px solid darkgrey;
 		}	
 	</style>
-	<div class="minijumbo"><div class="container">Domain Computer: <?php echo $computer->get_name(); ?></div></div>
+	<div class="minijumbo"><div class="container"><?php echo $computer->get_name(); ?>
+		<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="list_computers.php">Domain Computers</a></li><li class="breadcrumb-item active"><?php echo $computer->get_name(); ?></a></li></ol></nav>
+	</div></div>
 	<div class="container">
 	<div class="card mt-4">
 		<table class="table table-sm table-striped mb-0">

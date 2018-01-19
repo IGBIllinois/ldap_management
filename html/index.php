@@ -2,7 +2,7 @@
 	require_once 'includes/header.inc.php';
 ?>
 </div>
-<div class='jumbotron jumbotron-fluid'>
+<div class='jumbotron jumbotron-fluid mainjumbo'>
 	<div class="container">
 		<h1 class="display-3 igb-jumbo">
 			<img src="images/imark_bw.gif" class="mx-2 align-text-top mt-2">

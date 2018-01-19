@@ -1,3 +1,8 @@
+.mainjumbo {
+    background-image: url('../images/banner.png');
+    background-size: cover;
+    background-blend-mode: overlay;
+}
 .sortable-th {
 	cursor: pointer;
 }

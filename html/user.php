@@ -43,6 +43,8 @@
 	}
 
 // 	Next/prev buttons
+	$prevUid = null;
+	$nextUid = null;
 	if(isset($_COOKIE['lastUserSearchFilter']) and isset($_COOKIE['lastUserSearchSort']) and isset($_COOKIE['lastUserSearchAsc'])){
 		// Cookies are set, let's do this.
 		$filter = $_COOKIE['lastUserSearchFilter'];
@@ -63,7 +65,7 @@
 	</div></div>
 	<div class="container">
 	<div class="card mt-4">
-		<?php if(isset($prevUid) && isset($nextUid) && ($prevUid!=null || $nextUid!=null)){ ?>
+		<?php if( $prevUid!=null || $nextUid!=null ){ ?>
 		<div class="row">
 			<div class="col-sm-3 col-lg-2">
 				<a <?php if($prevUid!=null){echo 'href="user.php?uid='.$prevUid.'"';} ?> class="btn btn-light btn-prev btn-block<?php if($prevUid==null){echo " disabled";}?>">

@@ -105,10 +105,10 @@ function searchbar_hover(e){
 }
 
 function searchbar_setcookies(e){
-	Cookies.set('lastUserSearchSort','username');
-	Cookies.set('lastUserSearchAsc','true');
-	Cookies.set('lastUserSearchFilter','none');
-	Cookies.set('lastUserSearch',$("#searchbar").val());
+	Cookies.set('lastUserSearchSort','username',{'path':''});
+	Cookies.set('lastUserSearchAsc','true',{'path':''});
+	Cookies.set('lastUserSearchFilter','none',{'path':''});
+	Cookies.set('lastUserSearch',$("#searchbar").val(),{'path':''});
 }
 
 $(document).ready(function(){

@@ -17,6 +17,7 @@
 		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
 		
 		<script src="includes/jquery-3.2.1.js"></script>
+		<script src="includes/js.cookie.js"></script>
 	</head>
 	<body>
 		<nav class="navbar navbar-dark bg-dark navbar-expand-lg">

@@ -104,10 +104,18 @@ function searchbar_hover(e){
 	$("#searchbar-results a").removeClass("selected");
 }
 
+function searchbar_setcookies(e){
+	Cookies.set('lastUserSearchSort','username');
+	Cookies.set('lastUserSearchAsc','true');
+	Cookies.set('lastUserSearchFilter','none');
+	Cookies.set('lastUserSearch',$("#searchbar").val());
+}
+
 $(document).ready(function(){
 	$('#searchbar').on('input',searchbar_search);
 	$('#searchbar').on('keydown', searchbar_handle_keys);
 	$('#searchbar').on('focus', searchbar_show);
 	$('#searchbar-results').on('mouseenter','a', searchbar_hover);
+	$('#searchbar-results').on('click','a',searchbar_setcookies);
 	$('body').on('click',searchbar_hide);
 });

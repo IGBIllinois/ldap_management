@@ -132,8 +132,8 @@ class html {
 				}
 				$users_html .= "</td>";
                 $users_html .= "<td>" . $users[$i]['name']. "</td>";
-				$users_html .= "<td>" . $users[$i]['email']. "</td>";
 				$users_html .= "<td>" . $users[$i]['emailforward']. "</td>";
+				$users_html .= "<td>" . ($users[$i]['passwordexpire']===''?'':date('m/d/Y',$users[$i]['passwordexpire'])). "</td>";
 				if($showexpiration){
 					$users_html .= "<td>" . date('m/d/Y',$users[$i]['shadowexpire']). "</td>";
 				}
@@ -252,6 +252,16 @@ class html {
 	}
 	
 	public static function username_cmp($a,$b){
+		if($a==$b){
+			return 0;
+		}
+		// Empty strings should show up at the end of the list
+		if($a == ''){
+			return 1;
+		}
+		if($b == ''){
+			return -1;
+		}
 		$aalpha = strcspn($a,'0123456789');
 		$balpha = strcspn($b,'0123456789');
 		if($aalpha==$balpha && substr($a, 0, $aalpha)==substr($b,0,$balpha)){

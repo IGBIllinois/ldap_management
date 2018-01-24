@@ -46,7 +46,7 @@
 ?>
 <div class="minijumbo"><div class="container">Change Password
 	<?php if($uid != ""){ ?>
-	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="list_users.php">Users</a></li><li class="breadcrumb-item"><a href="user.php?uid=<?php echo $uid; ?>"><?php echo $uid; ?></a></li><li class="breadcrumb-item active">Change Password</li></ol></nav>
+	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="<?php echo html::get_list_users_url_from_cookies(); ?>">Users</a></li><li class="breadcrumb-item"><a href="user.php?uid=<?php echo $uid; ?>"><?php echo $uid; ?></a></li><li class="breadcrumb-item active">Change Password</li></ol></nav>
 	<?php } ?>
 </div></div>
 <div class="container">

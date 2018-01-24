@@ -3,37 +3,30 @@
 	$sitearea = "users";
 	require_once 'includes/header.inc.php';
 
-	$get_array = array();
 	$start = 0;
 	$count = 30;
-	
 	if ( isset($_GET['start']) && is_numeric($_GET['start']) ){
 		$start = $_GET['start'];
-		$get_array['start'] = $start;
 	}
 	
 	$search = "";
 	if ( isset($_GET['search']) ){
 		$search = trim($_GET['search']);
-		$get_array['search'] = $search;
 	}
 	
 	$sort = 'username';
 	if(isset($_GET['sort'])){
 		$sort = $_GET['sort'];
-		$get_array['sort'] = $sort;
 	}
 	
 	$asc = "true";
 	if(isset($_GET['asc'])){
 		$asc = $_GET['asc'];
-		$get_array['asc'] = $asc;
 	}
 	
 	$filter = 'none';
 	if(isset($_GET['filter'])){
 		$filter = $_GET['filter'];
-		$get_array['filter'] = $filter;
 	}
 	setcookie("lastUserSearchSort",$sort);
 	setcookie("lastUserSearchAsc",$asc);
@@ -41,12 +34,13 @@
 	setcookie("lastUserSearch",$search);
 	$all_users = user::get_search_users($ldap,$search,$start,$count,$sort,$asc,$filter);
 	$num_users = user::get_search_users_count($ldap,$search,$filter);
-	$pages_url = $_SERVER['PHP_SELF']."?".http_build_query($get_array);
+	$pages_url = html::get_list_users_url($search,$filter,$sort,$asc);
 	$pages_html = html::get_pages_html($pages_url,$num_users,$start,$count);
 	$users_html = "";
 	$user_count = 0;
 	
 	$users_html = html::get_users_rows($all_users,($filter=='expiring'||$filter=='expired'));
+	ob_end_flush();
 	?>
 	<div class="minijumbo"><div class="container">Users</div></div>
 	<div class="container">

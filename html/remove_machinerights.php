@@ -135,7 +135,7 @@
 ?>
 <div class="minijumbo"><div class="container">Revoke Machine Rights
 	<?php if(isset($_GET['from']) && $_GET['from']=='user'){ ?>
-	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="list_users.php">Users</a></li><li class="breadcrumb-item"><a href="user.php?uid=<?php echo $uid; ?>"><?php echo $uid; ?></a></li><li class="breadcrumb-item active">Revoke Machine Rights</li></ol></nav>
+	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="<?php echo html::get_list_users_url_from_cookies(); ?>">Users</a></li><li class="breadcrumb-item"><a href="user.php?uid=<?php echo $uid; ?>"><?php echo $uid; ?></a></li><li class="breadcrumb-item active">Revoke Machine Rights</li></ol></nav>
 	<?php } else { ?>
 	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="list_hosts.php">Hosts</a></li><li class="breadcrumb-item"><a href="host.php?hid=<?php echo $hid; ?>"><?php echo $hid; ?></a></li><li class="breadcrumb-item active">Revoke Machine Rights</li></ol></nav>
 	<?php } ?>

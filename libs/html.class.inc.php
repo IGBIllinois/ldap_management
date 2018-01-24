@@ -71,6 +71,18 @@ class html {
 	        return $pages_html;
 
 	}
+	
+	public static function get_list_users_url($search,$filter,$sort,$asc){
+		$get_array = array('search'=>$search,'filter'=>$filter,'sort'=>$sort,'asc'=>$asc);
+		return 'list_users.php?'.http_build_query($get_array);
+	}
+	public static function get_list_users_url_from_cookies(){
+		$search = (isset($_COOKIE['lastUserSearch'])?$_COOKIE['lastUserSearch']:'');
+		$filter = (isset($_COOKIE['lastUserSearchFilter'])?$_COOKIE['lastUserSearchFilter']:'none');
+		$sort = (isset($_COOKIE['lastUserSearchSort'])?$_COOKIE['lastUserSearchSort']:'username');
+		$asc = (isset($_COOKIE['lastUserSearchAsc'])?$_COOKIE['lastUserSearchAsc']:'true');
+		return self::get_list_users_url($search,$filter,$sort,$asc);
+	}
 
 	// Returns the number of pages for a given number of records and count per page
 	public static function get_num_pages($numRecords,$count) {

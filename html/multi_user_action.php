@@ -68,10 +68,10 @@
 			}
 		}
 	}
-
+	$searchdescription = html::get_list_users_description_from_cookies();
 ?>
 <div class="minijumbo"><div class="container">Add Users to Group
-	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="<?php echo html::get_list_users_url_from_cookies(); ?>">Users</a></li><li class="breadcrumb-item active">Add Users to Group</li></ol></nav>
+	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="<?php echo html::get_list_users_url_from_cookies(); ?>">Users<?php if($searchdescription!=""){echo " ($searchdescription)";} ?></a></li><li class="breadcrumb-item active">Add Users to Group</li></ol></nav>
 </div></div>
 <div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" name="form">

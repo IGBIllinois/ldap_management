@@ -38,10 +38,11 @@
 	if($uid == ""){
 		header('location: index.php');
 	}
+	$searchdescription = html::get_list_users_description_from_cookies();
 ?>
 <div class="minijumbo"><div class="container">Unlock User
 	<?php if($uid != ""){ ?>
-	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="<?php echo html::get_list_users_url_from_cookies(); ?>">Users</a></li><li class="breadcrumb-item"><a href="user.php?uid=<?php echo $uid; ?>"><?php echo $uid; ?></a></li><li class="breadcrumb-item active">Unlock</li></ol></nav>
+	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="<?php echo html::get_list_users_url_from_cookies(); ?>">Users<?php if($searchdescription!=""){echo " ($searchdescription)";} ?></a></li><li class="breadcrumb-item"><a href="user.php?uid=<?php echo $uid; ?>"><?php echo $uid; ?></a></li><li class="breadcrumb-item active">Unlock</li></ol></nav>
 	<?php } ?>
 </div></div>
 <div class="container">

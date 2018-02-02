@@ -72,6 +72,59 @@ class html {
 
 	}
 	
+	public static function get_list_users_description($search,$filter,$sort,$asc){
+		$description = array();
+		if($search != ""){
+			$description[] = "Search: '$search'";
+		}
+		if($filter != "none"){
+			switch($filter){
+				case 'expiring':
+					$description[] = "expiring users only";
+					break;
+				case 'expired':
+					$description[] = "expired users only";
+					break;
+				case 'passwordexpired':
+					$description[] = "only expired passwords";
+					break;
+				case 'left':
+					$description[] = "left-campus only";
+					break;
+			}
+		}
+		if($sort != "username" || $asc != "true"){
+			switch($sort){
+				case 'username':
+					$description[] = "sorted by username";
+					break;
+				case 'name':
+					$description[] = "sorted by name";
+					break;
+				case 'emailforward':
+					$description[] = "sorted by email";
+					break;
+				case 'passwordexpire':
+					$description[] = "sorted by password expiration";
+					break;
+				case 'shadowexpire':
+					$description[] = "sorted by expiration";
+					break;
+			}
+		}
+		if($asc != "true"){
+			$description[] = "descending";
+		}
+		
+		return implode(", ", $description);
+	}
+	public static function get_list_users_description_from_cookies(){
+		$search = (isset($_COOKIE['lastUserSearch'])?$_COOKIE['lastUserSearch']:'');
+		$filter = (isset($_COOKIE['lastUserSearchFilter'])?$_COOKIE['lastUserSearchFilter']:'none');
+		$sort = (isset($_COOKIE['lastUserSearchSort'])?$_COOKIE['lastUserSearchSort']:'username');
+		$asc = (isset($_COOKIE['lastUserSearchAsc'])?$_COOKIE['lastUserSearchAsc']:'true');
+		return self::get_list_users_description($search,$filter,$sort,$asc);
+	}
 	public static function get_list_users_url($search,$filter,$sort,$asc){
 		$get_array = array('search'=>$search,'filter'=>$filter,'sort'=>$sort,'asc'=>$asc);
 		return 'list_users.php?'.http_build_query($get_array);

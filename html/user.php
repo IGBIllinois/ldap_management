@@ -54,6 +54,7 @@
 		$prevUid = user::get_previous_user($ldap,$username,$search,$sort,$asc,$filter);
 		$nextUid = user::get_next_user($ldap,$username,$search,$sort,$asc,$filter);
 	}
+	$searchdescription = html::get_list_users_description_from_cookies();
 	?>
 	<style>
 		tr.topborder {
@@ -61,7 +62,7 @@
 		}	
 	</style>
 	<div class="minijumbo"><div class="container"><?php echo $user->get_name(); ?>
-		<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="<?php echo html::get_list_users_url_from_cookies(); ?>">Users</a></li><li class="breadcrumb-item active"><?php echo $user->get_username(); ?></li></ol></nav>
+		<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="<?php echo html::get_list_users_url_from_cookies(); ?>">Users<?php if($searchdescription!=""){echo " ($searchdescription)";} ?></a></li><li class="breadcrumb-item active"><?php echo $user->get_username(); ?></li></ol></nav>
 	</div></div>
 	<div class="container">
 	<div class="card mt-4">
@@ -73,6 +74,9 @@
 				</a>
 			</div>
 			<div class="col-sm-6 col-lg-8">
+				<center style="padding: 0.375rem 0;">
+					<span class="text-muted"><?php echo $searchdescription; ?></span>
+				</center>
 			</div>
 			<div class="col-sm-3 col-lg-2">
 				<a <?php if($nextUid!=null){echo 'href="user.php?uid='.$nextUid.'"';} ?> class="btn btn-light btn-next btn-block<?php if($nextUid==null){echo " disabled";}?>">

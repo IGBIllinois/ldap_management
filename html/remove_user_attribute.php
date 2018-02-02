@@ -69,6 +69,7 @@
 		unset($_POST);
 		exit;
 	}
+	$searchdescription = html::get_list_users_description_from_cookies();
 	
 	?>
 <div class="minijumbo"><div class="container">
@@ -80,7 +81,7 @@
 		}
 		echo $title;
 	?>
-	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="<?php echo html::get_list_users_url_from_cookies(); ?>">Users</a></li><li class="breadcrumb-item"><a href="user.php?uid=<?php echo $user->get_username(); ?>"><?php echo $user->get_username(); ?></a></li><li class="breadcrumb-item active"><?php echo $title; ?></li></ol></nav>
+	<nav><ol class="breadcrumb"><li class="breadcrumb-item"><a href="<?php echo html::get_list_users_url_from_cookies(); ?>">Users<?php if($searchdescription!=""){echo " ($searchdescription)";} ?></a></li><li class="breadcrumb-item"><a href="user.php?uid=<?php echo $user->get_username(); ?>"><?php echo $user->get_username(); ?></a></li><li class="breadcrumb-item active"><?php echo $title; ?></li></ol></nav>
 </div></div>
 <div class="container">
 <form class="mt-4" method="post" action="<?php echo $_SERVER['REQUEST_URI'];?>" name="form">

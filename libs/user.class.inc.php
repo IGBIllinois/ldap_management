@@ -599,7 +599,7 @@ class user {
 		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
 		$data = array("facsimiletelephonenumber"=>$expiration);
 		if($this->ldap->modify($dn,$data)){
-			$this->expiration = $expiration;
+			$this->passwordExpiration = $expiration;
 			log::log_message("Set password expiration for ".$this->get_username()." to ".strftime('%m/%d/%Y', $this->get_password_expiration()));
 			return array('RESULT'=>true,
 				'MESSAGE'=>'Password expiration successfully set.',

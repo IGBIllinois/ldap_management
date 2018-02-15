@@ -24,7 +24,12 @@ function drawCreatedUserChart(){
 			var chart = new google.visualization.Calendar(document.getElementById(element));
 			var options = {
 				title: 'Users created',
-				height: 750
+				height: 750,
+				noDataPattern: {
+					backgroundColor: 'white',
+					color: '#eee'
+				},
+				colorAxis: {colors: ['#ee0','#e00']}
 			};
 			chart.draw(dataTable,options);
 		}

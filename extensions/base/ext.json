@@ -42,14 +42,6 @@
 				"field": "uidnumber"
 			},
 			{
-				"name": "description",
-				"fullname": "Description",
-				"field": "description",
-				"button": {
-					"type": "edit"
-				}
-			},
-			{
 				"name": "mail",
 				"fullname": "Email",
 				"field": "mail"
@@ -93,6 +85,14 @@
 				"button": {
 					"type": "remove",
 					"text": "Cancel Expiration"
+				}
+			},
+			{
+				"name": "description",
+				"fullname": "Notes",
+				"field": "description",
+				"button": {
+					"type": "edit"
 				}
 			},
 			{

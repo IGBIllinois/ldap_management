@@ -2,7 +2,6 @@
 	"base",
 	"password_expiration",
 	"postfix",
-	"biocluster",
 	"biocluster2",
 	"crashplan"
 ]

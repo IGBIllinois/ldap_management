@@ -21,9 +21,9 @@ if(scalar(@ARGV)==1){
 	ssh('root@file-server.igb.illinois.edu',"chown $netid.$netid /file-server/home/$homesub/$netid");
 	ssh('root@file-server.igb.illinois.edu',"chmod 2770 /file-server/home/$homesub/$netid");
 	
-	print "Cleaning up $netid biocluster\n";
+# 	print "Cleaning up $netid biocluster\n";
 # 	Emptying biocluster directory
-	ssh('root@biocluster.igb.illinois.edu',"mv -f /home/$homesub/$netid /home/$homesub/old_users/no_backup/$netid-$datestr");
+# 	ssh('root@biocluster.igb.illinois.edu',"mv -f /home/$homesub/$netid /home/$homesub/old_users/no_backup/$netid-$datestr");
 	
 	print "Cleaning up $netid biocluster2\n";
 # 	Emptying biocluster directory

@@ -524,11 +524,11 @@ class user {
 	
 	public function lock(){
 		$filter = "(uid=".$this->get_username().")";
-		$attributes = array("userPassword");
+		$attributes = array("userPassword","sambaLMPassword","sambaNTPassword");
 		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 		if($result['count']>0){
 			$dn = $this->get_user_rdn();
-			$data = array('userPassword'=>'!'.$result[0]['userpassword'][0]);
+			$data = array('userPassword'=>'!'.$result[0]['userpassword'][0],'sambaLMPassword'=>'!'.$result[0]['sambalmpassword'][0],'sambaNTPassword'=>'!'.$result[0]['sambantpassword'][0]);
 			if($this->ldap->modify($dn,$data)){
 				log::log_message("User ".$this->get_username()." locked");
 				return array('RESULT'=>true,
@@ -542,18 +542,30 @@ class user {
 	
 	public function unlock(){
 		$filter = "(uid=".$this->get_username().")";
-		$attributes = array("userPassword");
+		$attributes = array("userPassword","sambaLMPassword","sambaNTPassword");
 		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 		if($result['count']>0){
 			if(substr($result[0]['userpassword'][0],0,1) == '!'){
-				$dn = $this->get_user_rdn();
-				$data = array('userPassword'=>substr($result[0]['userpassword'][0],1));
-				if($this->ldap->modify($dn,$data)){
-					log::log_message("User ".$this->get_username()." unlocked");
-					return array('RESULT'=>true,
-						'MESSAGE'=>'User unlocked.',
-						'uid'=>$this->get_username());
+				if(substr($result[0]['sambalmpassword'][0],0,1) == '!'){ // If the user was locked before this change, their samba password won't have been locked
+					$dn = $this->get_user_rdn();
+					$data = array('userPassword'=>substr($result[0]['userpassword'][0],1),'sambaLMPassword'=>substr($result[0]['sambalmpassword'][0],1),'sambaNTPassword'=>substr($result[0]['sambantpassword'][0],1));
+					if($this->ldap->modify($dn,$data)){
+						log::log_message("User ".$this->get_username()." unlocked");
+						return array('RESULT'=>true,
+							'MESSAGE'=>'User unlocked.',
+							'uid'=>$this->get_username());
+					}
+				} else {
+					$dn = $this->get_user_rdn();
+					$data = array('userPassword'=>substr($result[0]['userpassword'][0],1));
+					if($this->ldap->modify($dn,$data)){
+						log::log_message("User ".$this->get_username()." unlocked");
+						return array('RESULT'=>true,
+							'MESSAGE'=>'User unlocked.',
+							'uid'=>$this->get_username());
+					}
 				}
+				
 			}
 		}
 		return array('RESULT'=>false,

@@ -89,7 +89,7 @@ if ($sapi_type != 'cli') {
 	
 	if(count($emailtomorrow)>0){
 		// Email joe secretly who's going to be emailed tomorrow
-		$subject = "IGB Account Expiration Notices Pending";
+		$subject = "IGB Password Expiration Notices Pending";
 		$to = "jleigh@illinois.edu";
 		$emailmessage = "The following users will be emailed password expiration notices tomorrow:<br><pre>";
 		for($i=0; $i<count($emailtomorrow); $i++){

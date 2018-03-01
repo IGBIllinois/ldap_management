@@ -24,7 +24,7 @@
 			}
 		}
 	} else if (isset($_POST['cancel_group'])) {
-		header('location: group.php?uid='.$_POST['group']);
+		header('location: group.php?gid='.$_POST['group']);
 		unset($_POST);
 		exit();
 	}

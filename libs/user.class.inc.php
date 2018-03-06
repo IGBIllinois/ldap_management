@@ -49,9 +49,9 @@ class user {
 
 	// Inserts a user into the database with the given values, then loads that user into this object. Displays errors if there are any.
 	public function create($username, $firstname, $lastname, $password) {
-		$username = trim(rtrim($username));
-		$firstname = trim(rtrim($firstname));
-		$lastname = trim(rtrim($lastname));
+		$username = trim($username);
+		$firstname = trim($firstname);
+		$lastname = trim($lastname);
 		$name = $firstname." ".$lastname;
 
 		$error = false;
@@ -783,7 +783,7 @@ class user {
 	}
 	
 	public static function is_ldap_user($ldap, $username) {
-		$username = trim(rtrim($username));
+		$username = trim($username);
 		$filter = "(uid=" . $username . ")";
 		$attributes = array('');
 		$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);

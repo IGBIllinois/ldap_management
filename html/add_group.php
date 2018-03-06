@@ -5,9 +5,7 @@
 
 	$message="";
 	if (isset($_POST['add_group'])) {
-		foreach($_POST as $var){
-			$var = trim(rtrim($var));
-		}
+		$_POST = array_map("trim",$_POST);
 		
 		if($message == ""){
 			$group = new group($ldap);

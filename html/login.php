@@ -10,7 +10,7 @@ if ($session->get_var('webpage') != "") {
 
 if (isset($_POST['login'])) {
 
-	$username = trim(rtrim($_POST['username']));
+	$username = trim($_POST['username']);
 	$password = $_POST['password'];
 
 	$error = false;

@@ -5,9 +5,7 @@
 	
 	$message="";
 	if (isset($_POST['add_user'])) {
-		foreach($_POST as $var){
-			$var = trim(rtrim($var));
-		}
+		$_POST = array_map("trim",$_POST);
 		
 		if($_POST['new_passworda'] != $_POST['new_passwordb']){
 			$message = html::error_message("Passwords do not match.");

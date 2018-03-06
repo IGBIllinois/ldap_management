@@ -5,9 +5,7 @@
 	
 	$message="";
 	if (isset($_POST['change_ip'])) {
-		foreach($_POST as $var){
-			$var = trim(rtrim($var));
-		}
+		$_POST = array_map("trim",$_POST);
 		
 		if($_POST['new_ip'] == ""){
 			$_POST['new_ip'] = gethostbyname($_POST['name']);

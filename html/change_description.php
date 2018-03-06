@@ -5,9 +5,7 @@
 	
 	$message="";
 	if (isset($_POST['change_description'])) {
-		foreach($_POST as $var){
-			$var = trim(rtrim($var));
-		}
+		$_POST = array_map("trim",$_POST);
 		
 		if($_POST['new_description'] == ""){
 			$message .= html::error_message("Description cannot be blank.");

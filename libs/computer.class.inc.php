@@ -28,7 +28,7 @@ class computer {
 
 	// Inserts a user into the database with the given values, then loads that user into this object. Displays errors if there are any.
 	public function create($name) {
-		$name = trim(rtrim($name));
+		$name = trim($name);
 
 		$error = false;
 		$message = "";
@@ -149,7 +149,7 @@ class computer {
 	}
 	
 	public static function is_ldap_computer($ldap,$name){
-		$name = trim(rtrim($name));
+		$name = trim($name);
 		$filter = "(uid=".$name.")";
 		$attributes = array('');
 		$result = $ldap->search($filter,__LDAP_COMPUTER_OU__,$attributes);

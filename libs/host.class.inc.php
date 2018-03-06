@@ -29,7 +29,7 @@ class host {
 
 	// Inserts a host into the database with the given name, then loads that host into this object. Displays errors if there are any.
 	public function create($name,$ip) {
-		$name = trim(rtrim($name));
+		$name = trim($name);
 
 		$error = false;
 		$message = "";
@@ -167,7 +167,7 @@ class host {
 	}
 	
 	public static function is_ldap_host($ldap, $name){
-		$name = trim(rtrim($name));
+		$name = trim($name);
 		$filter = "(cn=".$name.")";
 		$attributes = array('');
 		$result = $ldap->search($filter,__LDAP_HOST_OU__,$attributes);

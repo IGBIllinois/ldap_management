@@ -18,9 +18,7 @@
 	$message="";
 	if(isset($_POST['remove_'.$attr['name']])){
 		// TODO implement form action
-		foreach($_POST as $var){
-			$var = trim(rtrim($var));
-		}
+		$_POST = array_map("trim",$_POST);
 		if($_POST['uid']=="" || !user::is_ldap_user($ldap,$_POST['uid'])){
 			$message .= html::error_message("Invalid username. Please stop trying to break my web interface.");
 		} else {

@@ -5,9 +5,7 @@
 	
 	$message="";
 	if (isset($_POST['remove_group']) && isset($_POST['group'])) {
-		foreach($_POST as $var){
-			$var = trim(rtrim($var));
-		}
+		$_POST = array_map("trim",$_POST);
 		
 		if($_POST['group'] == ""){
 			$message .= "Group cannot be blank. Please stop trying to break my web interface.";

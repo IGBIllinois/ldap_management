@@ -5,9 +5,7 @@
 	
 	$message="";
 	if (isset($_POST['remove_user'])) {
-		foreach($_POST as $var){
-			$var = trim(rtrim($var));
-		}
+		$_POST = array_map("trim",$_POST);
 		
 		if($_POST['group']==""){
 			$message .= html::error_message("Please select a group.");

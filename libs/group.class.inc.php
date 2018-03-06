@@ -37,7 +37,7 @@ class group {
 
 	// Inserts a group into the database with the given name, then loads that group into this object. Displays errors if there are any.
 	public function create($name, $description) {
-		$name = trim(rtrim($name));
+		$name = trim($name);
 
 		$error = false;
 		$message = "";
@@ -102,7 +102,7 @@ class group {
 
 	// Inserts a user-group into the database with the given name and gidnumber.
 	public function create_user_group($name, $description, $gidnumber) {
-		$name = trim(rtrim($name));
+		$name = trim($name);
 
 		$error = false;
 		$message = "";
@@ -397,7 +397,7 @@ class group {
 
 
 	public static function is_ldap_group($ldap, $name) {
-		$name = trim(rtrim($name));
+		$name = trim($name);
 		$filter = "(cn=" . $name . ")";
 		$attributes = array('');
 		$result = $ldap->search($filter, __LDAP_GROUP_OU__, $attributes);

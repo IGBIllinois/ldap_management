@@ -6,9 +6,7 @@
 	$message="";
 	$show_users = false;
 	if (isset($_POST['classroom_users'])) {
-		foreach($_POST as $var){
-			$var = trim(rtrim($var));
-		}
+		$_POST = array_map("trim",$_POST);
 		if(!isset($_POST['new_prefix'])){
 			$message = html::error_message("Please enter a username prefix.");
 		}

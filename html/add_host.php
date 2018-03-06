@@ -5,9 +5,7 @@
 
 	$message="";
 	if (isset($_POST['add_host'])) {
-		foreach($_POST as $var){
-			$var = trim(rtrim($var));
-		}
+		$_POST = array_map("trim",$_POST);
 		if($_POST['new_name']==""){
 			$message = html::error_message("Hostname cannot be blank");
 		}

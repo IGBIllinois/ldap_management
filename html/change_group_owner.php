@@ -5,9 +5,7 @@
 	
 	$message="";
 	if (isset($_POST['change_owner'])) {
-		foreach($_POST as $var){
-			$var = trim(rtrim($var));
-		}
+		$_POST = array_map("trim",$_POST);
 		
 		if($_POST['username']==""){
 			$message .= html::error_message("Please select a user.");

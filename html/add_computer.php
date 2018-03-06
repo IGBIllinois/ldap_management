@@ -5,9 +5,7 @@
 
 	$message="";
 	if (isset($_POST['add_computer'])) {
-		foreach($_POST as $var){
-			$var = trim(rtrim($var));
-		}
+		$_POST = array_map("trim",$_POST);
 		
 		if($message == ""){
 			$computer = new computer($ldap);

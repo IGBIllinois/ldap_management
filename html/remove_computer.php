@@ -5,9 +5,7 @@
 	
 	$message="";
 	if (isset($_POST['remove_computer']) && isset($_POST['computer'])) {
-		foreach($_POST as $var){
-			$var = trim(rtrim($var));
-		}
+		$_POST = array_map("trim",$_POST);
 		
 		if($_POST['computer'] == ""){
 			$message .= "Computer cannot be blank. Please stop trying to break my web interface.";

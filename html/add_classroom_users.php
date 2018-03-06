@@ -6,9 +6,7 @@
 	$message="";
 	$show_users = false;
 	if (isset($_POST['classroom_users'])) {
-		foreach($_POST as $var){
-			$var = trim(rtrim($var));
-		}
+		$_POST = array_map("trim",$_POST);
 		if(!isset($_POST['new_prefix'])){
 			$message = html::error_message("Please enter a username prefix.");
 		}
@@ -46,6 +44,7 @@
 					if(__RUN_SHELL_SCRIPTS__){
 						$safeusername = escapeshellarg($username);
 						exec("sudo ../bin/classroom_cleanup.pl $safeusername 2>&1",$output);
+						log::log_message("sudo ../bin/classroom_cleanup.pl $safeusername 2>&1");
 						log::log_message("Cleaned up file-server and biocluster directories for $username");
 					}
 					// Set the password
@@ -110,8 +109,10 @@
 	}
 
 	if($show_users){
-		echo "<div class='mt-4'><legend>Add Classroom Users</legend><p>The following classroom users have been added. This list has also been emailed to you for your records.</p></div>";
+		echo '<div class="minijumbo"><div class="container">Add Classroom Users</div></div><div class="container">';
+		echo "<div class='mt-4'><p>The following classroom users have been added. This list has also been emailed to you for your records.</p></div><div class='card'><div class='card-body'>";
 		echo $users_html;
+		echo "</div></div>";
 		echo $message;
 ?>
 

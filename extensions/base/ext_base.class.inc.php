@@ -75,4 +75,20 @@
 				'uid'=>$uid);
 			}
 		}
+		
+		public static function description_edit($ldap,$uid,$inputs){
+			$user = new user($ldap,$uid);
+			return $user->set_description($inputs['description']);
+		}
+		public static function expirationreason_edit($ldap,$uid,$inputs){
+			$user = new user($ldap,$uid);
+			return $user->set_expiration_reason($inputs['expirationreason']);
+		}
+		
+		public static function expiration_remove($ldap,$uid){
+			$user = new user($ldap,$uid);
+			$result = $user->cancel_expiration();
+			$user->set_expiration_reason("");
+			return $result;
+		}
 	}

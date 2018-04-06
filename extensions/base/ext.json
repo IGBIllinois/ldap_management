@@ -88,6 +88,15 @@
 				}
 			},
 			{
+				"name": "expirationreason",
+				"fullname": "Expiration Reason",
+				"field": "destinationindicator",
+				"button": {
+					"type": "edit"
+				},
+				"hidewhenempty": 1
+			},
+			{
 				"name": "description",
 				"fullname": "Notes",
 				"field": "description",

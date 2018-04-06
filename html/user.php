@@ -159,7 +159,7 @@
 								$field = $classname::$funcname($ldap,$user->get_username());
 							}
 						}
-						if($field == '' && isset($attributes[$attr]['button']) && $attributes[$attr]['button']['type']!='edit'){
+						if($field == '' && ( (isset($attributes[$attr]['button']) && $attributes[$attr]['button']['type']!='edit') || (isset($attributes[$attr]['hidewhenempty']) && $attributes[$attr]['hidewhenempty']==1) ) ){
 							continue;
 						}
 						echo "<tr><th><span class='align-middle'>".$attributes[$attr]['fullname'].":</span></th><td><span class='align-middle'>".$field."</span>".$button."</td></tr>";

@@ -20,7 +20,7 @@
 		
 		if($message == ""){
 			$user = new user($ldap,$_POST['username']);
-			$result = $user->set_expiration(strtotime($_POST['expiration']));
+			$result = $user->set_expiration(strtotime($_POST['expiration']),$_POST['reason']);
 		
 			if($result['RESULT'] == true){
 				header("Location: user.php?uid=".$result['uid']);
@@ -73,6 +73,12 @@
 			<label class="col-sm-3 col-form-label" for="exp-input">Expiration Date:</label>
 			<div class="col-sm-5">
 				<input class="form-control" id="exp-input" name="expiration" value="<?php echo date('m/d/Y',strtotime("+6 months")); ?>" placeholder="MM/DD/YYYY"/>
+			</div>
+		</div>
+		<div class="form-group row">
+			<label class="col-sm-3 col-form-label" for="reason-input">Reason:</label>
+			<div class="col-sm-5">
+				<input class="form-control" id="reason-input" name="reason" placeholder="e.g. they brought us their exit form"/>
 			</div>
 		</div>
 		<div class="form-group row">

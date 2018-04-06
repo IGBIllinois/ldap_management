@@ -23,6 +23,7 @@ class user {
 	private $classroom = false;
 	
 	private $description = "";
+	private $expirationreason = "";
 	
 	private $creator;
 	private $createTime;
@@ -585,11 +586,15 @@ class user {
 		return false;
 	}
 	
-	public function set_expiration($expiration){
+	public function set_expiration($expiration,$reason=""){
 		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
 		$data = array("shadowExpire"=>$expiration);
 		if($this->ldap->modify($dn,$data)){
 			$this->expiration = $expiration;
+			$reasonlog = "";
+			if($reason != ""){
+				$this->set_expiration_reason($reason);
+			}
 			log::log_message("Set expiration for ".$this->get_username()." to ".strftime('%m/%d/%Y', $this->get_expiration()));
 			return array('RESULT'=>true,
 				'MESSAGE'=>'Expiration successfully set.',
@@ -604,6 +609,32 @@ class user {
 			return array('RESULT'=>true,
 				'MESSAGE'=>'Expiration cancelled.',
 				'uid'=>$this->get_username());
+		}
+	}
+	public function get_expiration_reason(){
+		return $this->expirationreason;
+	}
+	public function set_expiration_reason($reason){
+		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
+		if($reason == ""){ // Delete
+			$data = array("destinationindicator"=>array());
+			if($this->ldap->mod_del($dn,$data)){
+				$this->expirationreason = "";
+				log::log_message("Removed expiration reason for ".$this->get_username());
+				return array('RESULT'=>true,
+					'MESSAGE'=>'Removed expiration reason',
+					'uid'=>$this->get_username()
+				);
+			}
+		} else { // Update
+			$data = array("destinationindicator"=>$reason);
+			if($this->ldap->modify($dn,$data)){
+				$this->expirationreason = $reason;
+				log::log_message("Set expiration reason for ".$this->get_username()." to '".$this->get_expiration_reason()."'");
+				return array('RESULT'=>true,
+					'MESSAGE'=>'Expiration reason successfully set.',
+					'uid'=>$this->get_username());
+			}
 		}
 	}
 	
@@ -634,13 +665,25 @@ class user {
 	}
 	public function set_description($description){
 		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
-		$data = array("description"=>$description);
-		if($this->ldap->modify($dn,$data)){
-			$this->description = $description;
-			log::log_message("Set description for ".$this->get_username()." to ".$this->get_password_expiration());
-			return array('RESULT'=>true,
-				'MESSAGE'=>'Description successfully set.',
-				'uid'=>$this->get_username());
+		if($description == ""){ // Delete
+			$data = array("description"=>array());
+			if($this->ldap->mod_del($dn,$data)){
+				$this->description = "";
+				log::log_message("Removed description for ".$this->get_username());
+				return array('RESULT'=>true,
+					'MESSAGE'=>'Removed description',
+					'uid'=>$this->get_username()
+				);
+			}
+		} else { // Update
+			$data = array("description"=>$description);
+			if($this->ldap->modify($dn,$data)){
+				$this->description = $description;
+				log::log_message("Set description for ".$this->get_username()." to ".$this->get_description());
+				return array('RESULT'=>true,
+					'MESSAGE'=>'Description successfully set.',
+					'uid'=>$this->get_username());
+			}
 		}
 	}
 
@@ -915,6 +958,9 @@ class user {
 			}
 			if(isset($result[0]['telexnumber'])){
 				$this->crashplan = ($result[0]['telexnumber'][0]==1);
+			}
+			if(isset($result[0]['destinationindicator'])){
+				$this->expirationreason = $result[0]['destinationindicator'][0];
 			}
 		}
 	}

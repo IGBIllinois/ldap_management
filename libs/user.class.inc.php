@@ -32,6 +32,8 @@ class user {
 	private $passwordSet = null;
 	private $passwordExpiration = null;
 	
+	private $ldap_entry = null;
+	
 	private static $lastSearch = array();
 
 	////////////////Public Functions///////////
@@ -238,6 +240,23 @@ class user {
 			return array('RESULT'=>true,
 				'MESSAGE'=>$field.' removed.',
 				'uid'=>$this->get_username());
+		}
+	}
+	
+	public function get_ldap_attributes(){
+		$this->load_ldap_result();
+		if($this->ldap_entry){
+			return ldap_get_attributes($this->ldap->get_resource(),$this->ldap_entry);
+		}
+		return false;
+	}
+	private function load_ldap_result(){
+		if($this->ldap_entry == null){
+			$filter = "(uid=".$this->get_username().")";
+			$result = $this->ldap->search_result($filter, __LDAP_PEOPLE_OU__);
+			if($result != false){
+				$this->ldap_entry = ldap_first_entry($this->ldap->get_resource(),$result);
+			}
 		}
 	}
 

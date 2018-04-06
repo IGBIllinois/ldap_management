@@ -177,6 +177,7 @@
 			<a href="lock_user.php?uid=<?php echo $username; ?>" class="btn btn-danger mt-1 mt-md-0"><span class="fa fa-lock"></span> Lock User</a>
 			<?php } ?>
 			<a href="remove_user.php?uid=<?php echo $username; ?>" class="btn btn-danger mt-1 mt-md-0"><span class="fa fa-trash"></span> Remove User</a>
+			<a href="user_advanced.php?uid=<?php echo $username; ?>" class="btn btn-light mt-1 mt-md-0"><span class="fa fa-user-secret"></span> LDAP Entry</a>
 		</div>
 	</div>
 	<div class="card mt-3">

@@ -19,6 +19,8 @@ class group {
 
 	private $isGroupOfNames = false;
 	
+	private $ldap_entry = null;
+	
 	private static $lastSearch = array();
 
 	////////////////Public Functions///////////
@@ -133,7 +135,23 @@ class group {
 		}
 
 	}
-
+	
+	public function get_ldap_attributes(){
+		$this->load_ldap_result();
+		if($this->ldap_entry){
+			return ldap_get_attributes($this->ldap->get_resource(),$this->ldap_entry);
+		}
+		return false;
+	}
+	private function load_ldap_result(){
+		if($this->ldap_entry == null){
+			$filter = "(cn=".$this->get_name().")";
+			$result = $this->ldap->search_result($filter, __LDAP_GROUP_OU__);
+			if($result != false){
+				$this->ldap_entry = ldap_first_entry($this->ldap->get_resource(),$result);
+			}
+		}
+	}
 
 	public function get_name() {
 		return $this->name;

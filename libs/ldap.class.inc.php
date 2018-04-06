@@ -91,18 +91,25 @@ class ldap {
 
 	public function search($filter, $ou = "", $attributes = "") {
 		$result = false;
+		$ldap_result = $this->search_result($filter, $ou, $attributes);
+		if($ldap_result){
+			$result = ldap_get_entries($this->get_resource(), $ldap_result);
+		}
+		return $result;
+	}
+	
+	public function search_result($filter, $ou="", $attributes = ""){
+		$result = false;
 		if ($ou == "") {
 			$ou = $this->get_base_dn();
 		}
 		if (($this->get_connection()) && ($attributes != "")) {
 			if ($this->bind($this->get_bind_user(), $this->get_bind_pass())) {
-				$ldap_result = ldap_search($this->get_resource(), $ou, $filter, $attributes);
-				$result = ldap_get_entries($this->get_resource(), $ldap_result);
+				$result = ldap_search($this->get_resource(), $ou, $filter, $attributes);
 			}
 		} elseif (($this->get_connection()) && ($attributes == "")) {
 			if ($this->bind($this->get_bind_user(), $this->get_bind_pass())) {
-				$ldap_result = ldap_search($this->get_resource(), $ou, $filter);
-				$result = ldap_get_entries($this->get_resource(), $ldap_result);
+				$result = ldap_search($this->get_resource(), $ou, $filter);
 			}
 		}
 		return $result;

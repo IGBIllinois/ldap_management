@@ -94,7 +94,8 @@
 		</table>
 		<hr class="my-0">
 		<div class="card-body">
-			<a href="remove_group.php?gid=<?php echo $gid; ?>" class="btn btn-danger"><span class="fa fa-times"></span> Remove Group</a>
+			<a href="remove_group.php?gid=<?php echo $gid; ?>" class="btn btn-danger mt-1 mt-md-0"><span class="fa fa-times"></span> Remove Group</a>
+			<a href="group_advanced.php?gid=<?php echo $gid; ?>" class="btn btn-light mt-1 mt-md-0"><span class="fa fa-user-secret"></span> LDAP Entry</a>
 		</div>
 	</div>
 	<div class="card mt-3">

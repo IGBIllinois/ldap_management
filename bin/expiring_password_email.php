@@ -38,6 +38,8 @@ if ($sapi_type != 'cli') {
 	$digestmonth = "";
 	$digestweek = "";
 	$digestexpired = "";
+	$userexpdate = date_format(date_add(date_create(),new DateInterval('P6M')),'U');
+	$userexpreason = "Password expired";
 	foreach($users as $uid){
 		$user = new user($ldap,$uid);
 		if($user->get_password_expiration()!=null && $user->get_email()!=null){
@@ -56,6 +58,9 @@ if ($sapi_type != 'cli') {
 		if ($user->is_password_expired() && !$user->is_locked()){
 			echo "Password expired for ".$user->get_username()."\n";
 			$user->lock();
+			if($user->get_expiration() == null){ // Don't extend the user's expiration date if they're already set to expire
+				$user->set_expiration($userexpdate,$userexpreason);
+			}
 		}
 	}
 	

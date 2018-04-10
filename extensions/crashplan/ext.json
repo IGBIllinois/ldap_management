@@ -4,6 +4,7 @@
 			{
 				"name": "crashplan",
 				"fullname": "Crashplan",
+				"icon": {"name": "hdd-o", "color": "success"},
 				"button": {
 					"type": "remove",
 					"text": "Remove Crashplan Archive",

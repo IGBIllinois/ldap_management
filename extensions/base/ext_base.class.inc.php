@@ -91,4 +91,15 @@
 			$user->set_expiration_reason("");
 			return $result;
 		}
+		
+		public static function expiration_icon($ldap,$uid){
+			$user = new user($ldap,$uid);
+			if($user->is_expired()){
+				return array("name"=>"clock-o","color"=>"danger");
+			}
+			if($user->is_expiring()){
+				return array("name"=>"clock-o","color"=>"warning");
+			}
+			return null;
+		}
 	}

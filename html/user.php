@@ -162,7 +162,19 @@
 						if($field == '' && ( (isset($attributes[$attr]['button']) && $attributes[$attr]['button']['type']!='edit') || (isset($attributes[$attr]['hidewhenempty']) && $attributes[$attr]['hidewhenempty']==1) ) ){
 							continue;
 						}
-						echo "<tr><th><span class='align-middle'>".$attributes[$attr]['fullname'].":</span></th><td><span class='align-middle'>".$field."</span>".$button."</td></tr>";
+						// Icon
+						$icon = '';
+						$iconinfo = null;
+						$funcname = $attributes[$attr]['name']."_icon";
+						if(method_exists($classname,$funcname)){
+							$iconinfo = $classname::$funcname($ldap,$user->get_username());
+						} else if(isset($attributes[$attr]['icon'])){
+							$iconinfo = $attributes[$attr]['icon'];
+						}
+						if($iconinfo != null){
+							$icon = " <span class='fa fa-".$iconinfo['name']." text-".$iconinfo['color']." mt-1 pull-right'></span>";
+						}
+						echo "<tr><th><span class='align-middle'>".$attributes[$attr]['fullname'].":</span>$icon</th><td><span class='align-middle'>".$field."</span>".$button."</td></tr>";
 					}
 				}
 			?>

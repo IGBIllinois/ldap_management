@@ -201,6 +201,7 @@ class html {
 				$users_html .= "<td>" . ($users[$i]['passwordexpire']===''?'':date('m/d/Y',$users[$i]['passwordexpire'])). "</td>";
 				if($showexpiration){
 					$users_html .= "<td>" . date('m/d/Y',$users[$i]['shadowexpire']). "</td>";
+					$users_html .= "<td class='d-xxl-table-cell d-none'>".$users[$i]['expirationreason']."</td>";
 				}
         		$users_html .= "</tr>";
 			}

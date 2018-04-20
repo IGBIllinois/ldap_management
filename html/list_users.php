@@ -79,6 +79,7 @@
 						<th class="sortable-th" onclick="sort_table('passwordexpire')">Password Expiration<?php echo html::sort_icon('passwordexpire', $sort, $asc); ?></th>
 						<?php if ($filter == 'expired' || $filter == 'expiring'){ ?>
 							<th class="sortable-th" onclick="sort_table('shadowexpire')">Expiration<?php echo html::sort_icon('shadowexpire',$sort,$asc); ?></th>
+							<th class="d-xxl-table-cell d-none">Expiration Reason</th>
 						<?php } ?>
 					</tr>
 				</thead>

@@ -754,7 +754,7 @@ class user {
 		} else {
 			$filter = "(|(uid=*$search*)(cn=*$search*))";
 		}
-		$attributes = array("uid","cn","mail","shadowexpire","postaladdress","employeetype",'telexnumber','facsimiletelephonenumber','description');
+		$attributes = array("uid","cn","mail","shadowexpire","postaladdress","employeetype",'telexnumber','facsimiletelephonenumber','description', 'destinationindicator');
 		$result = $ldap->search($filter,__LDAP_PEOPLE_OU__,$attributes);
 		$users = array();
 		$time = time();
@@ -770,6 +770,7 @@ class user {
 				"noncampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='noncampus':false),
 				"classroom"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='classroom':false),
 				'crashplan'=>(isset($result[$i]['telexnumber'])?$result[$i]['telexnumber'][0]==1:false), 
+				'expirationreason'=>(isset($result[$i]['destinationindicator'])?$result[$i]['destinationindicator'][0]:''),
 				"passwordexpired"=>(isset($result[$i]['facsimiletelephonenumber'])?$result[$i]['facsimiletelephonenumber'][0]<$time:false), 
 				"description"=>(isset($result[$i]['description'])?$result[$i]['description'][0]:''));
 			if($userfilter != 'none'){

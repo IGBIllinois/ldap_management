@@ -70,7 +70,7 @@
 						<th><input type="checkbox" id="select-all"/></th>
 						<th class="sortable-th pl-2" onclick="sort_table('username')">NetID<?php echo html::sort_icon('username', $sort, $asc); ?></th>
 						<th class="sortable-th" onclick="sort_table('description')">Description<?php echo html::sort_icon('description', $sort, $asc); ?></th>
-						<th class="sortable-th" onclick="sort_table('groups')">Groups<?php echo html::sort_icon('groups', $sort, $asc); ?></th>
+						<th>Groups</th>
 						<th class="sortable-th" onclick="sort_table('shadowexpire')">Expiration<?php echo html::sort_icon('shadowexpire',$sort,$asc); ?></th>
 					</tr>
 				</thead>

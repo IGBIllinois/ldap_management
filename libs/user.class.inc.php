@@ -3,38 +3,40 @@ class user {
 
 	////////////////Private Variables//////////
 
-	private $username;
-	private $name;
+	public $username;
+	public $name;
 
 	private $ldap;
 	private $uidnumber;
 	private $email;
-	private $emailforward;
+	public $emailforward;
 	private $homeDirectory;
 	private $givenName;
 	private $sn;
 	private $machinerights = null;
 	private $groups = null;
 	private $loginShell;
-	private $expiration = null;
+	public $expiration = null;
 	private $leftcampus = false;
 	private $noncampus = false;
 	private $crashplan = false;
 	private $classroom = false;
 	
-	private $description = "";
-	private $expirationreason = "";
+	public $description = "";
+	public $expirationreason = "";
 	
 	private $creator;
 	private $createTime;
 	private $modifier;
 	private $modifyTime;
 	private $passwordSet = null;
-	private $passwordExpiration = null;
+	public $passwordExpiration = null;
 	
 	private $ldap_entry = null;
 	
 	private static $lastSearch = array();
+	
+	private static $fullattributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress','employeetype','telexNumber','facsimiletelephonenumber','description','destinationindicator');
 
 	////////////////Public Functions///////////
 
@@ -754,49 +756,35 @@ class user {
 		} else {
 			$filter = "(|(uid=*$search*)(cn=*$search*))";
 		}
-		$attributes = array("uid","cn","mail","shadowexpire","postaladdress","employeetype",'telexnumber','facsimiletelephonenumber','description', 'destinationindicator');
-		$result = $ldap->search($filter,__LDAP_PEOPLE_OU__,$attributes);
+		$result = $ldap->search($filter,__LDAP_PEOPLE_OU__,self::$fullattributes);
 		$users = array();
 		$time = time();
 		for($i=0; $i<$result['count']; $i++){
-			$user = array(
-				"username"=>$result[$i]['uid'][0],
-				"name"=>$result[$i]['cn'][0],
-				"email"=>(isset($result[$i]['mail'])?$result[$i]['mail'][0]:''),
-				"shadowexpire"=>(isset($result[$i]['shadowexpire'])?$result[$i]['shadowexpire'][0]:''),
-				"passwordexpire"=>(isset($result[$i]['facsimiletelephonenumber'])?$result[$i]['facsimiletelephonenumber'][0]:''), 
-				"emailforward"=>(isset($result[$i]['postaladdress'])?$result[$i]['postaladdress'][0]:''),
-				"leftcampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='leftcampus':false),
-				"noncampus"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='noncampus':false),
-				"classroom"=>(isset($result[$i]['employeetype'])?$result[$i]['employeetype'][0]=='classroom':false),
-				'crashplan'=>(isset($result[$i]['telexnumber'])?$result[$i]['telexnumber'][0]==1:false), 
-				'expirationreason'=>(isset($result[$i]['destinationindicator'])?$result[$i]['destinationindicator'][0]:''),
-				"passwordexpired"=>(isset($result[$i]['facsimiletelephonenumber'])?$result[$i]['facsimiletelephonenumber'][0]<$time:false), 
-				"description"=>(isset($result[$i]['description'])?$result[$i]['description'][0]:''));
+			$user = new user($ldap);
+			$user->load_from_result($result[$i]);
 			if($userfilter != 'none'){
 				if($userfilter == 'expiring'){
-					if($user['shadowexpire'] > time() && !$user['classroom']){
+					if($user->is_expiring() && !$user->get_classroom()){
 						$users[] = $user;
 					}
 				} else if($userfilter == 'expired'){
-					if($user['shadowexpire']!='' && $user['shadowexpire'] <= time() && !$user['classroom']){
+					if($user->is_expired() && !$user->get_classroom()){
 						$users[] = $user;
 					}
 				} else if($userfilter == 'left'){
-					if($user['leftcampus']){
+					if($user->get_leftcampus()){
 						$users[] = $user;
 					}
 				} else if($userfilter == 'noncampus'){
-					if($user['noncampus']){
+					if($user->get_noncampus()){
 						$users[] = $user;
 					}	
 				} else if($userfilter == 'classroom'){
-					if($user['classroom']){
-						$user['groups'] = self::get_groups_for_uid($ldap,$user['username']);
+					if($user->get_classroom()){
 						$users[] = $user;
 					}	
 				} else if($userfilter == 'passwordexpired'){
-					if($user['passwordexpired']){
+					if($user->is_password_expired()){
 						$users[] = $user;
 					}
 				} else {
@@ -822,11 +810,11 @@ class user {
 			self::get_search_users($ldap,$search,0,30,$sort,$asc,$userfilter);
 		}
 		for($i=0; $i<count(self::$lastSearch); $i++){
-			if(self::$lastSearch[$i]['username'] == $uid){
+			if(self::$lastSearch[$i]->get_username() == $uid){
 				if($i==0){
 					return null;
 				}
-				return self::$lastSearch[$i-1]['username'];
+				return self::$lastSearch[$i-1]->get_username();
 			}
 		}
 	}
@@ -836,11 +824,11 @@ class user {
 			self::get_search_users($ldap,$search,0,30,$sort,$asc,$userfilter);
 		}
 		for($i=0; $i<count(self::$lastSearch); $i++){
-			if(self::$lastSearch[$i]['username'] == $uid){
+			if(self::$lastSearch[$i]->get_username() == $uid){
 				if($i==count(self::$lastSearch)-1){
 					return null;
 				}
-				return self::$lastSearch[$i+1]['username'];
+				return self::$lastSearch[$i+1]->get_username();
 			}
 		}
 	}
@@ -931,57 +919,59 @@ class user {
 
 	public function load_by_username($username) {
 		$filter = "(uid=".$username.")";
-		$attributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress','employeetype','telexNumber','facsimiletelephonenumber','description');
-		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
+		$result = $this->ldap->search($filter, __LDAP_PEOPLE_OU__, self::$fullattributes);
 		if($result['count']>0){
-			$this->name = $result[0]['cn'][0];
-			$this->sn = $result[0]['sn'][0];
-			if(isset($result[0]['givenname'])){
-				$this->givenName = $result[0]['givenname'][0];
-			} else {
-				$this->givenName = trim(strstr($this->name,$this->sn,true));
-			}
-			$this->username = $result[0]['uid'][0];
-			$this->homeDirectory = $result[0]['homedirectory'][0];
-			$this->loginShell = $result[0]['loginshell'][0];
-			$this->email = isset($result[0]['mail'])?$result[0]['mail'][0]:null;
-			$this->emailforward = isset($result[0]['postaladdress'][0])?$result[0]['postaladdress'][0]:null; // Yes, postalAddress holds the forwarding email. 
-			if(isset($result[0]['shadowexpire'])){
-				$this->expiration = $result[0]['shadowexpire'][0];
-			}
-			if(isset($result[0]['description'])){
-				$this->description = $result[0]['description'][0];
-			}
-			if( preg_match("/uid=(.*?),/um", $result[0]['creatorsname'][0], $matches) ){
-				$this->creator = $matches[1];
-			} else {
-				$this->creator = $result[0]['creatorsname'][0];
-			}
-			$this->createTime = strtotime($result[0]['createtimestamp'][0]);
-			if( preg_match("/uid=(.*?),/um", $result[0]['modifiersname'][0], $matches) ){
-				$this->modifier = $matches[1];
-			} else {
-				$this->modifier = $result[0]['modifiersname'][0];
-			}
-			$this->modifyTime = strtotime($result[0]['modifytimestamp'][0]);
-			$this->uidnumber = $result[0]['uidnumber'][0];
-			if(isset($result[0]['sambapwdlastset'])){
-				$this->passwordSet = $result[0]['sambapwdlastset'][0];
-			}
-			if(isset($result[0]['facsimiletelephonenumber'][0])){
-				$this->passwordExpiration = $result[0]['facsimiletelephonenumber'][0];
-			}
-			if(isset($result[0]['employeetype'])){
-				$this->leftcampus = ($result[0]['employeetype'][0]=='leftcampus');
-				$this->noncampus = ($result[0]['employeetype'][0]=='noncampus');
-				$this->classroom = ($result[0]['employeetype'][0] == 'classroom');
-			}
-			if(isset($result[0]['telexnumber'])){
-				$this->crashplan = ($result[0]['telexnumber'][0]==1);
-			}
-			if(isset($result[0]['destinationindicator'])){
-				$this->expirationreason = $result[0]['destinationindicator'][0];
-			}
+			$this->load_from_result($result[0]);
+		}
+	}
+	private function load_from_result($result){
+		$this->name = $result['cn'][0];
+		$this->sn = $result['sn'][0];
+		if(isset($result['givenname'])){
+			$this->givenName = $result['givenname'][0];
+		} else {
+			$this->givenName = trim(strstr($this->name,$this->sn,true));
+		}
+		$this->username = $result['uid'][0];
+		$this->homeDirectory = $result['homedirectory'][0];
+		$this->loginShell = $result['loginshell'][0];
+		$this->email = isset($result['mail'])?$result['mail'][0]:null;
+		$this->emailforward = isset($result['postaladdress'][0])?$result['postaladdress'][0]:null; // Yes, postalAddress holds the forwarding email. 
+		if(isset($result['shadowexpire'])){
+			$this->expiration = $result['shadowexpire'][0];
+		}
+		if(isset($result['description'])){
+			$this->description = $result['description'][0];
+		}
+		if( preg_match("/uid=(.*?),/um", $result['creatorsname'][0], $matches) ){
+			$this->creator = $matches[1];
+		} else {
+			$this->creator = $result['creatorsname'][0];
+		}
+		$this->createTime = strtotime($result['createtimestamp'][0]);
+		if( preg_match("/uid=(.*?),/um", $result['modifiersname'][0], $matches) ){
+			$this->modifier = $matches[1];
+		} else {
+			$this->modifier = $result['modifiersname'][0];
+		}
+		$this->modifyTime = strtotime($result['modifytimestamp'][0]);
+		$this->uidnumber = $result['uidnumber'][0];
+		if(isset($result['sambapwdlastset'])){
+			$this->passwordSet = $result['sambapwdlastset'][0];
+		}
+		if(isset($result['facsimiletelephonenumber'][0])){
+			$this->passwordExpiration = $result['facsimiletelephonenumber'][0];
+		}
+		if(isset($result['employeetype'])){
+			$this->leftcampus = ($result['employeetype'][0]=='leftcampus');
+			$this->noncampus = ($result['employeetype'][0]=='noncampus');
+			$this->classroom = ($result['employeetype'][0] == 'classroom');
+		}
+		if(isset($result['telexnumber'])){
+			$this->crashplan = ($result['telexnumber'][0]==1);
+		}
+		if(isset($result['destinationindicator'])){
+			$this->expirationreason = $result['destinationindicator'][0];
 		}
 	}
 
@@ -1016,11 +1006,11 @@ class user {
 	private static function sorter($key,$asc){
 		if($asc == "true"){
 			return function ($a,$b) use ($key) {
-				return html::username_cmp($a[$key], $b[$key]);
+				return html::username_cmp($a->$key, $b->$key);
 			};
 		} else {
 			return function ($a,$b) use ($key) {
-				return html::username_cmp($b[$key], $a[$key]);
+				return html::username_cmp($b->$key, $a->$key);
 			};
 		}
 	}

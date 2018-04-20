@@ -104,7 +104,7 @@ class html {
 				case 'emailforward':
 					$description[] = "sorted by email";
 					break;
-				case 'passwordexpire':
+				case 'passwordExpiration':
 					$description[] = "sorted by password expiration";
 					break;
 				case 'shadowexpire':
@@ -170,40 +170,40 @@ class html {
 		for ($i=$i_start;$i<$i_count;$i++) {
 	        if (array_key_exists($i,$users)) {
         		$users_html .= "<tr>";
-        		$users_html .= "<td width='14px'><input type='checkbox' name='selected[".$users[$i]['username']."]'/></td>";
-            	$users_html .= "<td class='pl-2 d-flex'><a class='mr-auto' href='user.php?uid=" . $users[$i]['username'] . "'>";
-				$users_html .= $users[$i]['username'] . "</a>";
-				if($users[$i]['shadowexpire']!='' && !$users[$i]['classroom']){ // Don't show expiration warnings for classroom users
-					if($users[$i]['shadowexpire'] <= time()){
+        		$users_html .= "<td width='14px'><input type='checkbox' name='selected[".$users[$i]->get_username()."]'/></td>";
+            	$users_html .= "<td class='pl-2 d-flex'><a class='mr-auto' href='user.php?uid=" . $users[$i]->get_username() . "'>";
+				$users_html .= $users[$i]->get_username() . "</a>";
+				if(!$users[$i]->get_classroom()){ // Don't show expiration warnings for classroom users
+					if($users[$i]->is_expired()){
 						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o text-danger' title='User expired'></span>";
-					} else {
+					} else if($users[$i]->is_expiring()) {
 						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o text-warning' title='User set to expire'></span>";
 					}
 				}
-				if($users[$i]['leftcampus']){
+				if($users[$i]->get_leftcampus()){
 					$users_html .= " <span class='my-auto ml-1 fa fa-graduation-cap text-warning' title='User left UIUC'></span>";
 				}
-				if($users[$i]['noncampus']){
+				if($users[$i]->get_noncampus()){
 					$users_html .= " <span class='my-auto ml-1 fa fa-graduation-cap text-info' title='User not from UIUC'></span>";
 				}
-				if($users[$i]['crashplan']){
+				if($users[$i]->get_crashplan()){
 					$users_html .= " <span class='my-auto ml-1 fa fa-hdd-o text-success' title='User has Crashplan'></span>";
 				}
-				if($users[$i]['passwordexpired']){
+				if($users[$i]->is_password_expired()){
 					$users_html .= " <span class='my-auto ml-1 fa fa-key text-danger' title='Password expired'></span>";
-				} else if($users[$i]['passwordexpire'] != '' && $users[$i]['passwordexpire'] < time()+(60*60*24*30)){
+				} else if($users[$i]->get_password_expiration() != null && $users[$i]->get_password_expiration() < time()+(60*60*24*30)){
 					$users_html .= " <span class='my-auto ml-1 fa fa-key text-warning' title='Password expiring soon'></span>";
 				}
-				if($users[$i]['classroom']){
+				if($users[$i]->get_classroom()){
 					$users_html .= " <span class='my-auto ml-1 fa fa-book text-info' title='Classroom User'></span>";
 				}
 				$users_html .= "</td>";
-                $users_html .= "<td>" . $users[$i]['name']. "</td>";
-				$users_html .= "<td>" . $users[$i]['emailforward']. "</td>";
-				$users_html .= "<td>" . ($users[$i]['passwordexpire']===''?'':date('m/d/Y',$users[$i]['passwordexpire'])). "</td>";
+                $users_html .= "<td>" . $users[$i]->get_name(). "</td>";
+				$users_html .= "<td>" . $users[$i]->get_emailforward(). "</td>";
+				$users_html .= "<td>" . ($users[$i]->get_password_expiration()===null?'':date('m/d/Y',$users[$i]->get_password_expiration())). "</td>";
 				if($showexpiration){
-					$users_html .= "<td>" . date('m/d/Y',$users[$i]['shadowexpire']). "</td>";
-					$users_html .= "<td class='d-xxl-table-cell d-none'>".$users[$i]['expirationreason']."</td>";
+					$users_html .= "<td>" . date('m/d/Y',$users[$i]->get_expiration()). "</td>";
+					$users_html .= "<td class='d-xxl-table-cell d-none'>".$users[$i]->get_expiration_reason()."</td>";
 				}
         		$users_html .= "</tr>";
 			}
@@ -215,20 +215,21 @@ class html {
 		$users_html = "";
 		for($i=0; $i<count($users);$i++){
 			if(array_key_exists($i,$users)){
-				usort($users[$i]['groups'],'html::username_cmp');
+				$groups = $users[$i]->get_groups();
+				usort($groups,'html::username_cmp');
 				$users_html .= "<tr>";
-				$users_html .= "<td width='14px'><input type='checkbox' name='selected[".$users[$i]['username']."]'/></td>";
-            	$users_html .= "<td class='pl-2 d-flex'><a class='mr-auto' href='user.php?uid=" . $users[$i]['username'] . "'>";
-				$users_html .= $users[$i]['username'] . "</a>";
-				if($users[$i]['shadowexpire']!=''){ 
-					if($users[$i]['shadowexpire'] <= time()){
+				$users_html .= "<td width='14px'><input type='checkbox' name='selected[".$users[$i]->get_username()."]'/></td>";
+            	$users_html .= "<td class='pl-2 d-flex'><a class='mr-auto' href='user.php?uid=" . $users[$i]->get_username() . "'>";
+				$users_html .= $users[$i]->get_username() . "</a>";
+				if($users[$i]->get_expiration() != null){ 
+					if($users[$i]->is_expired()){
 						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o text-danger' title='User expired'></span>";
 					}
 				}
 				$users_html .= "</td>";
-				$users_html .= "<td>" . $users[$i]['description']. "</td>";
-				$users_html .= "<td>" . implode(', ', $users[$i]['groups']). "</td>";
-				$users_html .= "<td>" . ($users[$i]['shadowexpire']!=''?date('m/d/Y',$users[$i]['shadowexpire']):'') . "</td>";
+				$users_html .= "<td>" . $users[$i]->get_description(). "</td>";
+				$users_html .= "<td>" . implode(', ', $groups). "</td>";
+				$users_html .= "<td>" . ($users[$i]->get_expiration()!=null?date('m/d/Y',$users[$i]->get_expiration()):'') . "</td>";
 				$users_html .="</tr>";
 			}
 		}

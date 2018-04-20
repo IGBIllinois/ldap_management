@@ -1,11 +1,11 @@
 .mainjumbo {
-    background-image: url('../images/banner.png');
+    background-image: url('../images/banner.jpg');
     background-size: cover;
     background-blend-mode: overlay;
     padding-top: 5rem;
 }
 .minijumbo {
-    background-image: url('../images/banner.png');
+    background-image: url('../images/banner.jpg');
     background-size: cover;
     background-blend-mode: overlay;
     background-color: #e9ecef;

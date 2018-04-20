@@ -191,6 +191,8 @@ class html {
 				}
 				if($users[$i]['passwordexpired']){
 					$users_html .= " <span class='my-auto ml-1 fa fa-key text-danger' title='Password expired'></span>";
+				} else if($users[$i]['passwordexpire'] != '' && $users[$i]['passwordexpire'] < time()+(60*60*24*30)){
+					$users_html .= " <span class='my-auto ml-1 fa fa-key text-warning' title='Password expiring soon'></span>";
 				}
 				if($users[$i]['classroom']){
 					$users_html .= " <span class='my-auto ml-1 fa fa-book text-info' title='Classroom User'></span>";

@@ -76,9 +76,9 @@
 						<th class="sortable-th pl-2" onclick="sort_table('username')">NetID<?php echo html::sort_icon('username', $sort, $asc); ?></th>
 						<th class="sortable-th" onclick="sort_table('name')">Name<?php echo html::sort_icon('name', $sort, $asc); ?></th>
 						<th class="sortable-th" onclick="sort_table('emailforward')">Forwarding Email<?php echo html::sort_icon('emailforward', $sort, $asc); ?></th>
-						<th class="sortable-th" onclick="sort_table('passwordExpiration')">Password Expiration<?php echo html::sort_icon('passwordExpiration', $sort, $asc); ?></th>
+						<th class="sortable-th" onclick="sort_table('password_expiration')">Password Expiration<?php echo html::sort_icon('password_expiration', $sort, $asc); ?></th>
 						<?php if ($filter == 'expired' || $filter == 'expiring'){ ?>
-							<th class="sortable-th" onclick="sort_table('shadowexpire')">Expiration<?php echo html::sort_icon('shadowexpire',$sort,$asc); ?></th>
+							<th class="sortable-th" onclick="sort_table('expiration')">Expiration<?php echo html::sort_icon('expiration',$sort,$asc); ?></th>
 							<th class="d-xxl-table-cell d-none sortable-th" onclick="sort_table('expirationreason')">Expiration Reason<?php echo html::sort_icon('expirationreason',$sort,$asc); ?></th>
 						<?php } ?>
 					</tr>

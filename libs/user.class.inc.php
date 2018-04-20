@@ -3,34 +3,34 @@ class user {
 
 	////////////////Private Variables//////////
 
-	public $username;
-	public $name;
+	private $username;
+	private $name;
 
 	private $ldap;
 	private $uidnumber;
 	private $email;
-	public $emailforward;
+	private $emailforward;
 	private $homeDirectory;
 	private $givenName;
 	private $sn;
 	private $machinerights = null;
 	private $groups = null;
 	private $loginShell;
-	public $expiration = null;
+	private $expiration = null;
 	private $leftcampus = false;
 	private $noncampus = false;
 	private $crashplan = false;
 	private $classroom = false;
 	
-	public $description = "";
-	public $expirationreason = "";
+	private $description = "";
+	private $expirationreason = "";
 	
 	private $creator;
 	private $createTime;
 	private $modifier;
 	private $modifyTime;
 	private $passwordSet = null;
-	public $passwordExpiration = null;
+	private $passwordExpiration = null;
 	
 	private $ldap_entry = null;
 	
@@ -1004,13 +1004,14 @@ class user {
 	}
 
 	private static function sorter($key,$asc){
+		$key = "get_".$key;
 		if($asc == "true"){
 			return function ($a,$b) use ($key) {
-				return html::username_cmp($a->$key, $b->$key);
+				return html::username_cmp($a->$key(), $b->$key());
 			};
 		} else {
 			return function ($a,$b) use ($key) {
-				return html::username_cmp($b->$key, $a->$key);
+				return html::username_cmp($b->$key(), $a->$key());
 			};
 		}
 	}

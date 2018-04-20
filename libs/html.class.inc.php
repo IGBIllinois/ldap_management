@@ -104,10 +104,10 @@ class html {
 				case 'emailforward':
 					$description[] = "sorted by email";
 					break;
-				case 'passwordExpiration':
+				case 'password_expiration':
 					$description[] = "sorted by password expiration";
 					break;
-				case 'shadowexpire':
+				case 'expiration':
 					$description[] = "sorted by expiration";
 					break;
 			}

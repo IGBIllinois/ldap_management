@@ -71,7 +71,7 @@
 						<th class="sortable-th pl-2" onclick="sort_table('username')">NetID<?php echo html::sort_icon('username', $sort, $asc); ?></th>
 						<th class="sortable-th" onclick="sort_table('description')">Description<?php echo html::sort_icon('description', $sort, $asc); ?></th>
 						<th>Groups</th>
-						<th class="sortable-th" onclick="sort_table('shadowexpire')">Expiration<?php echo html::sort_icon('shadowexpire',$sort,$asc); ?></th>
+						<th class="sortable-th" onclick="sort_table('expiration')">Expiration<?php echo html::sort_icon('expiration',$sort,$asc); ?></th>
 					</tr>
 				</thead>
 				<tbody>

@@ -88,17 +88,17 @@
 		<table class="table table-striped table-igb-bordered table-responsive-md mb-0">
 			<?php if($user->is_locked()) { ?>
 				<tr>
-					<td colspan="2" class="table-danger">User is locked</td>
+					<td colspan="2" class="table-danger border-bottom border-danger">User is locked</td>
 				</tr>
 			<?php	} ?>
 			<?php if($user->is_password_expired()) { ?>
 				<tr>
-					<td colspan="2" class="table-danger">Password has expired</td>
+					<td colspan="2" class="table-danger border-bottom border-danger">Password has expired</td>
 				</tr>
 			<?php	} ?>
 			<?php if($user->get_leftcampus()) { ?>
 				<tr>
-					<td colspan="2" class="table-warning">User has left UIUC</td>
+					<td colspan="2" class="table-warning border-bottom border-warning">User has left UIUC</td>
 				</tr>
 			<?php } ?>
 			<?php

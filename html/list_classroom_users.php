@@ -85,7 +85,7 @@
 				<input type="hidden" name="search" value="<?php echo $search; ?>" />
 				<input type="hidden" name="start" value="<?php echo $start; ?>" />
 				<input type="hidden" name="filter" value="<?php echo $filter; ?>" />
-				<label>All checked: </label> <select class="custom-select" name="action"><option hidden>Select an action...</option><option value="add-to-group">Add to group</option></select> <input type="submit" class="btn btn-primary">
+				<label>All checked: </label> <select class="custom-select" style="max-width:100%; width: unset" name="action"><option hidden>Select an action...</option><option value="add-to-group">Add to group</option></select> <input type="submit" class="btn btn-primary">
 			</div>
 		</form>
 	</div>

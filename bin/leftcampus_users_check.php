@@ -22,7 +22,8 @@ if ($sapi_type != 'cli') {
 	$ldap->set_bind_user(__LDAP_BIND_USER__);
 	$ldap->set_bind_pass(__LDAP_BIND_PASS__);
 	$adldap = new ldap(__AD_LDAP_HOST__,false,__AD_LDAP_PORT__,__AD_LDAP_PEOPLE_OU__);
-	$users = user::get_all_users($ldap);
+	$users_group = new group($ldap,'igb_users');
+	$users = $users_group->get_users();
 
 	foreach($users as $uid){
 		$user = new user($ldap,$uid);

@@ -83,7 +83,7 @@ if (isset($_POST['login'])) {
 							<div class="col-sm-9">
 								<div class="input-group">
 									<input class='form-control' type='text' name='username' id="username" tabindex='1' placeholder='Username' value='<?php if (isset($username)) { echo $username; } ?>'> 
-									<span class="input-group-addon"><span class='fa fa-user'></span></span>
+									<div class="input-group-append"><span class="input-group-text"><span class='fa fa-user'></span></span></div>
 								</div>
 							</div>
 						</div>
@@ -92,7 +92,7 @@ if (isset($_POST['login'])) {
 							<div class="col-sm-9">
 								<div class="input-group">
 									<input class='form-control' type='password' name='password' placeholder='Password' tabindex='2'>
-									<span class="input-group-addon"><span class='fa fa-lock'></span></span>
+									<div class="input-group-append"><span class="input-group-text"><span class='fa fa-lock'></span></span></div>
 								</div>
 							</div>
 						</div>

@@ -45,13 +45,17 @@
 			</tr>
 		</table>
 		<div class="row">
-			<div class="col-sm-12">
+			<div class="col-xxl-6">
 				<div id="created-chart"></div>
+			</div>
+			<div class="col-xxl-6">
+				<div id="password-chart"></div>
 			</div>
 		</div>
 		<script type="text/javascript">
 			$(document).ready(function(){
 				google.charts.setOnLoadCallback(drawCreatedUserChart);
+				google.charts.setOnLoadCallback(drawPasswordSetChart);
 			});
 		</script>
 <?php

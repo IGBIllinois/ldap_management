@@ -349,7 +349,7 @@ class group {
 			$filter = "(cn=*)";
 		} else {
 			// This ugly str_replace brought to you by our version of php being too old to support JSON_UNESCAPED_SLASHES
-			$filter = "(|(cn=*$search*)(description=*".str_replace("/","\\\\/",$search)."*))";
+			$filter = "(|(|(cn=*$search*)(description=*".str_replace("/","\\\\/",$search)."*))(gidnumber=$search))";
 		}
 		if ($filterusers) {
 			$users = user::get_all_users($ldap);

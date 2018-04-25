@@ -754,7 +754,7 @@ class user {
 		if($search == ""){
 			$filter = "(uid=*)";
 		} else {
-			$filter = "(|(uid=*$search*)(cn=*$search*))";
+			$filter = "(|(|(uid=*$search*)(cn=*$search*))(uidnumber=$search))";
 		}
 		$result = $ldap->search($filter,__LDAP_PEOPLE_OU__,self::$fullattributes);
 		$users = array();

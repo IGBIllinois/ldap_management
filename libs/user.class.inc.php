@@ -11,6 +11,7 @@ class user {
 	private $email;
 	private $emailforward;
 	private $homeDirectory;
+	private $homeSubfolder;
 	private $givenName;
 	private $sn;
 	private $machinerights = null;
@@ -36,7 +37,7 @@ class user {
 	
 	private static $lastSearch = array();
 	
-	private static $fullattributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress','employeetype','telexNumber','facsimiletelephonenumber','description','destinationindicator');
+	private static $fullattributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress','employeetype','telexNumber','facsimiletelephonenumber','description','destinationindicator','initials');
 
 	////////////////Public Functions///////////
 
@@ -152,6 +153,7 @@ class user {
 				'uidNumber' => $uidnumber,
 				'gidNumber' => $gidnumber,
 				'homeDirectory' => __HOME_DIR__."/".$homesub."/".$username,
+				'initials' => $homesub,
 				'gecos'=> $name,
 				'sambaSID' => __SAMBA_ID__."-".$uidnumber,
 				'sambaLMPassword' => $lmpasswd,
@@ -337,7 +339,24 @@ class user {
 	public function get_homeDirectory(){
 		return $this->homeDirectory;
 	}
-
+	
+	public function get_homeSubfolder(){
+		return $this->homeSubfolder;
+	}
+	public function set_homeSubfolder($subfolder){
+		$dn = $this->get_user_rdn();
+		$data = array("initials"=>$subfolder);
+		if($this->ldap->modify($dn,$data)){
+			log::log_message("Set home subfolder for ".$this->get_username()." to ".$subfolder);
+			return array('RESULT'=>true,
+				'MESSAGE'=>'Home Subfolder changed.',
+				'uid'=>$this->username);
+		} else {
+			return array('RESULT'=>false,
+				'MESSAGE'=>'LDAP Error: '.$this->ldap->get_error(),
+				'uid'=>$this->username);
+		}
+	}
 
 	public function get_name() {
 		return $this->name;
@@ -972,6 +991,9 @@ class user {
 		}
 		if(isset($result['destinationindicator'])){
 			$this->expirationreason = $result['destinationindicator'][0];
+		}
+		if(isset($result['initials'])){
+			$this->homeSubfolder = $result['initials'][0];
 		}
 	}
 

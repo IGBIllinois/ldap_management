@@ -51,13 +51,15 @@
 	<div class="card">
 		<div class="card-body">
 			<form method="get" action='<?php echo $_SERVER['PHP_SELF']; ?>' class="form-inline">
-				<div class="form-group">
+				<div class="input-group mr-auto">
 					<input type="text" name="search" class="form-control" value="<?php if (isset($search)){echo $search; } ?>" placeholder="Search" />
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-primary"><span class="fa fa-search"></span></button>
+					</div>
 				</div>
 				
 				<input type="hidden" name="sort" value="<?php echo $sort; ?>" />
 				<input type="hidden" name="asc" value="<?php echo $asc; ?>" />
-				<input type="submit" class="btn btn-primary ml-1 mr-auto" value="Go" />
 				
 				<div class="btn-group">
 					<button type="button" class="btn <?php if($filter=='expiring'){echo 'btn-warning';}else{echo 'btn-light';} ?>" id="expiring-button" onclick="filter_table('expiring')"><span class="fa fa-clock-o"></span> Expiring</button>

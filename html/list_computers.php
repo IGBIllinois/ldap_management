@@ -45,12 +45,11 @@
 	<div class="card">
 		<div class="card-body">
 			<form method="get" action='<?php echo $_SERVER['PHP_SELF']; ?>' class="form-inline">
-				<div class="col-md-6">
-					<input type="text" name="search" class="form-control mb-2 mr-sm-2 mb-sm-0" value="<?php if (isset($search)){echo $search; } ?>" placeholder="Search" />
-					
-					<input type="hidden" name="sort" value="<?php echo $sort; ?>" />
-					<input type="hidden" name="asc" value="<?php echo $asc; ?>" />
-					<input type="submit" class="btn btn-primary" value="Go" />
+				<div class="input-group mr-auto">
+					<input type="text" name="search" class="form-control" value="<?php if (isset($search)){echo $search; } ?>" placeholder="Search" />
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-primary"><span class="fa fa-search"></span></button>
+					</div>
 				</div>
 			</form>
 		</div>

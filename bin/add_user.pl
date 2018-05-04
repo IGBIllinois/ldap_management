@@ -28,4 +28,5 @@ if(scalar(@ARGV)>=1 and not $ARGV[0] eq ""){
 	ssh('root@file-server.igb.illinois.edu',"mkdir /file-server/home/$homesub/$netid");
 	ssh('root@file-server.igb.illinois.edu',"chown $netid.$netid /file-server/home/$homesub/$netid");
 	ssh('root@file-server.igb.illinois.edu',"chmod 2770 /file-server/home/$homesub/$netid");
+	ssh('root@file-server.igb.illinois.edu',"/usr/local/sbin/dropbox.pl $netid");
 }

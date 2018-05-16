@@ -31,6 +31,10 @@
 					$result = $queuegroup->add_user($uid);
 				}
 			}
+			if(__RUN_SHELL_SCRIPTS__){
+				$safeusername = escapeshellarg($uid);
+				exec("sudo ../bin/setup_biocluster.pl $safeusername");	
+			}
 			if($result['RESULT']){
 				log::log_message('Biocluster2 access given to user '.$uid);
 				return array('RESULT'=>true,

@@ -400,15 +400,13 @@ class group {
 	}
 
 
-	public static function get_all_groups() {
+	public static function get_all_groups($ldap) {
 		$groups_array = array();
-		if ($this->get_connection()) {
-			$filter = "(cn=*)";
-			$attributes = array('cn');
-			$result = $this->search($filter, __LDAP_GROUP_OU__, $attributes);
-			for ($i=0; $i<$result['count']; $i++) {
-				array_push($groups_array, $result[$i]['cn'][0]);
-			}
+		$filter = "(cn=*)";
+		$attributes = array('cn');
+		$result = $ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
+		for ($i=0; $i<$result['count']; $i++) {
+			array_push($groups_array, $result[$i]['cn'][0]);
 		}
 		return $groups_array;
 	}

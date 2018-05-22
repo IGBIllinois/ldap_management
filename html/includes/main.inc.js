@@ -363,7 +363,9 @@ function check_username(){
 		if(warning1){
 			document.getElementById('emailforward_input').value = document.getElementById('username_input').value + "@illinois.edu";
 		} else {
-			document.getElementById('emailforward_input').value = '';
+			if( document.getElementById('emailforward_input').value.includes('@illinois.edu') ){
+				document.getElementById('emailforward_input').value = '';
+			}
 		}
 	}
 	

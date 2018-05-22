@@ -379,11 +379,11 @@ function check_username(){
 		}
 	});
 	var rule2 = ( username.match(/^[a-z]/)!=null );
-	var rule3 = ( username.match(/[^A-Za-z0-9_]/)==null );
+	var rule3 = ( username.match(/[^a-z0-9_]/)==null );
 
 	showUsernameError(1,rule1==0,rule1==0?"Username not in use":(rule1==1?"Username already exists":"Username exists as group"));
 	showUsernameError(2,rule2,"Username must begin with a lowercase letter");
-	showUsernameError(3,rule3,"Username must be alphanumeric (letters, numbers, underscore)");
+	showUsernameError(3,rule3,"Username must be alphanumeric (lowercase letters, numbers, underscore)");
 	
 	return rule1==0 && rule2 && rule3;
 }

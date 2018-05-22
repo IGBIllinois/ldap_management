@@ -82,8 +82,12 @@
 				$user->set_description($_POST['new_desc']);
 				
 				// Set expiration
-				if(isset($_POST['new_exp']) && $_POST['new_exp']!=""){
-					$user->set_expiration(strtotime($_POST['new_exp']));
+				if(isset($_POST['new_exp'])){
+					if($_POST['new_exp'] != ""){
+						$user->set_expiration(strtotime($_POST['new_exp']));
+					} else {
+						$user->cancel_expiration();
+					}
 				}
 				
 				// Set extra group

@@ -56,8 +56,8 @@
 			<div class="card-body">
 				<h2 class="display-5"><center><span class="fa fa-desktop"> </span><br/>Domain Computers</center></h1>
 				<p><div class="btn-group d-flex">
-					<a class="btn btn-info w-100" href="list_domain_computers.php"><span class="fa fa-list"></span> List</a>
-					<a class="btn btn-success w-100" href="add_domain_computer.php"><span class="fa fa-plus-circle"></span> Add</a>
+					<a class="btn btn-info w-100" href="list_computers.php"><span class="fa fa-list"></span> List</a>
+					<a class="btn btn-success w-100" href="add_computer.php"><span class="fa fa-plus-circle"></span> Add</a>
 				</div></p>
 			</div>
 		</div>

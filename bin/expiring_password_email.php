@@ -12,7 +12,7 @@ include_once '../conf/settings.inc.php';
 
 function emailmessage($user, $subject, $duration){
 	$to = $user->get_email();
-	$emailmessage = $user->get_name().",<br><br>You are receiving this email because your IGB account password will expire in $duration (".date('F j, Y', $user->get_password_expiration())."). This will not affect your University of Illinois account password.<br><br> To change your password, go to https://illinoisauth.igb.illinois.edu/password/ and log in with either your current IGB password or your University of Illinois AD password. <br><br>If you do not change your password before ".date('F j, Y', $user->get_password_expiration()).", you will not be able to log into IGB services such as IGB Wi-Fi, the IGB file-server, and the Biocluster. <br/><br/>If you have any questions, please contact us at help@igb.illinois.edu. <br/><br/>Computer and Network Resource Group<br/>Institute for Genomic Biology<br/>help@igb.illinois.edu";
+	$emailmessage = $user->get_name().",<br><br>You are receiving this email because your IGB account password will expire in $duration (".date('F j, Y', $user->get_password_expiration())."). This will not affect your University of Illinois account password.<br><br> To change your password, go to https://illinoisauth.igb.illinois.edu/password/ and log in with either your current IGB password or your University of Illinois AD password. <br><br>If you do not change your password before ".date('F j, Y', $user->get_password_expiration()).", you will not be able to log into IGB services such as IGB Wi-Fi, the IGB file-server, and the Biocluster. <br/><br/>If you have any questions, please contact us at help@igb.illinois.edu. <br/><br/>Computer and Network Resource Group<br/>Carl R. Woese Institute for Genomic Biology<br/>help@igb.illinois.edu";
 
 	$headers = "From: do-not-reply@igb.illinois.edu\r\n";
 	$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
@@ -34,7 +34,7 @@ if ($sapi_type != 'cli') {
 	$users = user::get_all_users($ldap);
 	$onemonth = array();
 	$oneweek = array();
-	$emailtomorrow = array();
+	$emailtoday = array();
 	$digestmonth = "";
 	$digestweek = "";
 	$digestexpired = "";
@@ -48,10 +48,10 @@ if ($sapi_type != 'cli') {
 
 			if( $timetoexp == 6 ){
 				$oneweek[] = $user;
+				$emailtoday[] = $user;
 			} else if( $timetoexp == 29 ){
 				$onemonth[] = $user;
-			} else if( $timetoexp == 7 || $timetoexp == 30 ){
-				$emailtomorrow[] = $user;
+				$emailtoday[] = $user;
 			}
 
 		} 
@@ -92,13 +92,13 @@ if ($sapi_type != 'cli') {
 		echo "\nNo users expiring in one week.\n";
 	}
 	
-	if(count($emailtomorrow)>0){
-		// Email joe secretly who's going to be emailed tomorrow
+	if(count($emailtoday)>0){
+		// Email joe secretly who's going to be emailed today
 		$subject = "IGB Password Expiration Notices Pending";
 		$to = "jleigh@illinois.edu";
-		$emailmessage = "The following users will be emailed password expiration notices tomorrow:<br><pre>";
-		for($i=0; $i<count($emailtomorrow); $i++){
-			$emailmessage .= $emailtomorrow[$i]->get_username()."\t".date('F j, Y', $emailtomorrow[$i]->get_password_expiration())."\n";
+		$emailmessage = "The following users will be emailed password expiration notices today:<br><pre>";
+		for($i=0; $i<count($emailtoday); $i++){
+			$emailmessage .= $emailtoday[$i]->get_username()."\t".date('F j, Y', $emailtoday[$i]->get_password_expiration())."\n";
 		}
 		$emailmessage .= "</pre><br><br>--IGBLAM";
 		

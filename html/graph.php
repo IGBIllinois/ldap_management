@@ -24,14 +24,18 @@
 	if($_REQUEST['graph'] == "passcal"){
 		$ldap->set_bind_user(__LDAP_BIND_USER__);
 		$ldap->set_bind_pass(__LDAP_BIND_PASS__);
-		$filter = "(uid=*)";
+		$filter = "(cn=igb_users)";
+		$attributes = array('memberUid');
+		$groupmembers = $ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
+		
 		$attributes = array('sambapwdlastset');
-		$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 		$calendar = array();
-		for($i=0; $i<$result['count'];$i++){
-			if(isset($result[$i]['sambapwdlastset'])){
-				$date = strftime('%Y/%m/%d', $result[$i]['sambapwdlastset'][0]);
-				if(strftime('%Y',$result[$i]['sambapwdlastset'][0]) >= 2000){
+		for($i=0; $i<$groupmembers[0]['memberuid']['count']; $i++){
+			$filter = "(uid=".$groupmembers[0]['memberuid'][$i].")";
+			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
+			if(isset($result[0]['sambapwdlastset'])){
+				$date = strftime('%Y/%m/%d', $result[0]['sambapwdlastset'][0]);
+				if(strftime('%Y',$result[0]['sambapwdlastset'][0]) >= 2000){
 					if(isset($calendar[$date])){
 						$calendar[$date]++;
 					} else {
@@ -45,4 +49,5 @@
 			$calarray[] = array($key,$value);
 		}
 		echo json_encode($calarray);
+
 	}

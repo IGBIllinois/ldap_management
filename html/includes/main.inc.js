@@ -379,7 +379,7 @@ function check_username(){
 		}
 	});
 	var rule2 = ( username.match(/^[a-z]/)!=null );
-	var rule3 = ( username.match(/[^a-z0-9_]/)==null );
+	var rule3 = ( username.match(/[^a-z0-9_\-]/)==null );
 
 	showUsernameError(1,rule1==0,rule1==0?"Username not in use":(rule1==1?"Username already exists":"Username exists as group"));
 	showUsernameError(2,rule2,"Username must begin with a lowercase letter");

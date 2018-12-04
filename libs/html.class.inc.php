@@ -162,7 +162,7 @@ class html {
 	}
 
 	// Returns trs for the given users list
-	public static function get_users_rows($users,$showexpiration=false) {
+	public static function get_users_rows($users,$showexpiration=false, $showpwdlastset=true) {
 		$i_start = 0;
 		$i_count = count($users);
 		
@@ -201,6 +201,9 @@ class html {
                 $users_html .= "<td>" . $users[$i]->get_name(). "</td>";
 				$users_html .= "<td>" . $users[$i]->get_emailforward(). "</td>";
 				$users_html .= "<td>" . ($users[$i]->get_password_expiration()===null?'':date('m/d/Y',$users[$i]->get_password_expiration())). "</td>";
+				if($showpwdlastset){
+					$users_html .= "<td class='d-xxl-table-cell d-none'>" . date('m/d/Y', $users[$i]->get_passwordSet()) . "</td>";
+				}
 				if($showexpiration){
 					$users_html .= "<td>" . date('m/d/Y',$users[$i]->get_expiration()). "</td>";
 					$users_html .= "<td class='d-xxl-table-cell d-none'>".$users[$i]->get_expiration_reason()."</td>";

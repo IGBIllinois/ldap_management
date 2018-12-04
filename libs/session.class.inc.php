@@ -6,13 +6,13 @@ class session {
 	///////////////Private Variables//////////
 	private $session_name;
 
-        ////////////////Public Functions///////////
+    ////////////////Public Functions///////////
 
-        public function __construct($session_name) {
+    public function __construct($session_name) {
 		$this->session_name = $session_name;
 		$this->set_settings();
 		$this->start_session();		
-        }
+    }
 
 	public function __destruct() {}
 

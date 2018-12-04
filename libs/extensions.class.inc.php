@@ -6,7 +6,7 @@ class extensions{
 	private static $extensionpath = "../extensions/";
 	private static $extensions = array();
 	
-	function init(){
+	static function init(){
 		$loadorder = json_decode(file_get_contents(self::$extensionpath."extensions.json"));
 // 		echo "Load Order: <pre>"; var_dump($loadorder); echo "</pre>";
 		for($i=0; $i<count($loadorder); $i++){
@@ -37,13 +37,13 @@ class extensions{
 // 		echo "Extensions: <pre>"; var_dump(self::$extensions); echo "</pre>";
 	}
 	
-	function get_attributes($type){
+	static function get_attributes($type){
 		if(isset(self::$extensions[$type])){
 			return self::$extensions[$type]['attributes'];
 		}
 		return false;
 	}
-	function get_attribute($type,$attr){
+	static function get_attribute($type,$attr){
 		if(isset(self::$extensions[$type])){
 			for($i=0; $i<count(self::$extensions[$type]['attributes']); $i++){
 				if(self::$extensions[$type]['attributes'][$i]['name'] == $attr){
@@ -54,7 +54,7 @@ class extensions{
 		return false;
 	}
 	
-	function format($value,$format){
+	static function format($value,$format){
 		if($value=='')return $value;
 		if($format == "date"){
 			return strftime('%m/%d/%Y %I:%M:%S %p', strtotime($value));

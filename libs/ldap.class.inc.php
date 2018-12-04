@@ -18,7 +18,7 @@ class ldap {
 		$this->set_port($port);
 		$this->set_base_dn($base_dn);
 		$this->connect();
-		$this->set_protocol(3);
+        $this->set_protocol(3);
 	}
 
 
@@ -221,7 +221,7 @@ class ldap {
 
 	private function connect() {
 
-		$prefix;
+		$prefix = "";
 		if ($this->get_ssl() == true) {
 			$prefix = "ldaps://";
 		}
@@ -229,7 +229,7 @@ class ldap {
 			$prefix = "ldap://";
 		}
 
-		$this->ldap_resource = ldap_connect($prefix . $this->get_host(), $this->get_port());
+		$this->ldap_resource = ldap_connect($prefix . $this->get_host().":".$this->get_port());
 		$result = false;
 		if ($this->get_connection()) {
 			$result = true;

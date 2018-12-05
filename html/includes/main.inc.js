@@ -348,6 +348,7 @@ function change_password_errors(){
 function check_username(){
 	var username = document.getElementById('username_input').value;
 	var warning1 = false;
+
 	$.ajax('check_netid.php',{
 		async: false,
 		data: {'username':username},
@@ -358,6 +359,7 @@ function check_username(){
 			}
 		}
 	});
+
 	showUsernameWarning(1,warning1,warning1?"Username matches a UIUC netid":"Username does not match a UIUC netid");
 	if(document.getElementById('emailforward_input') != null){
 		if(warning1){

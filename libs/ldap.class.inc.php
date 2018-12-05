@@ -8,15 +8,17 @@ class ldap {
 	private $ldap_bind_user = false;
 	private $ldap_bind_pass;
 	private $ldap_ssl = false;
+	private $ldap_tls = false;
 	private $ldap_port = 389;
 	private $ldap_protocol = 3;
 	////////////////Public Functions///////////
 
-	public function __construct($host, $ssl, $port, $base_dn) {
+	public function __construct($host, $ssl, $port, $base_dn, $tls=false) {
 		$this->set_host($host);
 		$this->set_ssl($ssl);
 		$this->set_port($port);
 		$this->set_base_dn($base_dn);
+		$this->set_tls($tls);
 		$this->connect();
         $this->set_protocol(3);
 	}
@@ -218,6 +220,8 @@ class ldap {
 
 	private function set_port($ldap_port) { $this->ldap_port = $ldap_port; }
 
+	private function set_tls($tls) { $this->ldap_tls = $tls; }
+
 
 	private function connect() {
 
@@ -233,7 +237,9 @@ class ldap {
 		$result = false;
 		if ($this->get_connection()) {
 			$result = true;
-
+		}
+		if($this->ldap_tls){
+			$result = ldap_start_tls($this->ldap_resource);
 		}
 		return $result;
 	}

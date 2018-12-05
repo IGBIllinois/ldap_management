@@ -15,54 +15,84 @@ $sapi_type = php_sapi_name();
 if ($sapi_type != 'cli') {
 	echo "Error: This script can only be run from the command line.\n";
 } else {
-	echo "Analyzing users...\n";
+	echo "Connecting to IGB LDAP...\n";
 	
 	// Connect to ldap
-	$ldap = new ldap(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__);
+	$ldap = new ldap(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__, __LDAP_TLS__);
 	$ldap->set_bind_user(__LDAP_BIND_USER__);
 	$ldap->set_bind_pass(__LDAP_BIND_PASS__);
-	$adldap = new ldap(__AD_LDAP_HOST__,false,__AD_LDAP_PORT__,__AD_LDAP_PEOPLE_OU__);
-	$users_group = new group($ldap,'igb_users');
-	$users = $users_group->get_users();
 
-	foreach($users as $uid){
-		$user = new user($ldap,$uid);
-		echo $user->get_username().": ";
-		if(!$user->get_classroom()){	
-			$filter = "(uid=".$uid.")";
-			$attributes = array('uiucEduPhInactiveDate');
-			$results = $adldap->search($filter,"",$attributes);
-			if($results){
-				if($results['count']==0){
-					// User not in campus ldap
-					if(!$user->get_noncampus()){
-						echo "non-campus\n";
-						$user->set_noncampus(true);
-					} else {
-						echo "non-campus (already knew)\n";
-					}
-				} else {
-					// User in campus ldap
-					if( !( ($results[0]['count']==0)||($results['count']==0) ) ){
-						// User left campus
-						if($user->get_leftcampus() == false){
-							echo "left campus\n";
-							$user->set_leftcampus(true);
-						} else {
-							echo "left campus (already knew)\n";
-						}
-					} else {
-						if($user->get_leftcampus() == true){
-							echo "on campus\n";
-							$user->set_leftcampus(false);
-						} else {
-							echo "on campus (already knew)\n";
-						}
-					}
-				}
-			}
-		} else {
-			echo "classroom\n";
-		}
-	}
+	echo "Connecting to AD...\n";
+	$adldap = new ldap(__AD_LDAP_HOST__,__AD_LDAP_SSL__,__AD_LDAP_PORT__,__AD_LDAP_PEOPLE_OU__, __AD_LDAP_TLS__);
+    $adldap->set_bind_user(__AD_LDAP_BIND_USER__);
+    $adldap->set_bind_pass(__AD_LDAP_BIND_PASS__);
+
+    echo "Fetching IGB Users...\n";
+	$users_group = new group($ldap,'igb_users');
+	$igb_users = $users_group->get_users();
+	$users = array();
+	foreach ($igb_users as $igb_user){
+	    $users[$igb_user] = false;
+    }
+
+
+	echo "Fetching AD Users...\n";
+	$moreADUsers = true;
+	$start = 0;
+	$range = 1500;
+	while($moreADUsers){
+	    $attr = 'member;range='.$start.'-'.($start+$range-1);
+        $ad_attributes = array($attr);
+        $campus_members = $adldap->search("(cn=UIUC Campus Accounts)", __AD_LDAP_GROUP_OU__, $ad_attributes);
+
+        $member_attr = $campus_members[0][0];
+//        echo $member_attr."\n";
+
+        for ($i = 0; $i<$campus_members[0][$member_attr]['count']; $i++){
+            $matches = array();
+            preg_match('/^CN=([a-zA-Z0-9\\-_\\.]+),/u', $campus_members[0][$member_attr][$i],$matches);
+            if(!isset($matches[1])){
+                echo $campus_members[0][$member_attr][$i]."\n";
+            }
+            if(in_array($matches[1],$igb_users)){
+                $users[$matches[1]] = true;
+            }
+        }
+
+        $start += $range;
+        if($campus_members[0][$member_attr]['count'] < $range){
+            $moreADUsers = false;
+        }
+    }
+	echo "Done.\n";
+	foreach($users as $user=>$active){
+	    $user_obj = new user($ldap, $user);
+        echo $user.": ";
+        if(!$user_obj->get_classroom()){
+            if(!$user_obj->get_noncampus()){
+                if($active){
+                    // Active AD user
+                    if($user_obj->get_leftcampus()){
+                        echo "on campus";
+                        $user_obj->set_leftcampus(false);
+                    } else {
+                        echo "on campus (already knew)";
+                    }
+                } else {
+                    // Not active AD user
+                    if($user_obj->get_leftcampus()){
+                        echo "left campus (already knew)";
+                    } else {
+                        echo "left campus";
+                        $user_obj->set_leftcampus(true);
+                    }
+                }
+            } else {
+                echo "non-campus";
+            }
+        } else {
+            echo "classroom";
+        }
+        echo "\n";
+    }
 }

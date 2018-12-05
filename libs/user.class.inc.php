@@ -865,9 +865,18 @@ class user {
 	}
 	
 
-	public static function is_ad_user($adldap,$username){
-		$filter = "(uid=".$username.")";
-		$results = $adldap->search($filter);
+	public static function is_ad_user($username) {
+		if($username == ""){
+			return false;
+		}
+		$adldap = new ldap(__AD_LDAP_HOST__, __AD_LDAP_SSL__, __AD_LDAP_PORT__, __AD_LDAP_BASE_DN__, __AD_LDAP_TLS__);
+		$adldap->set_bind_user(__AD_LDAP_BIND_USER__);
+		$adldap->set_bind_pass(__AD_LDAP_BIND_PASS__);
+
+		$filter = "(&(cn=UIUC Campus Accounts)(member=CN=".$username.",".__AD_LDAP_PEOPLE_OU__."))";
+
+		$attributes = array('dn');
+		$results = $adldap->search($filter,__AD_LDAP_GROUP_OU__,$attributes);
 		if($results && $results['count']>0){
 			return true;
 		} else {
@@ -881,14 +890,19 @@ class user {
 	
 	public function set_leftcampus($leftcampus){
 		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
-		$data = array("employeetype"=>($leftcampus?'leftcampus':''));
+		$data = array("employeetype"=>($leftcampus?'leftcampus':array()));
 		if($this->ldap->modify($dn,$data)){
 			$this->leftcampus = $leftcampus;
 			log::log_message("Set left-campus for ".$this->get_username()." to ".$this->get_leftcampus());
 			return array('RESULT'=>true,
 				'MESSAGE'=>'Leftcampus successfully set.',
 				'uid'=>$this->get_username());
-		}
+		} else {
+            return array(
+                'RESULT'=>false,
+                'MESSAGE'=>html::error_message('LDAP error when setting leftcampus: '.$this->ldap->get_error())
+            );
+        }
 	}
 	
 	public function get_noncampus(){
@@ -896,14 +910,19 @@ class user {
 	}
 	public function set_noncampus($noncampus){
 		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
-		$data = array("employeetype"=>($noncampus?'noncampus':''));
+		$data = array("employeetype"=>($noncampus?'noncampus':array()));
 		if($this->ldap->modify($dn,$data)){
 			$this->noncampus = $noncampus;
 			log::log_message("Set non-campus for ".$this->get_username()." to ".$this->get_noncampus());
 			return array('RESULT'=>true,
 				'MESSAGE'=>'Noncampus successfully set.',
 				'uid'=>$this->get_username());
-		}
+		} else {
+            return array(
+                'RESULT'=>false,
+                'MESSAGE'=>html::error_message('LDAP error when setting noncampus: '.$this->ldap->get_error())
+            );
+        }
 	}
 	
 	public function get_classroom(){
@@ -911,7 +930,7 @@ class user {
 	}
 	public function set_classroom($classroom){
 		$dn = "uid=".$this->get_username().",".__LDAP_PEOPLE_OU__;
-		$data = array("employeetype"=>($classroom?'classroom':''));
+		$data = array("employeetype"=>($classroom?'classroom':array()));
 		if($this->ldap->modify($dn,$data)){
 			$this->classroom = $classroom;
 			log::log_message("Set classroom-user for ".$this->get_username()." to ".$this->get_classroom());

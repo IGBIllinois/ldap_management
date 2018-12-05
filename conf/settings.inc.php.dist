@@ -16,12 +16,22 @@ define("__LDAP_BASE_DN__","");
 define("__LDAP_PEOPLE_OU__","");
 define("__LDAP_GROUP_OU__","");
 define("__LDAP_COMPUTER_OU__","");
+define("__LDAP_HOST_OU__","");
 define("__LDAP_ADMIN_GROUP__","");
+define("__LDAP_BIND_USER__","");
+define("__LDAP_BIND_PASS__","");
 define("__LDAP_SSL__",FALSE);
+define("__LDAP_TLS__", FALSE);
 define("__LDAP_PORT__",389);
 
-define("__AD_LDAP_HOST__","ldap.illinois.edu");
-define("__AD_LDAP_PEOPLE_OU__","dc=uiuc,dc=edu");
+define("__AD_LDAP_HOST__","ldap.ad.uillinois.edu");
+define("__AD_LDAP_BASE_DN__", "dc=ad,dc=uillinois,dc=edu");
+define("__AD_LDAP_PEOPLE_OU__","ou=People,dc=ad,dc=uillinois,dc=edu");
+define("__AD_LDAP_GROUP_OU__","ou=Urbana,dc=ad,dc=uillinois,dc=edu");
+define("__AD_LDAP_BIND_USER__", "");
+define("__AD_LDAP_BIND_PASS__", "");
+define("__AD_LDAP_SSL__", FALSE);
+define("__AD_LDAP_TLS__", TRUE);
 define("__AD_LDAP_PORT__",389);
 
 #LDAP Defaults

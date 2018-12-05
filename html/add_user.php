@@ -23,6 +23,9 @@
 			} else {
 				$user->cancel_password_expiration();
 			}
+			if(!user::is_ad_user($_POST['new_username'])){
+			    $user->set_noncampus(true);
+            }
 		
 			if($result['RESULT'] == true){
 				// Run script to add user to file-server, mail

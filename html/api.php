@@ -41,45 +41,7 @@
 			}
 			exit();
 		}
-/*
-		if($_REQUEST['task']=='expired_users'){
-			$filter = "(shadowExpire=*)";
-			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, array('uid','shadowexpire'));
-			$users = array();
-			$time = time();
-			for($i=0;$i<$result['count'];$i++){
-				if($result[$i]['shadowexpire'][0]<=$time){
-					$users[] = array($result[$i]['uid'][0],date("Y-m-d",$result[$i]['shadowexpire'][0]));
-				}
-			}
-			echo json_encode($users);
-			exit();
-		}
-		if($_REQUEST['task']=='expiring_users'){
-			$filter = "(shadowExpire=*)";
-			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, array('uid','shadowexpire'));
-			$users = array();
-			$time = time();
-			for($i=0;$i<$result['count'];$i++){
-				if($result[$i]['shadowexpire'][0]>$time){
-					$users[] = array($result[$i]['uid'][0],date("Y-m-d",$result[$i]['shadowexpire'][0]));
-				}
-			}
-			echo json_encode($users);
-			exit();
-		}
-		if($_REQUEST['task']=='left_uiuc'){
-			$allusers = user::get_all_users($ldap);
-			$users = array();
-			for($i=0; $i<count($allusers); $i++){
-				if(!user::is_ad_current($adldap,$allusers[$i])){
-					$users[] = $allusers[$i];
-				}
-			}
-			echo json_encode($users);
-			exit();
-		}
-*/
+
 		if($_REQUEST['task']=='add_to_group'){
 			if(!isset($_REQUEST['username']) || !isset($_REQUEST['password'])){
 				echo json_encode(array(

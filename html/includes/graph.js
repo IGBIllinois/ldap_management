@@ -2,6 +2,11 @@
 // google.load('visualization', '1.0', {'packages':['corechart']});
 google.charts.load("current", {packages:["calendar"]});
 
+function chartHeight(years){
+	// Magic formula I calculated
+	return 145*years + 25;
+}
+
 function drawCreatedUserChart(){
 	var element = 'created-chart';
 	$.ajax( 'graph.php', {
@@ -15,15 +20,15 @@ function drawCreatedUserChart(){
 			dataTable.addColumn({type: 'number', id: 'Users Created'});
 			
 			var rows = [];
-			for(var i=0; i<data.length; i++){
-				var splitDate = data[i][0].split('/');
-				rows[i] = [new Date(splitDate[0],splitDate[1]-1,splitDate[2]),data[i][1]];
+			for(var i=0; i<data.data.length; i++){
+				var splitDate = data.data[i][0].split('/');
+				rows[i] = [new Date(splitDate[0],splitDate[1]-1,splitDate[2]),data.data[i][1]];
 			}
 			dataTable.addRows(rows);
 			var chart = new google.visualization.Calendar(document.getElementById(element));
 			var options = {
 				title: 'Users created',
-				height: 750,
+				height: chartHeight(data.years),
 				noDataPattern: {
 					backgroundColor: 'white',
 					color: '#eee'
@@ -31,12 +36,14 @@ function drawCreatedUserChart(){
 				colorAxis: {colors: ['#ee0','#e00']}
 			};
 			chart.draw(dataTable,options);
+		},
+		error: function(data){
+			console.log(data);
 		}
 	} );
 }
 
 function drawPasswordSetChart(){
-	console.log('passwordchart');
 	var element = 'password-chart';
 	$.ajax( 'graph.php', {
 		data: {
@@ -49,15 +56,15 @@ function drawPasswordSetChart(){
 			dataTable.addColumn({type: 'number', id: 'Passwords set'});
 			
 			var rows = [];
-			for(var i=0; i<data.length; i++){
-				var splitDate = data[i][0].split('/');
-				rows[i] = [new Date(splitDate[0],splitDate[1]-1,splitDate[2]),data[i][1]];
+			for(var i=0; i<data.data.length; i++){
+				var splitDate = data.data[i][0].split('/');
+				rows[i] = [new Date(splitDate[0],splitDate[1]-1,splitDate[2]),data.data[i][1]];
 			}
 			dataTable.addRows(rows);
 			var chart = new google.visualization.Calendar(document.getElementById(element));
 			var options = {
 				title: 'Password Last Set',
-				height: 1620,
+				height: chartHeight(data.years),
 				noDataPattern: {
 					backgroundColor: 'white',
 					color: '#eee'

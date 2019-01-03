@@ -5,9 +5,12 @@
 		$attributes = array('createTimestamp');
 		$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 		$calendar = array();
+		$years = array();
 		for($i=0;$i<$result['count'];$i++){
 			$date = substr($result[$i]['createtimestamp'][0],0,4)."/".substr($result[$i]['createtimestamp'][0],4,2)."/".substr($result[$i]['createtimestamp'][0],6,2);
+			$year = substr($date,0,4);
 			if($date != "2014/08/12"){
+				$years[$year] = 1;
 				if(isset($calendar[$date])){
 					$calendar[$date]++;
 				} else {
@@ -19,7 +22,7 @@
 		foreach($calendar as $key=>$value){
 			$calarray[] = array($key,$value);
 		}
-		echo json_encode($calarray);
+		echo json_encode(array('data'=>$calarray,'years'=>count(array_keys($years))));
 	}
 	if($_REQUEST['graph'] == "passcal"){
 		$ldap->set_bind_user(__LDAP_BIND_USER__);
@@ -30,12 +33,15 @@
 		
 		$attributes = array('sambapwdlastset');
 		$calendar = array();
+		$years = array();
 		for($i=0; $i<$groupmembers[0]['memberuid']['count']; $i++){
 			$filter = "(uid=".$groupmembers[0]['memberuid'][$i].")";
 			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, $attributes);
 			if(isset($result[0]['sambapwdlastset'])){
 				$date = strftime('%Y/%m/%d', $result[0]['sambapwdlastset'][0]);
-				if(strftime('%Y',$result[0]['sambapwdlastset'][0]) >= 2000){
+				$year = strftime('%Y',$result[0]['sambapwdlastset'][0]);
+				if($year >= 2000){
+					$years[$year] = 1;
 					if(isset($calendar[$date])){
 						$calendar[$date]++;
 					} else {
@@ -48,6 +54,6 @@
 		foreach($calendar as $key=>$value){
 			$calarray[] = array($key,$value);
 		}
-		echo json_encode($calarray);
+		echo json_encode(array('data'=>$calarray, 'years'=>count(array_keys($years))));
 
 	}

@@ -72,6 +72,12 @@
 				}
 			},
 			{
+				"name": "authtimestamp",
+				"fullname": "Last Login",
+				"field": "authtimestamp",
+				"format": "date"
+			},
+			{
 				"name": "pwdlastset",
 				"fullname": "Password Last Set",
 				"field": "sambapwdlastset",

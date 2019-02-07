@@ -406,6 +406,10 @@ div.panel td, div.panel th {
 .table-igb-bordered td.d-flex {
 	border-right: 0px;
 }
+.shrink {
+	width: 0.1%;
+	white-space: nowrap;
+}
 /* Searchbar styles */
 #searchbar-results {
 	position: absolute;

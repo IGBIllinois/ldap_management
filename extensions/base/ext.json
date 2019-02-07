@@ -114,7 +114,7 @@
 				"name": "createddate",
 				"fullname": "Created",
 				"field": "createtimestamp",
-				"format": "date"
+				"format": "datetime"
 			},
 			{
 				"name": "createdby",
@@ -126,7 +126,7 @@
 				"name": "modifieddate",
 				"fullname": "Last Modified",
 				"field": "modifytimestamp",
-				"format": "date"
+				"format": "datetime"
 			},
 			{
 				"name": "modifiedby",

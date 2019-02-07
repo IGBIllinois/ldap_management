@@ -161,7 +161,13 @@ class html {
 
 	}
 
-	// Returns trs for the given users list
+	/**
+	 * Returns trs for the given users list
+	 * @param user[] $users
+	 * @param bool $showexpiration
+	 * @param bool $showpwdlastset
+	 * @return string
+	 */
 	public static function get_users_rows($users,$showexpiration=false, $showpwdlastset=true) {
 		$i_start = 0;
 		$i_count = count($users);
@@ -175,9 +181,9 @@ class html {
 				$users_html .= $users[$i]->get_username() . "</a>";
 				if(!$users[$i]->get_classroom()){ // Don't show expiration warnings for classroom users
 					if($users[$i]->is_expired()){
-						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o text-danger' title='User expired'></span>";
+						$users_html .= " <span class='my-auto ml-1 far fa-clock text-danger' title='User expired'></span>";
 					} else if($users[$i]->is_expiring()) {
-						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o text-warning' title='User set to expire'></span>";
+						$users_html .= " <span class='my-auto ml-1 far fa-clock text-warning' title='User set to expire'></span>";
 					}
 				}
 				if($users[$i]->get_leftcampus()){
@@ -187,7 +193,7 @@ class html {
 					$users_html .= " <span class='my-auto ml-1 fa fa-graduation-cap text-info' title='User not from UIUC'></span>";
 				}
 				if($users[$i]->get_crashplan()){
-					$users_html .= " <span class='my-auto ml-1 fa fa-hdd-o text-success' title='User has Crashplan'></span>";
+					$users_html .= " <span class='my-auto ml-1 far fa-hdd text-success' title='User has Crashplan'></span>";
 				}
 				if($users[$i]->is_password_expired()){
 					$users_html .= " <span class='my-auto ml-1 fa fa-key text-danger' title='Password expired'></span>";
@@ -196,6 +202,12 @@ class html {
 				}
 				if($users[$i]->get_classroom()){
 					$users_html .= " <span class='my-auto ml-1 fa fa-book text-info' title='Classroom User'></span>";
+				}
+				if($users[$i]->get_last_login() >= time()-60*60*24*30){
+					$users_html .= " <span class='my-auto ml-1 fas fa-sign-in-alt text-success' title='Logged in within past 30 days'></span>";
+				}
+				if($users[$i]->get_last_login() === null){
+					$users_html .= " <span class='my-auto ml-1 fas fa-sign-in-alt text-danger' title='Never logged in'></span>";
 				}
 				$users_html .= "</td>";
                 $users_html .= "<td>" . $users[$i]->get_name(). "</td>";
@@ -208,6 +220,7 @@ class html {
 					$users_html .= "<td>" . date('m/d/Y',$users[$i]->get_expiration()). "</td>";
 					$users_html .= "<td class='d-xxl-table-cell d-none'>".$users[$i]->get_expiration_reason()."</td>";
 				}
+				$users_html .= "<td>" . ($users[$i]->get_last_login()===null?'':date('m/d/Y', $users[$i]->get_last_login()))."</td>";
         		$users_html .= "</tr>";
 			}
         }
@@ -226,7 +239,7 @@ class html {
 				$users_html .= $users[$i]->get_username() . "</a>";
 				if($users[$i]->get_expiration() != null){ 
 					if($users[$i]->is_expired()){
-						$users_html .= " <span class='my-auto ml-1 fa fa-clock-o text-danger' title='User expired'></span>";
+						$users_html .= " <span class='my-auto ml-1 far fa-clock text-danger' title='User expired'></span>";
 					}
 				}
 				$users_html .= "</td>";

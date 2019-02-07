@@ -59,7 +59,7 @@ if (isset($_POST['login'])) {
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title><?php echo __TITLE__; ?></title>
 		<link rel="stylesheet" href="includes/bootstrap/css/bootstrap.css" type="text/css">
-		<link rel="stylesheet" href="includes/font-awesome/css/font-awesome.css" type="text/css" />
+		<link rel="stylesheet" href="includes/font-awesome/css/all.css" type="text/css" />
 		<link rel="stylesheet" href="includes/main.inc.css" type="text/css"/>
 		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
 	</head>
@@ -71,7 +71,6 @@ if (isset($_POST['login'])) {
 				</div>
 			</div>
 		</nav>
-		</div>
 		<?php include 'includes/jumbotron.inc.php'; ?>
 		<div class="container">
 		<div class="container">
@@ -98,7 +97,7 @@ if (isset($_POST['login'])) {
 						</div>
 						<div class="row">
 							<div class="col-sm-9 offset-sm-3">
-								<button type='submit' name='login' class='btn btn-primary'><span class="fa fa-sign-in"></span> Login</button>
+								<button type='submit' name='login' class='btn btn-primary'><span class="fas fa-sign-in-alt"></span> Login</button>
 							</div>
 						</div>
 					</form>

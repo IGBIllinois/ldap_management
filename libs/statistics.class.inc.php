@@ -52,6 +52,24 @@
 			return $result['count'];
 		}
 
+		public static function lastMonthUsers(ldap $ldap){
+			$filter = "(authtimestamp=*)";
+			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, array('authtimestamp'));
+			$count = 0;
+			$time = time() - 60*60*24*30;
+			for ($i=0; $i<$result['count']; $i++){
+				if(strtotime($result[$i]['authtimestamp'][0]) >= $time){
+					$count++;
+				}
+			}
+			return $count;
+		}
+		public static function neverLoggedInUsers(ldap $ldap){
+			$filter = "(!(authtimestamp=*))";
+			$result = $ldap->search($filter, __LDAP_PEOPLE_OU__, array('authtimestamp'));
+			return $result['count'];
+		}
+
 		public static function groups($ldap){
 			$filter = "(cn=*)";
 			$result = $ldap->search($filter,__LDAP_GROUP_OU__, array(''));

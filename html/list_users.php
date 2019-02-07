@@ -62,8 +62,8 @@
 				<input type="hidden" name="asc" value="<?php echo $asc; ?>" />
 				
 				<div class="btn-group">
-					<button type="button" class="btn <?php if($filter=='expiring'){echo 'btn-warning';}else{echo 'btn-light';} ?>" id="expiring-button" onclick="filter_table('expiring')"><span class="fa fa-clock-o"></span> Expiring</button>
-					<button type="button" class="btn <?php if($filter=='expired'){echo 'btn-danger';}else{echo 'btn-light';} ?>" id="expired-button" onclick="filter_table('expired')"><span class="fa fa-clock-o"></span> Expired</button>
+					<button type="button" class="btn <?php if($filter=='expiring'){echo 'btn-warning';}else{echo 'btn-light';} ?>" id="expiring-button" onclick="filter_table('expiring')"><span class="far fa-clock"></span> Expiring</button>
+					<button type="button" class="btn <?php if($filter=='expired'){echo 'btn-danger';}else{echo 'btn-light';} ?>" id="expired-button" onclick="filter_table('expired')"><span class="far fa-clock"></span> Expired</button>
 					<button type="button" class="btn <?php if($filter=='passwordexpired'){echo 'btn-danger';}else{echo 'btn-light';} ?>" id="passwordexpired-button" onclick="filter_table('passwordexpired')"><span class="fa fa-key"></span> Password Expired</button>
 					<button type="button" class="btn <?php if($filter=='left'){echo 'btn-warning';}else{echo 'btn-light';} ?>" id="ad-button" onclick="filter_table('left')"><span class="fa fa-graduation-cap"></span> Left Campus</button>
 <!-- 					<button type="button" class="btn <?php if($filter=='noncampus'){echo 'btn-info';}else{echo 'btn-light';} ?>" id="noncampus-button" onclick="filter_table('noncampus')"><span class="fa fa-graduation-cap"></span> Non-Campus</button> -->
@@ -84,6 +84,7 @@
 							<th class="sortable-th" onclick="sort_table('expiration')">Expiration<?php echo html::sort_icon('expiration',$sort,$asc); ?></th>
 							<th class="d-xxl-table-cell d-none sortable-th" onclick="sort_table('expirationreason')">Expiration Reason<?php echo html::sort_icon('expirationreason',$sort,$asc); ?></th>
 						<?php } ?>
+						<th class="sortable-th" onclick="sort_table('last_login')">Last Login<?php echo html::sort_icon('last_login',$sort,$asc);?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -99,14 +100,16 @@
 				<input type="hidden" name="filter" value="<?php echo $filter; ?>" />
 				<label>All checked: </label> <select class="custom-select" style="max-width:100%; width: unset" name="action"><option hidden>Select an action...</option><option value="add-to-group">Add to group</option></select> <input type="submit" class="btn btn-primary"><br>
 				<div class="mt-2">
-					<span class="fa fa-clock-o text-warning"> </span>=expiration set &nbsp;
-					<span class="fa fa-clock-o text-danger"> </span>=expired &nbsp;
+					<span class="far fa-clock text-warning"> </span>=expiration set &nbsp;
+					<span class="far fa-clock text-danger"> </span>=expired &nbsp;
 					<span class="fa fa-graduation-cap text-warning"> </span>=left campus &nbsp;
 					<span class="fa fa-graduation-cap text-info"> </span>=non-campus &nbsp;
-					<span class='fa fa-hdd-o text-success' title='User has Crashplan'></span>=has crashplan &nbsp;
+					<span class='far fa-hdd text-success' title='User has Crashplan'></span>=has crashplan &nbsp;
 					<span class='fa fa-key text-danger' title='Password Expired'></span>=password expired &nbsp;
 					<span class='fa fa-key text-warning' title='Password Expiring in <1 month'></span>=password expiring soon &nbsp;
 					<span class='fa fa-book text-info' title='Classroom User'></span>=classroom user
+					<span class='fas fa-sign-in-alt text-success' title='Logged in within past 30 days'></span>=logged in within 30 days
+					<span class='fas fa-sign-in-alt text-danger' title='Never logged in'></span>=never logged in
 				</div>
 			</div>
 		</form>

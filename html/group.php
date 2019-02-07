@@ -24,16 +24,16 @@
 		}
 		$userobj = new user($ldap,$users[$i]);
 		if($userobj->is_expired()){
-			$usershtml .= " <span class='fa fa-clock-o text-danger' title='User has expired'></span>";
+			$usershtml .= " <span class='far fa-clock text-danger' title='User has expired'></span>";
 		}
 		if($userobj->is_expiring()){
-			$usershtml .= " <span class='fa fa-clock-o text-warning' title='User is expiring'></span>";
+			$usershtml .= " <span class='far fa-clock text-warning' title='User is expiring'></span>";
 		}
 		if($userobj->get_leftcampus()){
 			$usershtml .= " <span class='fa fa-graduation-cap text-warning' title='User has left UIUC'></span>";
 		}
 		if($group->get_name()!=$users[$i]){
-			$usershtml .= " <a href='remove_from_group.php?uid=".$users[$i]."&gid=$gid' class='btn btn-danger btn-sm pull-right'><span class='fa fa-times'></span> Remove from group</a></td></tr>";
+			$usershtml .= " <a href='remove_from_group.php?uid=".$users[$i]."&gid=$gid' class='btn btn-danger btn-sm float-right'><span class='fa fa-times'></span> Remove from group</a></td></tr>";
 		}
 		$userscopytext .= $users[$i]."\n";
 	}
@@ -43,7 +43,7 @@
 	$dircopytext = "";
 	for($i=0; $i<count($serverdirs); $i++){
 		$dir = explode(':', $serverdirs[$i]);
-		$dirhtml .= "<tr><td class='pl-2'>".$dir[0]."</td><td>".$dir[1]." <a href='remove_serverdir.php?gid=$gid&serverdir=".urlencode($serverdirs[$i])."' class='btn btn-danger btn-sm pull-right'><span class='fa fa-times'></span> Remove directory</a></td></tr>";
+		$dirhtml .= "<tr><td class='pl-2'>".$dir[0]."</td><td>".$dir[1]." <a href='remove_serverdir.php?gid=$gid&serverdir=".urlencode($serverdirs[$i])."' class='btn btn-danger btn-sm float-right'><span class='fa fa-times'></span> Remove directory</a></td></tr>";
 		$dircopytext .= $serverdirs[$i]."\n";
 	}
 
@@ -61,11 +61,11 @@
 		<table class="table table-striped table-igb-bordered mb-0">
 			<tr>
 				<th><span class='align-middle'>Name:</span></th>
-				<td><span class='align-middle'><?php echo $group->get_name(); if(!$isusergroup){ ?></span> <a href="change_group_name.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-sm pull-right"><span class="fa fa-pencil"></span> Change Name</a><?php } ?></td>
+				<td><span class='align-middle'><?php echo $group->get_name(); if(!$isusergroup){ ?></span> <a href="change_group_name.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-sm float-right"><span class="fas fa-edit"></span> Change Name</a><?php } ?></td>
 			</tr>
 			<tr>
 				<th><span class='align-middle'>Description:</span></th>
-				<td><span class='align-middle'><?php echo $group->get_description(); if(!$isusergroup){ ?></span> <a href="change_description.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-sm pull-right"><span class="fa fa-pencil"></span> Change Description</a><?php } ?></td>
+				<td><span class='align-middle'><?php echo $group->get_description(); if(!$isusergroup){ ?></span> <a href="change_description.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-sm float-right"><span class="fas fa-edit"></span> Change Description</a><?php } ?></td>
 			</tr>
 			<tr>
 				<th>GID Number:</th>
@@ -73,7 +73,7 @@
 			</tr>
 			<tr>
 				<th><span class='align-middle'>Owner:</span></th>
-				<td><span class='align-middle'><?php echo $group->get_owner(); if(!$isusergroup){ ?></span> <a href="change_group_owner.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-sm pull-right"><span class="fa fa-pencil"></span> Change Owner</a><?php } ?></td>
+				<td><span class='align-middle'><?php echo $group->get_owner(); if(!$isusergroup){ ?></span> <a href="change_group_owner.php?gid=<?php echo $group->get_name(); ?>" class="btn btn-info btn-sm float-right"><span class="fas fa-edit"></span> Change Owner</a><?php } ?></td>
 			</tr>
 			<tr>
 				<th>Created By:</th>

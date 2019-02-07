@@ -6,6 +6,9 @@ class user {
 	private $username;
 	private $name;
 
+	/**
+	 * @var ldap ldap
+	 */
 	private $ldap;
 	private $uidnumber;
 	private $email;
@@ -30,6 +33,7 @@ class user {
 	private $createTime;
 	private $modifier;
 	private $modifyTime;
+	private $lastLogin;
 	private $passwordSet = null;
 	private $passwordExpiration = null;
 	
@@ -37,7 +41,7 @@ class user {
 	
 	private static $lastSearch = array();
 	
-	private static $fullattributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress','employeetype','telexNumber','facsimiletelephonenumber','description','destinationindicator','initials');
+	private static $fullattributes = array("uid","cn",'sn','givenname',"homeDirectory","loginShell","mail","shadowExpire","creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp","uidnumber",'sambaPwdLastSet','postalAddress','employeetype','telexNumber','facsimiletelephonenumber','description','destinationindicator','initials','authTimestamp');
 
 	////////////////Public Functions///////////
 
@@ -376,6 +380,9 @@ class user {
 	}
 	public function is_password_expired(){
 		return ($this->passwordExpiration != null && $this->passwordExpiration <= time());
+	}
+	public function get_last_login(){
+		return $this->lastLogin;
 	}
 	public function get_uidnumber(){
 		return $this->uidnumber;
@@ -993,6 +1000,9 @@ class user {
 			$this->modifier = $result['modifiersname'][0];
 		}
 		$this->modifyTime = strtotime($result['modifytimestamp'][0]);
+		if(isset($result['authtimestamp'])) {
+			$this->lastLogin = strtotime($result['authtimestamp'][0]);
+		}
 		$this->uidnumber = $result['uidnumber'][0];
 		if(isset($result['sambapwdlastset'])){
 			$this->passwordSet = $result['sambapwdlastset'][0];

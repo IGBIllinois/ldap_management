@@ -57,6 +57,9 @@ class extensions{
 	static function format($value,$format){
 		if($value=='')return $value;
 		if($format == "date"){
+			return strftime('%m/%d/%Y', strtotime($value));
+		}
+		if($format == "datetime"){
 			return strftime('%m/%d/%Y %I:%M:%S %p', strtotime($value));
 		}
 		if($format == "timestamp"){

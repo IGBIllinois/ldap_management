@@ -12,7 +12,7 @@
 		<title><?php echo __TITLE__.(isset($title)?" - $title":''); ?></title>
 		<link rel="stylesheet" href="includes/bootstrap/css/bootstrap.min.css" type="text/css"/>
 		<link rel="stylesheet" href="includes/select2/css/select2.css" type="text/css" />
-		<link rel="stylesheet" href="includes/font-awesome/css/font-awesome.css" type="text/css" />
+		<link rel="stylesheet" href="includes/font-awesome/css/all.css" type="text/css" />
 		<link rel="stylesheet" href="includes/main.inc.css" type="text/css"/>
 		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
 		
@@ -63,14 +63,14 @@
 								<a class="dropdown-item" href="add_computer.php"><span class="fa fa-plus"></span> Add Domain Computer</a>
 							</div>
 						</li>
-						<li class="nav-item<?php if(isset($sitearea) && $sitearea=='statistics'){echo ' active';} ?>"><a href="statistics.php" class="nav-link"><span class="fa fa-bar-chart"></span> Statistics</a></li>
+						<li class="nav-item<?php if(isset($sitearea) && $sitearea=='statistics'){echo ' active';} ?>"><a href="statistics.php" class="nav-link"><span class="fas fa-chart-bar"></span> Statistics</a></li>
 					</ul>
 					
 					<form class="form-inline mt-2 mt-lg-0" id="searchbar-container">
 						<input type="search" class="form-control" name="searchbar" id="searchbar" placeholder="Search"/>
 						<div id="searchbar-results" class="dropdown-menu"></div>
 					</form>
-					<a class="btn btn-outline-secondary my-2 my-lg-0 ml-lg-1" style="margin-right:0" href="logout.php"><span class="fa fa-sign-out"></span> Logout</a>
+					<a class="btn btn-outline-secondary my-2 my-lg-0 ml-lg-1" style="margin-right:0" href="logout.php"><span class="fas fa-sign-out-alt"></span> Logout</a>
 				</div>
 			</div>
 		</nav>

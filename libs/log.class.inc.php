@@ -27,6 +27,38 @@ class log {
         }
         return __LOG_FILE__;
     }
+
+    public static function search_logs($search){
+		$log_dir = dirname(__LOG_FILE__);
+		$log_lines = array();
+		$logs = scandir($log_dir);
+		foreach ($logs as $log){ // Get all logs in the log directory
+			if(preg_match('/^'.basename(__LOG_FILE__).'.*?$/u', $log)){
+				$fh = fopen($log_dir."/".$log, 'r');
+				if($fh){
+					while(($line = fgets($fh)) !== false){
+						if(preg_match('/^(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}) (.+?): (.*)$/u', $line, $matches)){ // Pull out timestamp and user
+							$time = $matches[1];
+							$user = $matches[2];
+							$message = $matches[3];
+							if(preg_match('/\\s'.$search.'[\\s\\z]/um', $message)){ // Search for the search string in the log message
+								$timestamp = strtotime($time);
+								$log_lines[] = array('time'=>$timestamp, 'uid'=>$user, 'msg'=>$message);
+							}
+						}
+					}
+				}
+			}
+		}
+		usort($log_lines, function($a, $b){ // Sort by time
+			if($a['time'] == $b['time']){
+				return 0;
+			}
+			return ($a['time'] < $b['time'])? -1 : 1;
+		});
+
+		return $log_lines;
+	}
 }
 
 ?>

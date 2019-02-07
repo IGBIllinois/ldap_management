@@ -24,7 +24,7 @@
 			if(!host::is_ldap_host($ldap,$machinerights[$i])){
 				$machinerightshtml .= " <span class='fa fa-exclamation-triangle text-warning' title='Host does not exist'></span>";
 			}
-			$machinerightshtml .= " <a class='btn btn-danger btn-sm pull-right' href='remove_machinerights.php?uid=$username&hid=".$machinerights[$i]."&from=user'><span class='fa fa-times'> </span> Remove host</a></td></tr>";
+			$machinerightshtml .= " <a class='btn btn-danger btn-sm float-right' href='remove_machinerights.php?uid=$username&hid=".$machinerights[$i]."&from=user'><span class='fa fa-times'> </span> Remove host</a></td></tr>";
 			$machinecopytext .= $machinerights[$i]."\n";
 		}
 	}
@@ -36,7 +36,7 @@
 	for($i=0; $i<count($groups);$i++){
 		$groupshtml .= "<tr><td class='pl-2'><a class='align-middle' href='group.php?gid=".$groups[$i]."'>".$groups[$i]."</a>";
 		if($username != $groups[$i]){
-			$groupshtml .= " <a class='btn btn-danger btn-sm pull-right' href='remove_from_group.php?uid=$username&gid=".$groups[$i]."&from=user'><span class='fa fa-times'> </span> Remove from group</a>";
+			$groupshtml .= " <a class='btn btn-danger btn-sm float-right' href='remove_from_group.php?uid=$username&gid=".$groups[$i]."&from=user'><span class='fa fa-times'> </span> Remove from group</a>";
 		}
 		$groupcopytext .= $groups[$i]."\n";
 		$groupshtml .= "</td></tr>";
@@ -120,7 +120,7 @@
 							$url = '';
 							if(isset($attributes[$attr]['button']['type']) && $attributes[$attr]['button']['type'] == 'edit'){
 								$color = 'btn-info';
-								$icon = '<span class="fa fa-pencil"></span>';
+								$icon = '<span class="fas fa-edit"></span>';
 								$text = "Change ".$attributes[$attr]['fullname'];
 								$url = 'edit_user_attribute.php';
 							}
@@ -142,7 +142,7 @@
 							if(isset($attributes[$attr]['button']['url'])){
 								$url = $attributes[$attr]['button']['text'];
 							}
-							$button = " <a href='$url?attr=".$attributes[$attr]['name']."&uid=".$user->get_username()."' class='btn btn-sm pull-right ".$color."'>".$icon." ".$text."</a>";
+							$button = " <a href='$url?attr=".$attributes[$attr]['name']."&uid=".$user->get_username()."' class='btn btn-sm float-right ".$color."'>".$icon." ".$text."</a>";
 						}
 						// Fetch field
 						$field = '';
@@ -172,7 +172,7 @@
 							$iconinfo = $attributes[$attr]['icon'];
 						}
 						if($iconinfo != null){
-							$icon = " <span class='fa fa-".$iconinfo['name']." text-".$iconinfo['color']." mt-1 pull-right'></span>";
+							$icon = " <span class='fa fa-".$iconinfo['name']." text-".$iconinfo['color']." mt-1 float-right'></span>";
 						}
 						echo "<tr><th><span class='align-middle'>".$attributes[$attr]['fullname'].":</span>$icon</th><td><span class='align-middle'>".$field."</span>".$button."</td></tr>";
 					}
@@ -181,8 +181,8 @@
 		</table>
 		<hr class="my-0">
 		<div class="card-body">
-			<a href="change_password.php?uid=<?php echo $username; ?>" class="btn btn-info mt-1 mt-md-0"><span class="fa fa-pencil"></span> Change Password</a>
-			<a href="expire_user.php?uid=<?php echo $username; ?>" class="btn btn-warning mt-1 mt-md-0"><span class="fa fa-clock-o"></span> Set Expiration</a>
+			<a href="change_password.php?uid=<?php echo $username; ?>" class="btn btn-info mt-1 mt-md-0"><span class="fas fa-edit"></span> Change Password</a>
+			<a href="expire_user.php?uid=<?php echo $username; ?>" class="btn btn-warning mt-1 mt-md-0"><span class="far fa-clock"></span> Set Expiration</a>
 			<?php if($user->is_locked()){ ?>
 			<a href="unlock_user.php?uid=<?php echo $username; ?>" class="btn btn-warning mt-1 mt-md-0"><span class="fa fa-unlock-alt"></span> Unlock User</a>
 			<?php } else { ?>
@@ -190,6 +190,7 @@
 			<?php } ?>
 			<a href="remove_user.php?uid=<?php echo $username; ?>" class="btn btn-danger mt-1 mt-md-0"><span class="fa fa-trash"></span> Remove User</a>
 			<a href="user_advanced.php?uid=<?php echo $username; ?>" class="btn btn-light mt-1 mt-md-0"><span class="fa fa-user-secret"></span> LDAP Entry</a>
+			<a href="user_log.php?uid=<?php echo $username; ?>" class="btn btn-light mt-1 mt-md-0"><span class="fas fa-file-alt"></span> Log</a>
 		</div>
 	</div>
 	<div class="card mt-3">

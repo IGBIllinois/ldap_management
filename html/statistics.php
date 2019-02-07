@@ -16,12 +16,20 @@
 				<td><?php echo statistics::password_expired_users($ldap); ?></td>
 			</tr>
 			<tr>
-				<td class="d-flex"><span class="mr-auto">Expiring Users</span> <i class="my-auto fa fa-clock-o text-warning"></i></td>
+				<td class="d-flex"><span class="mr-auto">Expiring Users</span> <i class="my-auto far fa-clock text-warning"></i></td>
 				<td><?php echo statistics::expiring_users($ldap)-statistics::expired_users($ldap); ?></td>
 			</tr>
 			<tr>
-				<td class="d-flex"><span class="mr-auto">Expired Users</span> <i class="my-auto fa fa-clock-o text-danger"></i></td>
+				<td class="d-flex"><span class="mr-auto">Expired Users</span> <i class="my-auto far fa-clock text-danger"></i></td>
 				<td><?php echo statistics::expired_users($ldap); ?></td>
+			</tr>
+			<tr>
+				<td class="d-flex"><span class="mr-auto">Users Logged in within last 30 days</span> <span class='my-auto fas fa-sign-in-alt text-success' title='Logged in within past 30 days'></span></td>
+				<td><?php echo statistics::lastMonthUsers($ldap); ?></td>
+			</tr>
+			<tr>
+				<td class="d-flex"><span class="mr-auto">Users never logged in</span> <span class='my-auto fas fa-sign-in-alt text-danger' title='Logged in within past 30 days'></span></td>
+				<td><?php echo statistics::neverLoggedInUsers($ldap); ?></td>
 			</tr>
 			<tr>
 				<td class="d-flex"><span class="mr-auto">Users who have left UIUC</span> <i class="my-auto fa fa-graduation-cap text-warning"></i></td>

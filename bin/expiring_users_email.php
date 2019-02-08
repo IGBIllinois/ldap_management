@@ -35,7 +35,6 @@ if ($sapi_type != 'cli') {
 	$emailtomorrow = array();
 	$digestmonth = "";
 	$digestweek = "";
-	$digestexpired = "";
 	foreach($users as $uid){
 		$user = new user($ldap,$uid);
 		if(!($user->get_classroom())){
@@ -51,13 +50,6 @@ if ($sapi_type != 'cli') {
 					$emailtomorrow[] = $user;
 				}
 	
-			} else if ($user->is_expired()){
-				$expiration = $user->get_expiration();
-				$timetoexp = intval(($expiration-time())/(60*60*24));
-				
-				if($timetoexp == 0){
-					$digestexpired .= $user->get_username()."<br>";	
-				}
 			}
 		}
 	}
@@ -88,18 +80,6 @@ if ($sapi_type != 'cli') {
 		}
 	} else {
 		echo "\nNo users expiring in one week.\n";
-	}
-	
-	if(strlen($digestexpired)>0){
-		// Send a digest to help
-		$subject = "Expired IGB Users";
- 		$to = "help@igb.illinois.edu";
-		$emailmessage = "The following users expired today:<br><br>".$digestexpired;
-
-		$headers = "From: do-not-reply@igb.illinois.edu\r\n";
-		$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
-		mail($to,$subject,$emailmessage,$headers," -f " . __ADMIN_EMAIL__);
-		echo "\nDone.\n";
 	}
 	
 	if(count($emailtomorrow)>0){

@@ -1,453 +1,374 @@
-function confirm_disable_user() {
-	return confirm("Are you sure you wish to delete this user? This operation cannot be undone.");
+function toggleClasses(e, onClass, offClass) {
+    if (e.hasClass(onClass)) {
+        e.addClass(offClass);
+        e.removeClass(onClass);
+    } else {
+        e.addClass(onClass);
+        e.removeClass(offClass);
+    }
 }
 
-function toggleClasses(e,onClass,offClass){
-	if(e.hasClass(onClass)){
-		e.addClass(offClass);
-		e.removeClass(onClass);
-	} else {
-		e.addClass(onClass);
-		e.removeClass(offClass);
-	}
+function sort_table(column) {
+    // Build new url
+    const currentURL = window.location.href;
+    const URLMatch = currentURL.match(/sort=(.*?)(&|$)/);
+    if (URLMatch == null) {
+        // Add sort to the end of the string
+        if (currentURL.indexOf('?') > -1) {
+            window.location.href = currentURL + "&sort=" + column;
+        } else {
+            window.location.href = currentURL + "?sort=" + column;
+        }
+    } else {
+        // Replace in place
+        const ascMatch = currentURL.match(/asc=(.*?)(&|$)/);
+        if (URLMatch[1] === column) {
+            // Clicked twice, flip asc
+            if (ascMatch == null) {
+                window.location.href = currentURL + "&asc=false";
+            } else if (ascMatch[1] === "true") {
+                window.location.href = currentURL.replace(/asc=(.*?)(&|$)/g, "asc=false");
+            } else {
+                window.location.href = currentURL.replace(/asc=(.*?)(&|$)/g, "asc=true");
+            }
+        } else {
+            // New column, default asc
+            if (ascMatch == null) {
+                window.location.href = currentURL.replace(/sort=(.*?)(&|$)/g, "sort=" + column + "$2");
+            } else {
+                window.location.href = currentURL.replace(/sort=(.*?)(&|$)/g, "sort=" + column + "$2").replace(/asc=(.*?)(&|$)/g, "asc=true");
+            }
+        }
+    }
 }
 
-function sort_table(column){
-	// Build new url
-	var currentURL = window.location.href;
-	var URLMatch = currentURL.match(/sort=(.*?)(&|$)/);
-	if(URLMatch == null){
-		// Add sort to the end of the string
-		if (currentURL.indexOf('?') > -1){
-			window.location.href=currentURL+"&sort="+column;
-		} else {
-			window.location.href=currentURL+"?sort="+column;
-		}
-	} else {
-		// Replace in place
-		var ascMatch = currentURL.match(/asc=(.*?)(&|$)/);
-		if(URLMatch[1] == column){
-			// Clicked twice, flip asc
-			if(ascMatch == null){
-				window.location.href=currentURL+"&asc=false";
-			} else if(ascMatch[1] == "true") {
-				window.location.href=currentURL.replace(/asc=(.*?)(&|$)/g, "asc=false");
-			} else {
-				window.location.href=currentURL.replace(/asc=(.*?)(&|$)/g, "asc=true");
-			}
-		} else {
-			// New column, default asc
-			if(ascMatch == null){
-				window.location.href=currentURL.replace(/sort=(.*?)(&|$)/g, "sort="+column+"$2");
-			} else {
-				window.location.href=currentURL.replace(/sort=(.*?)(&|$)/g, "sort="+column+"$2").replace(/asc=(.*?)(&|$)/g, "asc=true");
-			}
-		}
-	}
+function filter_table(filter) {
+    // Build new URL
+    const currentURL = window.location.href;
+    const URLMatch = currentURL.match(/filter=(.*?)(&|$)/);
+    if (URLMatch == null) {
+        // Add filter to the end of the URL
+        if (currentURL.indexOf('?') > -1) {
+            window.location.href = currentURL + "&filter=" + filter;
+        } else {
+            window.location.href = currentURL + "?filter=" + filter;
+        }
+    } else {
+        // Replace filter in place
+        if (URLMatch[1] === filter) {
+            // Clicked twice, no filter
+            window.location.href = currentURL.replace(/filter=(.*?)(&|$)/g, "filter=none$2");
+        } else {
+            window.location.href = currentURL.replace(/filter=(.*?)(&|$)/g, "filter=" + filter + "$2");
+        }
+    }
 }
 
-function filter_table(filter){
-	// Build new URL
-	var currentURL = window.location.href;
-	var URLMatch = currentURL.match(/filter=(.*?)(&|$)/);
-	if(URLMatch == null){
-		// Add filter to the end of the URL
-		if(currentURL.indexOf('?')>-1){
-			window.location.href=currentURL+"&filter="+filter;
-		} else {
-			window.location.href=currentURL+"?filter="+filter;
-		}
-	} else {
-		// Replace filter in place
-		if(URLMatch[1] == filter){
-			// Clicked twice, no filter
-			window.location.href=currentURL.replace(/filter=(.*?)(&|$)/g, "filter=none$2");
-		} else {
-			window.location.href=currentURL.replace(/filter=(.*?)(&|$)/g, "filter="+filter+"$2");
-		}
-	}
+// TODO validation needs to be a bit more flexible
+function show_add_classroom_text() {
+    const prefix = $('#prefix_input').val();
+    const start = $('#start_input').val();
+    const end = $('#end_input').val();
+    const paddedStart = start < 10 ? '0' + start : start;
+    const paddedEnd = end < 10 ? '0' + end : end;
+
+    const rule2 = Number(start) > 0;
+    const rule3 = Number(end) > Number(start);
+
+    let error = prefix + paddedStart + '-' + prefix + paddedEnd + ' will be created';
+    if (prefix === "") {
+        error = "Please enter a prefix.";
+    } else if (isNaN(start) || Number(start) < 1) {
+        error = "Start must be >=1";
+    } else if (isNaN(end) || Number(end) <= Number(start)) {
+        error = "End must be greater than start";
+    }
+
+    showValidateError('username',1, rule2 && rule3, error);
+    document.getElementById('submit').disabled = !(rule2 && rule3);
 }
 
-function show_add_classroom_text(){
-	var prefix = $('#prefix-input').val();
-	var start = $('#start-input').val();
-	var end = $('#end-input').val();
-	var paddedstart = start<10?'0'+start:start;
-	var paddedend = end<10?'0'+end:end;
-	
-	var rule2 = Number(start)>0;
-	var rule3 = Number(end)>Number(start);
-	
-	var error = prefix+paddedstart+'-'+prefix+paddedend+' will be created';
-	if(prefix == ""){
-		error = "Please enter a prefix.";
-	} else if (!isInt(start) || Number(start)<1){
-		error = "Start must be >=1";
-	} else if (!isInt(end) || Number(end)<=Number(start)){
-		error = "End must be greater than start";
-	}
-	
-	showUsernameError(1,rule2 && rule3,error);
-	document.getElementById('add_user_submit').disabled = !( rule2 && rule3 );
+function show_remove_classroom_text() {
+    const prefix = $('#prefix_input').val();
+    const start = $('#start_input').val();
+    const end = $('#end_input').val();
+    const paddedStart = start < 10 ? '0' + start : start;
+    const paddedEnd = end < 10 ? '0' + end : end;
+
+    let rule1 = 0;
+    $.ajax('check_username.php', {
+        async: false,
+        data: {'username': prefix + paddedStart},
+        method: 'POST',
+        success: function (data) {
+            rule1 = data;
+        }
+    });
+    rule1 = rule1 == 1;
+
+    const rule2 = Number(start) > 0;
+    const rule3 = Number(end) > Number(start);
+
+    console.log(start, isInt(start));
+
+    let error = prefix + paddedStart + '-' + prefix + paddedEnd + ' will be removed';
+    if (prefix == "") {
+        error = "Please enter a prefix.";
+    } else if (isNaN(start) || Number(start) < 1) {
+        error = "Start must be >=1";
+    } else if (isNaN(end) || Number(end) <= Number(start)) {
+        error = "End must be greater than start";
+    } else if (!rule1) {
+        error = prefix + paddedStart + " does not exist";
+    }
+
+    showValidateError('username', 1, rule1 && rule2 && rule3, error);
+    document.getElementById('submit').disabled = !(rule1 && rule2 && rule3);
 }
 
-function show_remove_classroom_text(){
-	var prefix = $('#prefix-input').val();
-	var start = $('#start-input').val();
-	var end = $('#end-input').val();
-	var paddedstart = start<10?'0'+start:start;
-	var paddedend = end<10?'0'+end:end;
-	
-	var rule1 = 0;
-	$.ajax('check_username.php',{
-		async: false,
-		data: {'username':prefix+paddedstart},
-		method: 'POST',
-		success: function(data){
-			rule1 = data;
-		}
-	});
-	rule1 = rule1==1?true:false;
-	
-	var rule2 = Number(start)>0;
-	var rule3 = Number(end)>Number(start);
-	
-	var error = prefix+paddedstart+'-'+prefix+paddedend+' will be removed';
-	if(prefix == ""){
-		error = "Please enter a prefix.";
-	} else if (!isInt(start) || Number(start)<1){
-		error = "Start must be >=1";
-	} else if (!isInt(end) || Number(end)<=Number(start)){
-		error = "End must be greater than start";
-	} else if (!rule1){
-		error = prefix+paddedstart+" does not exist";
-	}
-	
-	showUsernameError(1,rule1 && rule2 && rule3,error);
-	document.getElementById('remove_user_submit').disabled = !( rule1 && rule2 && rule3 );
+function copy_panel() {
+    const $this = $(this);
+    const $textarea = $this.parents('.content').find('.copy-text');
+    let showTextArea = true;
+    if (document.queryCommandSupported('copy')) {
+        showTextArea = false;
+        console.log($textarea);
+        $textarea.removeClass('d-none');
+        $textarea[0].select();
+
+        try {
+            document.execCommand('copy');
+        } catch (err) {
+            showTextArea = true;
+        }
+
+        $textarea.addClass('d-none');
+        window.getSelection().removeAllRanges();
+    }
+    if (showTextArea) {
+        $textarea.removeClass('d-none');
+    }
 }
 
-function copy_panel(event){
-	var $this = $(this);
-	var $textarea = $this.parents('.card').find('.copy-text');
-	var showTextArea = true;
-	if(document.queryCommandSupported('copy')){
-		showTextArea = false;
-		console.log($textarea);
-		$textarea.removeClass('d-none');
-		$textarea[0].select();
-		
-		try {
-			var success = document.execCommand('copy');
-		} catch(err) {
-			showTextArea = true;
-		}
-	
-		$textarea.addClass('d-none');
-		window.getSelection().removeAllRanges();
-	}
-	if(showTextArea){
-		$textarea.removeClass('d-none');
-	}
+function showUsernameError(errorNum, valid, text) {
+    if (valid) {
+        $('#usernameerror' + errorNum).removeClass('text-danger').addClass('text-success');
+        $('#usernameerror' + errorNum + ' .fa').removeClass('fa-times').addClass('fa-check');
+    } else {
+        $('#usernameerror' + errorNum).removeClass('text-success').addClass('text-danger');
+        $('#usernameerror' + errorNum + ' .fa').removeClass('fa-check').addClass('fa-times');
+    }
+    $('#usernameerror' + errorNum + ' .text').html(text);
 }
 
 
-function showPasswordError(rulenum,valid,text){
-	if(valid){
-		$('#passworderror'+rulenum).removeClass('text-danger').addClass('text-success');
-		$('#passworderror'+rulenum+' .fa').removeClass('fa-times').addClass('fa-check');
-	} else {
-		$('#passworderror'+rulenum).removeClass('text-success').addClass('text-danger');
-		$('#passworderror'+rulenum+' .fa').removeClass('fa-check').addClass('fa-times');
-	}
-	$('#passworderror'+rulenum+' .text').html(text);
+function showValidateError(field, errorNum, valid, text) {
+    if (!($('#validation p#' + field + 'error' + errorNum).length)) {
+        $('#validation').append('<p id=' + field + 'error' + errorNum + '><span class="fa"></span> <span class="text"></span></p>');
+    }
+    if (valid) {
+        $('#' + field + 'error' + errorNum).removeClass('text-danger').addClass('text-success');
+        $('#' + field + 'error' + errorNum + ' .fa').removeClass('fa-times').addClass('fa-check');
+    } else {
+        $('#' + field + 'error' + errorNum).removeClass('text-success').addClass('text-danger');
+        $('#' + field + 'error' + errorNum + ' .fa').removeClass('fa-check').addClass('fa-times');
+    }
+    $('#' + field + 'error' + errorNum + ' .text').html(text);
 }
 
-function showUsernameWarning(warnnum,valid,text){
-	if(valid){
-		$('#usernamewarning'+warnnum).removeClass('text-warning').addClass('text-success');
-		$('#usernamewarning'+warnnum+' .fa').removeClass('fa-exclamation-triangle').addClass('fa-check');
-	} else {
-		$('#usernamewarning'+warnnum).removeClass('text-success').addClass('text-warning');
-		$('#usernamewarning'+warnnum+' .fa').removeClass('fa-check').addClass('fa-exclamation-triangle');
-	}
-	$('#usernamewarning'+warnnum+' .text').html(text);
+function showValidateWarning(field, warnNum, valid, text) {
+    if (!($('#validation p#' + field + 'warning' + warnNum).length)) {
+        $('#validation').append('<p id=' + field + 'warning' + warnNum + '><span class="fa"></span> <span class="text"></span></p>');
+    }
+    if (valid) {
+        $('#' + field + 'warning' + warnNum).removeClass('text-warning').addClass('text-success');
+        $('#' + field + 'warning' + warnNum + ' .fa').removeClass('fa-exclamation-triangle').addClass('fa-check');
+    } else {
+        $('#' + field + 'warning' + warnNum).removeClass('text-success').addClass('text-warning');
+        $('#' + field + 'warning' + warnNum + ' .fa').removeClass('fa-check').addClass('fa-exclamation-triangle');
+    }
+    $('#' + field + 'warning' + warnNum + ' .text').html(text);
 }
 
-function showUsernameError(errornum,valid,text){
-	if(valid){
-		$('#usernameerror'+errornum).removeClass('text-danger').addClass('text-success');
-		$('#usernameerror'+errornum+' .fa').removeClass('fa-times').addClass('fa-check');
-	} else {
-		$('#usernameerror'+errornum).removeClass('text-success').addClass('text-danger');
-		$('#usernameerror'+errornum+' .fa').removeClass('fa-check').addClass('fa-times');
-	}
-	$('#usernameerror'+errornum+' .text').html(text);
+function check_passwords() {
+    const password = document.getElementById('password_input').value;
+    const confirmPassword = document.getElementById('confirmPassword_input').value;
+
+    const rule1 = (password.length >= 8 && password.length <= 127);
+    const rule2 = (password.match(/[A-Z]/));
+    const rule3 = (password.match(/[a-z]/));
+    const rule4 = (password.match(/[^A-Za-z]/) && !password.match(/[\s]/));
+    const rule5 = (password === confirmPassword);
+
+    showValidateError('password', 1, rule1, "Password must be between 8 and 127 characters in length");
+    showValidateError('password', 2, rule2, "Password must contain at least 1 uppercase letter");
+    showValidateError('password', 3, rule3, "Password must contain at least 1 lowercase letter");
+    showValidateError('password', 4, rule4, "Password must contain at least 1 number or special character (no spaces)");
+    showValidateError('password', 5, rule5, "Password and confirm password must match");
+
+    return rule1 && rule2 && rule3 && rule4 && rule5;
 }
 
-function showGroupnameError(errornum,valid,text){
-	if(valid){
-		$('#groupnameerror'+errornum).removeClass('text-danger').addClass('text-success');
-		$('#groupnameerror'+errornum+' .fa').removeClass('fa-times').addClass('fa-check');
-	} else {
-		$('#groupnameerror'+errornum).removeClass('text-success').addClass('text-danger');
-		$('#groupnameerror'+errornum+' .fa').removeClass('fa-check').addClass('fa-times');
-	}
-	$('#groupnameerror'+errornum+' .text').html(text);
+function check_email() {
+    const email = document.getElementById('forwardingEmail_input').value;
+
+    const rule1 = (email.length === 0 || email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+$/) != null);
+
+    showValidateError('email', 1, rule1, rule1 ? "Valid forwarding email" : "Invalid forwarding email");
+
+    return rule1;
 }
 
-function showGroupdescriptionError(errornum,valid,text){
-	if(valid){
-		$('#groupdescriptionerror'+errornum).removeClass('text-danger').addClass('text-success');
-		$('#groupdescriptionerror'+errornum+' .fa').removeClass('fa-times').addClass('fa-check');
-	} else {
-		$('#groupdescriptionerror'+errornum).removeClass('text-success').addClass('text-danger');
-		$('#groupdescriptionerror'+errornum+' .fa').removeClass('fa-check').addClass('fa-times');
-	}
-	$('#groupdescriptionerror'+errornum+' .text').html(text);
+let username_errors = false;
+let email_errors = false;
+let password_errors = false;
+
+function add_user_errors(e) {
+    if (typeof e == 'undefined') {
+        username_errors = check_username();
+        email_errors = check_email();
+        password_errors = check_passwords();
+    } else {
+        if (e.target.name == 'username') {
+            username_errors = check_username();
+        }
+        if (e.target.name == 'forwardingEmail') {
+            email_errors = check_email();
+        }
+        if (e.target.name == 'password' || e.target.name == 'confirmPassword') {
+            password_errors = check_passwords();
+        }
+    }
+    console.log(username_errors, password_errors, email_errors);
+    document.getElementById('submit').disabled = !(password_errors && username_errors && email_errors);
 }
 
-function showEmailError(errornum,valid,text){
-	if(valid){
-		$('#emailerror'+errornum).removeClass('text-danger').addClass('text-success');
-		$('#emailerror'+errornum+' .fa').removeClass('fa-times').addClass('fa-check');
-	} else {
-		$('#emailerror'+errornum).removeClass('text-success').addClass('text-danger');
-		$('#emailerror'+errornum+' .fa').removeClass('fa-check').addClass('fa-times');
-	}
-	$('#emailerror'+errornum+' .text').html(text);
+function change_emailforward_errors() {
+    document.getElementById('change_emailforward_submit').disabled = !check_email();
 }
 
-function showValidateError(field,errornum,valid,text){
-	if( !($('#validation p#'+field+'error'+errornum).length) ){
-		$('#validation').append('<p id='+field+'error'+errornum+'><span class="fa"></span> <span class="text"></span></p>');
-	}
-	if(valid){
-		$('#'+field+'error'+errornum).removeClass('text-danger').addClass('text-success');
-		$('#'+field+'error'+errornum+' .fa').removeClass('fa-times').addClass('fa-check');
-	} else {
-		$('#'+field+'error'+errornum).removeClass('text-success').addClass('text-danger');
-		$('#'+field+'error'+errornum+' .fa').removeClass('fa-check').addClass('fa-times');
-	}
-	$('#'+field+'error'+errornum+' .text').html(text);
-}
-function showValidateWarning(field,warnnum,valid,text){
-	if( !($('#validation p#'+field+'warning'+warnnum).length) ){
-		$('#validation').append('<p id='+field+'warning'+warnnum+'><span class="fa"></span> <span class="text"></span></p>');
-	}
-	if(valid){
-		$('#'+field+'warning'+warnnum).removeClass('text-warning').addClass('text-success');
-		$('#'+field+'warning'+warnnum+' .fa').removeClass('fa-exclamation-triangle').addClass('fa-check');
-	} else {
-		$('#'+field+'warning'+warnnum).removeClass('text-success').addClass('text-warning');
-		$('#'+field+'warning'+warnnum+' .fa').removeClass('fa-check').addClass('fa-exclamation-triangle');
-	}
-	$('#'+field+'warning'+warnnum+' .text').html(text);
+function change_username_errors() {
+    document.getElementById('change_username_submit').disabled = !check_username();
 }
 
-function check_passwords(){
-	var passworda = document.getElementById('passworda_input').value;
-	var passwordb = document.getElementById('passwordb_input').value;
-	
-	var rule1 = ( passworda.length >= 8 && passworda.length <= 127 );
-	var rule2 = ( passworda.match(/[A-Z]/) );
-	var rule3 = ( passworda.match(/[a-z]/) );
-	var rule4 = ( passworda.match(/[^A-Za-z]/) && !passworda.match(/[\s]/) );
-	var rule5 = ( passworda == passwordb );
-	
-	showPasswordError(1,rule1,"Password must be between 8 and 127 characters in length");
-	showPasswordError(2,rule2,"Password must contain at least 1 uppercase letter");
-	showPasswordError(3,rule3,"Password must contain at least 1 lowercase letter");
-	showPasswordError(4,rule4,"Password must contain at least 1 number or special character (no spaces)");
-	showPasswordError(5,rule5,"Password and confirm password must match");
-	
-	return rule1 && rule2 && rule3 && rule4 && rule5;
+function change_group_errors() {
+    const nameValid = check_groupname();
+    const descValid = check_groupdescription();
+    document.getElementById('submit').disabled = !(nameValid && descValid);
 }
 
-function check_email(){
-	var email = document.getElementById('emailforward_input').value;
-	
-	var rule1 = ( email.length==0 || email.match(/^[a-zA-Z0-9\._-]+@[a-zA-Z0-9\._-]+\.[a-zA-Z0-9\._-]+$/) );
-	
-	showEmailError(1,rule1,rule1?"Valid forwarding email":"Invalid forwarding email");
-	
-	return rule1;
+function change_groupName_errors() {
+    document.getElementById('submit').disabled = !check_groupname();
 }
 
-function add_user_errors(username_errors,password_errors,email_errors){
-	if(password_errors==null){
-		password_errors = check_passwords();
-		
-	}
-	if(username_errors==null){
-		username_errors = check_username();		
-	}
-	if(email_errors==null){
-		email_errors = check_email();
-	}
-	
-	if (password_errors && username_errors && email_errors){
-		document.getElementById('add_user_submit').disabled = false;
-	} else {
-		document.getElementById('add_user_submit').disabled = true;
-	}
-	
-	return [username_errors,password_errors,email_errors];
+function change_password_errors() {
+    document.getElementById('submit').disabled = !check_passwords();
 }
 
-function change_emailforward_errors(){
-	var email_errors = check_email();
-	console.log(email_errors);
-	if(email_errors){
-		document.getElementById('change_emailforward_submit').disabled = false;
-	} else {
-		document.getElementById('change_emailforward_submit').disabled = true;
-	}
+function check_username() {
+    const username = document.getElementById('username_input').value;
+    let warning1 = false;
+
+    $.ajax('check_netid.php', {
+        async: false,
+        data: {'username': username},
+        method: 'POST',
+        success: function (data) {
+            if (data === '1') {
+                warning1 = true;
+            }
+        }
+    });
+
+    showValidateWarning('username', 1, warning1, warning1 ? "Username matches a UIUC netid" : "Username does not match a UIUC netid");
+    if (document.getElementById('forwardingEmail') != null) {
+        if (warning1) {
+            document.getElementById('forwardingEmail').value = document.getElementById('username').value + "@illinois.edu";
+        } else {
+            if (document.getElementById('forwardingEmail').value.includes('@illinois.edu')) {
+                document.getElementById('forwardingEmail').value = '';
+            }
+        }
+    }
+
+    let rule1 = -1;
+    $.ajax('check_username.php', {
+        async: false,
+        data: {'username': username},
+        method: 'POST',
+        success: function (data) {
+            rule1 = data;
+        }
+    });
+    const rule2 = (username.match(/^[a-z]/) != null);
+    const rule3 = (username.match(/[^a-z0-9_\-]/) == null);
+
+    showValidateError('username', 1, rule1 == 0, rule1 == 0 ? "Username not in use" : (rule1 == 1 ? "Username already exists" : "Username exists as group"));
+    showValidateError('username', 2, rule2, "Username must begin with a lowercase letter");
+    showValidateError('username', 3, rule3, "Username must be alphanumeric (lowercase letters, numbers, underscore)");
+
+    return rule1 == 0 && rule2 && rule3;
 }
 
-function change_username_errors(){
-	var username_errors = check_username();
-	
-	if(username_errors){
-		document.getElementById('change_username_submit').disabled = false;
-	} else {
-		document.getElementById('change_username_submit').disabled = true;
-	}
+function check_groupname() {
+    const name = document.getElementById('name_input').value;
+    let rule1 = -1;
+    $.ajax('check_username.php', {
+        async: false,
+        data: {'username': name},
+        method: 'POST',
+        success: function (data) {
+            rule1 = data;
+        }
+    });
+    const rule2 = (name.match(/^[a-z]/));
+    const rule3 = !(name.match(/[^A-Za-z0-9_]/));
+
+    showValidateError('groupname', 1, rule1 == 0, rule1 == 0 ? "Name not in use" : (rule1 == 1 ? "Name exists as user" : "Name already exists"));
+    showValidateError('groupname', 2, rule2, "Name must begin with a lowercase letter");
+    showValidateError('groupname', 3, rule3, "Name must be alphanumeric (letters, numbers, underscore)");
+
+    return rule1 == 0 && rule2 && rule3;
 }
 
-function change_group_errors(){
-	var group_errors = check_groupname();
-	var description_errors = check_groupdescription();
-	
-	if(group_errors && description_errors){
-		document.getElementById('group_submit').disabled = false;
-	} else {
-		document.getElementById('group_submit').disabled = true;
-	}
-}
-function change_groupname_errors(){
-	var group_errors = check_groupname();
-	
-	if(group_errors){
-		document.getElementById('group_submit').disabled = false;
-	} else {
-		document.getElementById('group_submit').disabled = true;
-	}
+function check_groupdescription() {
+    console.log('check desc');
+    const description = document.getElementById('description_input').value;
+    const rule1 = (description.length > 0);
+
+    showValidateError('groupdescription', 1, rule1, "Description must not be blank");
+
+    return rule1;
 }
 
-function change_password_errors(){
-	var password_errors = check_passwords();
-	
-	if(password_errors){
-		document.getElementById('change_password_submit').disabled = false;
-	} else {
-		document.getElementById('change_password_submit').disabled = true;
-	}
+function random_password(length) {
+    const randomChars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@$%&';
+    let password = '';
+    let array = new Uint8Array(length);
+    window.crypto.getRandomValues(array);
+    for (let i = 0; i < length; i++) {
+        password += randomChars.charAt(array[i] % randomChars.length);
+    }
+    return password;
 }
 
-function check_username(){
-	var username = document.getElementById('username_input').value;
-	var warning1 = false;
-
-	$.ajax('check_netid.php',{
-		async: false,
-		data: {'username':username},
-		method: 'POST',
-		success: function(data){
-			if(data == '1'){
-				warning1 = true;
-			}
-		}
-	});
-
-	showUsernameWarning(1,warning1,warning1?"Username matches a UIUC netid":"Username does not match a UIUC netid");
-	if(document.getElementById('emailforward_input') != null){
-		if(warning1){
-			document.getElementById('emailforward_input').value = document.getElementById('username_input').value + "@illinois.edu";
-		} else {
-			if( document.getElementById('emailforward_input').value.includes('@illinois.edu') ){
-				document.getElementById('emailforward_input').value = '';
-			}
-		}
-	}
-	
-	var rule1 = true;
-	$.ajax('check_username.php',{
-		async: false,
-		data: {'username':username},
-		method: 'POST',
-		success: function(data){
-			rule1 = data;
-		}
-	});
-	var rule2 = ( username.match(/^[a-z]/)!=null );
-	var rule3 = ( username.match(/[^a-z0-9_\-]/)==null );
-
-	showUsernameError(1,rule1==0,rule1==0?"Username not in use":(rule1==1?"Username already exists":"Username exists as group"));
-	showUsernameError(2,rule2,"Username must begin with a lowercase letter");
-	showUsernameError(3,rule3,"Username must be alphanumeric (lowercase letters, numbers, underscore)");
-	
-	return rule1==0 && rule2 && rule3;
-}
-
-function check_groupname(){
-	var name = document.getElementById('name_input').value;
-	var rule1 = true;
-	$.ajax('check_username.php',{
-		async: false,
-		data: {'username':name},
-		method: 'POST',
-		success: function(data){
-			rule1 = data;
-		}
-	});
-	var rule2 = ( name.match(/^[a-z]/) );
-	var rule3 = !( name.match(/[^A-Za-z0-9_]/) );
-
-	showGroupnameError(1,rule1==0,rule1==0?"Name not in use":(rule1==1?"Name exists as user":"Name already exists"));
-	showGroupnameError(2,rule2,"Name must begin with a lowercase letter");
-	showGroupnameError(3,rule3,"Name must be alphanumeric (letters, numbers, underscore)");
-	
-	return rule1==0 && rule2 && rule3;
-}
-function check_groupdescription(){
-	var description = document.getElementById('description_input').value;
-	console.log(description);
-	var rule1 = ( description.length>0 );
-	
-	showGroupdescriptionError(1,rule1,"Description must not be blank");
-	
-	return rule1;
-}
-
-function random_password(length){
-	var randomchars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@$%&';
-	var password = '';
-	var array = new Uint8Array(length);
-	window.crypto.getRandomValues(array);
-	for(var i=0; i<length; i++){
-		password += randomchars.charAt(array[i]%randomchars.length);
-	}
-	return password;
-}
-
-function generate_password(){
-	do {
-		var password = random_password(8);
-		$('#password-text').html(password);
-		$('#passworda_input').val(password);
-		$('#passwordb_input').val(password);
-	} while(!check_passwords());
+function generate_password() {
+    do {
+        const password = random_password(8);
+        $('#password-text').html(password);
+        $('#password_input').val(password);
+        $('#confirmPassword_input').val(password);
+    } while (!check_passwords());
 }
 
 function isInt(value) {
-  return !isNaN(value) && 
-         parseInt(Number(value)) == value && 
-         !isNaN(parseInt(value, 10));
+    return !isNaN(value) &&
+        parseInt(Number(value)) === value &&
+        !isNaN(parseInt(value, 10));
 }
 
-$.fn.select2.defaults.set( "width", null );
+$.fn.select2.defaults.set("width", null);
 
-$(document).ready(function(){
-	$('.copy-button').click(copy_panel);
+$(document).ready(function () {
+    $('.copy-button').click(copy_panel);
 });

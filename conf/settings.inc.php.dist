@@ -34,6 +34,10 @@ define("__AD_LDAP_SSL__", FALSE);
 define("__AD_LDAP_TLS__", TRUE);
 define("__AD_LDAP_PORT__",389);
 
+define("__CRASHPLAN_URL__","");
+define("__CRASHPLAN_USER__","");
+define("__CRASHPLAN_PASS__","");
+
 #LDAP Defaults
 define("__SAMBA_ID__","S-1-5-21-3679620730-2824407525-958489067");
 define("__MAIL_SUFFIX__","@igb.illinois.edu");

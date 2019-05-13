@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+{% import 'macros/igblam.html.twig' as igblam %}
+{% import 'macros/icon.html.twig' as icon %}
+{% import 'macros/table.html.twig' as table %}
+
+{% block title %}{{ parent() }} - Domain Computer: {{ computer.name }}{% endblock %}
+
+{% block jumbotron %}
+	{{ computer.name }}
+	<nav>
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="list_computers.php">Domain Computers</a></li>
+			<li class="breadcrumb-item active">{{ computer.name }}</a></li>
+		</ol>
+	</nav>
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-12">
+			<div class="content px-0 pt-3">
+				<div class="row px-4 mb-3">
+					<div class="col-sm-4">
+						<h4 class="m-0">{{ icon.domain() }} Endpoint Info</h4>
+					</div>
+					<div class="col-lg-8 d-none d-lg-block text-right">
+						<a href="computer_remove.php?uid={{ computer.name }}"
+						   class="btn btn-danger btn-sm mt-md-0"><span class="fa fa-times"></span> Remove Host</a>
+						<a href="computer_ldap.php?uid={{ computer.name }}" class="btn btn-light btn-sm mt-md-0"><span
+									class="fa fa-user-secret"></span> LDAP Entry</a>
+					</div>
+				</div>
+				<table class="table table-striped table-igb-bordered table-responsive-md mb-0">
+					{{ table.sectionHead("Basic Info") }}
+					{{ table.infoRow("Name", computer.name) }}
+					{{ table.infoRow("UID Number", computer.uidNumber) }}
+
+					{{ table.sectionHead("Updates") }}
+					{{ table.infoRow("Created", computer.createTime|date("n/j/Y g:ia")) }}
+					{{ table.infoRow("Created By", computer.creator) }}
+					{{ table.infoRow("Modified", computer.modifyTime|date("n/j/Y g:ia")) }}
+					{{ table.infoRow("Modified By", computer.modifier) }}
+				</table>
+				<div class="py-3 px-3 d-block d-lg-none">
+					<a href="computer_remove.php?uid={{ computer.name }}" class="btn btn-danger mt-1 mt-md-0"><span
+								class="fa fa-times"></span> Remove Host</a>
+					<a href="computer_ldap.php?uid={{ computer.name }}" class="btn btn-light mt-1 mt-md-0"><span
+								class="fa fa-user-secret"></span> LDAP Entry</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block scripts %}
+	{{ parent() }}
+{% endblock %}

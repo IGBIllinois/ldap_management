@@ -10,15 +10,21 @@ function __autoload($class_name) {
 
 include_once '../conf/settings.inc.php';
 
+/**
+ * @param User $user
+ * @param string $subject
+ * @param string $duration
+ */
 function emailmessage($user, $subject, $duration){
-	$to = $user->get_email();
-	$emailmessage = $user->get_name().",<br><br>You are receiving this email because your IGB account will expire and be removed in $duration (".date('F j, Y', $user->get_expiration())."). This will not affect your University of Illinois account. Please make sure you have no important data on the IGB File Server or Biocluster, as it will be inaccessible after this time. Connection information for the IGB File Server can be found here <a href='https://help.igb.illinois.edu/File_Server_Access'>https://help.igb.illinois.edu/File_Server_Access</a>, and information for the Biocluster can be found here <a href='https://help.igb.illinois.edu/Biocluster'>https://help.igb.illinois.edu/Biocluster</a>. <br/><br/>If you believe you are receiving this message in error, or would like to request additional time to remove your data, please contact us at help@igb.illinois.edu. <br/><br/>Computer and Network Resource Group<br/>Institute for Genomic Biology<br/>help@igb.illinois.edu";
+	$to = $user->getEmail();
+	// TODO use a twig template
+	$emailmessage = $user->getName().",<br><br>You are receiving this email because your IGB account will expire and be removed in $duration (".date('F j, Y', $user->getExpiration())."). This will not affect your University of Illinois account. Please make sure you have no important data on the IGB File Server or Biocluster, as it will be inaccessible after this time. Connection information for the IGB File Server can be found here <a href='https://help.igb.illinois.edu/File_Server_Access'>https://help.igb.illinois.edu/File_Server_Access</a>, and information for the Biocluster can be found here <a href='https://help.igb.illinois.edu/Biocluster'>https://help.igb.illinois.edu/Biocluster</a>. <br/><br/>If you believe you are receiving this message in error, or would like to request additional time to remove your data, please contact us at help@igb.illinois.edu. <br/><br/>Computer and Network Resource Group<br/>Institute for Genomic Biology<br/>help@igb.illinois.edu";
 
 	$headers = "From: do-not-reply@igb.illinois.edu\r\n";
 	$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
 	$headers .= "Reply-To: help@igb.illinois.edu\r\n";
 	mail($to,$subject,$emailmessage,$headers," -f " . __ADMIN_EMAIL__);
-	log::log_message("Expiration email sent to ".$user->get_username().".");
+	Log::info("Expiration email sent to ".$user->getUsername().".");
 }
 
 $sapi_type = php_sapi_name();
@@ -28,18 +34,21 @@ if ($sapi_type != 'cli') {
 } else {
 	echo "Analyzing users...";
 	// Connect to ldap
-	$ldap = new ldap(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__);
-	$users = user::get_all_users($ldap);
-	$onemonth = array();
-	$oneweek = array();
-	$emailtomorrow = array();
+	Ldap::init(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__);
+	$users = User::all();
+    /** @var User[] $onemonth */
+    $onemonth = array();
+    /** @var User[] $oneweek */
+    $oneweek = array();
+    /** @var User[] $emailtomorrow */
+    $emailtomorrow = array();
 	$digestmonth = "";
 	$digestweek = "";
 	foreach($users as $uid){
-		$user = new user($ldap,$uid);
-		if(!($user->get_classroom())){
-			if($user->is_expiring() && $user->get_email()!=null){
-				$expiration = $user->get_expiration();
+		$user = new User($uid);
+		if(!($user->isClassroom())){
+			if($user->isExpiring() && $user->getEmail()!=null){
+				$expiration = $user->getExpiration();
 				$timetoexp = intval(($expiration-time())/(60*60*24));
 	
 				if( $timetoexp == 6 ){
@@ -57,11 +66,11 @@ if ($sapi_type != 'cli') {
 	if(count($onemonth)>0){
 		echo "\n==== Expiring in One Month ====\n";
 		foreach($onemonth as $user){
-			echo date('Y-m-d',$user->get_expiration())."\t".$user->get_username()."  \t".$user->get_name()."\n";
+			echo date('Y-m-d',$user->getExpiration())."\t".$user->getUsername()."  \t".$user->getName()."\n";
 		}
 		echo "Sending mail...";
 		foreach($onemonth as $user){
-			$digestmonth .= $user->get_username()."<br>";
+			$digestmonth .= $user->getUsername()."<br>";
 			emailmessage($user, "IGB Account Expiration", "one month");
 		}
 	} else {
@@ -71,24 +80,24 @@ if ($sapi_type != 'cli') {
 	if(count($oneweek)>0){
 		echo "\n==== Expiring in One Week ====\n";
 		foreach($oneweek as $user){
-			echo date('Y-m-d',$user->get_expiration())."\t".$user->get_username()."  \t".$user->get_name()."\n";
+			echo date('Y-m-d',$user->getExpiration())."\t".$user->getUsername()."  \t".$user->getName()."\n";
 		}
 		echo "Sending mail...";
 		foreach($oneweek as $user){
-			$digestweek .= $user->get_username()."<br>";
+			$digestweek .= $user->getUsername()."<br>";
 			emailmessage($user, "IGB Account Expiration Final Notice", "one week");
 		}
 	} else {
 		echo "\nNo users expiring in one week.\n";
 	}
 	
-	if(count($emailtomorrow)>0){
+	if(false and count($emailtomorrow)>0){
 		// Email joe secretly who's going to be emailed tomorrow
 		$subject = "IGB Account Expiration Notices Pending";
 		$to = "jleigh@illinois.edu";
 		$emailmessage = "The following users will be emailed expiration notices tomorrow:<br><pre>";
 		for($i=0; $i<count($emailtomorrow); $i++){
-			$emailmessage .= $emailtomorrow[$i]->get_username()."\t".date('F j, Y', $emailtomorrow[$i]->get_expiration())."\n";
+			$emailmessage .= $emailtomorrow[$i]->getUsername()."\t".date('F j, Y', $emailtomorrow[$i]->getExpiration())."\n";
 		}
 		$emailmessage .= "</pre><br><br>--IGBLAM";
 		

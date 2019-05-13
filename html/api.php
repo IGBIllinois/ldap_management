@@ -6,7 +6,7 @@
 		if($_REQUEST['task']=='group_members' && isset($_REQUEST['gid'])){
 			$filter = "(cn=".$_REQUEST['gid'].")";
 			$attributes = array('cn','memberUID');
-			$groupinfo = $ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
+			$groupinfo = Ldap::getInstance()->search($filter, __LDAP_GROUP_OU__, $attributes);
 			if($groupinfo['count']==0){
 				echo json_encode(array(
 					'code'=> 404,
@@ -14,20 +14,20 @@
 				));
 				exit();
 			} else {
-				$group = new group($ldap,$_REQUEST['gid']);
-				$users = $group->get_users();
+				$group = new Group($_REQUEST['gid']);
+				$users = $group->getMemberUIDs();
 				echo json_encode(array(
 					'code'=>200,
 					'msg'=>'OK',
-					'group'=>$_REQUEST['gid'],
+					'Group' =>$_REQUEST['gid'],
 					'members'=>$users
 					));
 					exit();
 				}
 		}
-		if($_REQUEST['task']=='user' && isset($_REQUEST['uid'])){
-			$user= new user($ldap,$_REQUEST['uid']);
-			if($user->get_username()==null){
+		if($_REQUEST['task']== 'User' && isset($_REQUEST['uid'])){
+			$user= new User($_REQUEST['uid']);
+			if($user->getUsername()==null){
 				echo json_encode(array(
 					'code'=>404,
 					'msg'=>'No such user'
@@ -36,7 +36,7 @@
 				echo json_encode(array(
 					'code'=>200,
 					'msg'=>'OK',
-					'user'=>$user->serializable()
+					'User' =>$user->serializable()
 				));
 			}
 			exit();
@@ -49,15 +49,15 @@
 					'msg'=> 'Username/password required'
 				));
 				exit();
-			} else if(!$ldap->bind('uid='.$_REQUEST['username'].','.__LDAP_PEOPLE_OU__,$_REQUEST['password'])) {
+			} else if(!Ldap::getInstance()->bind('uid='.$_REQUEST['username'].','.__LDAP_PEOPLE_OU__,$_REQUEST['password'])) {
 				echo  json_encode(array(
 					'code'=> 401,
 					'msg'=> 'Invalid username/password'
 				));
 				exit();
 			} else {
-				$ldap->set_bind_user('uid='.$_REQUEST['username'].','.__LDAP_PEOPLE_OU__);
-				$ldap->set_bind_pass($_REQUEST['password']);
+                Ldap::getInstance()->set_bind_user('uid='.$_REQUEST['username'].','.__LDAP_PEOPLE_OU__);
+                Ldap::getInstance()->set_bind_pass($_REQUEST['password']);
 				
 				if(!isset($_REQUEST['gid']) || !isset($_REQUEST['uid'])){
 					echo json_encode(array(
@@ -68,7 +68,7 @@
 				}
 				$filter = "(cn=".$_REQUEST['gid'].")";
 				$attributes = array('cn','memberUID');
-				$groupinfo = $ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
+				$groupinfo = Ldap::getInstance()->search($filter, __LDAP_GROUP_OU__, $attributes);
 				if($groupinfo['count']==0){
 					echo json_encode(array(
 						'code'=> 404,
@@ -82,8 +82,8 @@
 							'msg'=> 'User already in group'
 						));
 					} else {
-						$group = new group($ldap,$_REQUEST['gid']);
-						$result = $group->add_user($_REQUEST['uid']);
+						$group = new Group($_REQUEST['gid']);
+						$result = $group->addUser($_REQUEST['uid']);
 						if($result['RESULT']){
 							echo json_encode(array(
 								'code'=> 200,
@@ -107,15 +107,15 @@
 					'msg'=> 'Username/password required'
 				));
 				exit();
-			} else if(!$ldap->bind('uid='.$_REQUEST['username'].','.__LDAP_PEOPLE_OU__,$_REQUEST['password'])) {
+			} else if(!Ldap::getInstance()->bind('uid='.$_REQUEST['username'].','.__LDAP_PEOPLE_OU__,$_REQUEST['password'])) {
 				echo  json_encode(array(
 					'code'=> 401,
 					'msg'=> 'Invalid username/password'
 				));
 				exit();
 			} else {
-				$ldap->set_bind_user('uid='.$_REQUEST['username'].','.__LDAP_PEOPLE_OU__);
-				$ldap->set_bind_pass($_REQUEST['password']);
+                Ldap::getInstance()->set_bind_user('uid='.$_REQUEST['username'].','.__LDAP_PEOPLE_OU__);
+                Ldap::getInstance()->set_bind_pass($_REQUEST['password']);
 				
 				if(!isset($_REQUEST['gid']) || !isset($_REQUEST['uid'])){
 					echo json_encode(array(
@@ -126,7 +126,7 @@
 				}
 				$filter = "(cn=".$_REQUEST['gid'].")";
 				$attributes = array('cn','memberUID');
-				$groupinfo = $ldap->search($filter, __LDAP_GROUP_OU__, $attributes);
+				$groupinfo = Ldap::getInstance()->search($filter, __LDAP_GROUP_OU__, $attributes);
 				if($groupinfo['count']==0){
 					echo json_encode(array(
 						'code'=> 404,
@@ -140,8 +140,8 @@
 							'msg'=> 'User not in group'
 						));
 					} else {
-						$group = new group($ldap,$_REQUEST['gid']);
-						$result = $group->remove_user($_REQUEST['uid']);
+						$group = new Group($_REQUEST['gid']);
+						$result = $group->removeUser($_REQUEST['uid']);
 						if($result['RESULT']){
 							echo json_encode(array(
 								'code'=> 200,

@@ -1,0 +1,21 @@
+{% extends 'edit.html.twig' %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item"><a href="list_users.php">Users</a></li>
+	<li class="breadcrumb-item"><a href="user.php?uid={{ user.username }}">{{ user.username }}</a></li>
+	<li class="breadcrumb-item active">{{ header }}</li>
+{% endblock %}
+
+{% block immutable %}
+	<div class="form-group row">
+		<label class="col-sm-3 col-form-label">Username</label>
+		<div class="col-sm-9">
+			<label class="col-form-label">{{ user.username }}</label>
+			<input type="hidden" name="uid" value="{{ user.username }}"/>
+		</div>
+	</div>
+{% endblock %}
+
+{% block cancelURL %}
+	user.php?uid={{ user.username }}
+{% endblock %}

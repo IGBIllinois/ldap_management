@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block jumbotron %}
+	{{ header }}
+	<nav>
+		<ol class="breadcrumb">
+			{% block breadcrumb %}
+			{% endblock %}
+		</ol>
+	</nav>
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="{% if validation is defined %}col-sm-8{% else %}col-12{% endif %}">
+			<div class="content p-3">
+				<form method="post" name="form">
+					{% block immutable %}
+					{% endblock %}
+					{% for input in inputs %}
+						<div class="form-group row">
+							<label class="col-sm-3 col-form-label" for="{{ input.attr }}_input">{{ input.name }}</label>
+							<div class="col-sm-9">
+								{% if input.type == 'select' %}
+									<select class="form-control" name="{{ input.attr }}" id="{{ input.attr }}_input">
+										{% if input.blankOption %}
+											<option value=""></option>
+										{% endif %}
+										{% for option in input.options %}
+											<option value="{{ option }}"{% if option == input.value %} selected{% endif %}>{{ option }}</option>
+										{% endfor %}
+									</select>
+								{% elseif input.type == 'date' %}
+									<input class="form-control" type="date" name="{{ input.attr }}" id="{{ input.attr }}_input" value="{{ input.value|date('Y-m-d') }}"/>
+								{% elseif input.type == 'password' %}
+									<input class="form-control" type="password" name="{{ input.attr }}" id="{{ input.attr }}_input"/>
+								{% elseif input.type == 'hidden' %}
+									{{ input.value }}
+									<input class="form-control" type="hidden" name="{{ input.attr }}" value="{{ input.value }}"/>
+								{% elseif input.type == 'checkbox' %}
+									<input type="checkbox" name="{{ input.attr }}" id="{{ input.attr }}_input" {% if input.value %}checked{% endif %}/>
+								{% else %}
+									<input class="form-control" type="text" name="{{ input.attr }}" id="{{ input.attr }}_input" value="{{ input.value }}" placeholder="{{ input.placeholder }}"/>
+								{% endif %}
+							</div>
+						</div>
+					{% endfor %}
+					{% if message is defined %}
+						<div class="row">
+							<div class="col-sm-9 offset-sm-3">
+								<p>{{ message|raw }}</p>
+							</div>
+						</div>
+					{% endif %}
+					<div class="row">
+						<div class="col-sm-9 offset-sm-3">
+							<input class="btn btn-{{ button.color|default("primary") }}" type="submit" id="submit" name="submit" value="{{ button.text|default("Update") }}">
+							{% if extraButtons is defined %}
+								{% for extra in extraButtons %}
+									<input class="btn btn-{{ extra.color|default("primary") }}" type="submit" id="{{ extra.name }}" name="{{ extra.name }}" value="{{ extra.text|default("Update") }}">
+								{% endfor %}
+							{% endif %}
+							<a class="btn btn-light" href="{% block cancelURL %}index.php{% endblock %}">Cancel</a>
+						</div>
+					</div>
+					{% if error is not empty %}
+						{#TODO make a macro for these errors#}
+						{{ error|raw }}
+					{% endif %}
+				</form>
+			</div>
+		</div>
+		{% if validation is defined %}
+			<div class="col-sm-4">
+				<div class="content p-3" id="validation"></div>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+        $('select').select2({
+            'width': 'element'
+        });
+	</script>
+	{% if validation is defined %}
+		<script type="text/javascript">
+            $(document).ready(function () {
+                window["{{ validation }}"]();
+                $('input').on('input',{{ validation }});
+            });
+		</script>
+	{% endif %}
+	{% if readyScripts is defined %}
+		<script type="text/javascript">
+            $(document).ready(function () {
+				{{ readyScripts|raw }}
+            });
+		</script>
+	{% endif %}
+{% endblock %}

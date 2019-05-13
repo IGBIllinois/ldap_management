@@ -1,0 +1,19 @@
+{% extends 'edit.html.twig' %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item"><a href="list_groups.php">Domain Computers</a></li>
+	<li class="breadcrumb-item"><a href="group.php?{{ {'gid':computer.name}|url_encode }}">{{ computer.name }}</a></li>
+	<li class="breadcrumb-item active">{{ header }}</li>
+{% endblock %}
+
+{% block immutable %}
+	<div class="form-group row">
+		<label class="col-sm-3 col-form-label">Computer</label>
+		<div class="col-sm-9">
+			<label class="col-form-label">{{ computer.name }}</label>
+			<input type="hidden" name="uid" value="{{ computer.name }}"/>
+		</div>
+	</div>
+{% endblock %}
+
+{% block cancelURL %}computer.php?{{ {'uid':computer.name}|url_encode }}{% endblock %}

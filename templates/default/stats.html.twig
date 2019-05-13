@@ -1,0 +1,209 @@
+{% extends 'base.html.twig' %}
+{% import 'macros/icon.html.twig' as icon %}
+{% import 'macros/table.html.twig' as table %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{% block jumbotron %}Statistics{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-xxl-6">
+			<div class="content mb-3">
+				<table class='table table-condensed table-striped table-bordered table-igb-bordered m-0'>
+					{{ table.statRow('Users', totalUsers, icon.user('my-auto text-dark')) }}
+					{{ table.statRow('Expired Passwords', passwordExpiredUsers, icon.passwordExpired('my-auto')) }}
+					{{ table.statRow('Expiring Users', expiringUsers, icon.expiring('my-auto')) }}
+					{{ table.statRow('Expired Users', expiredUsers, icon.expired('my-auto')) }}
+					{{ table.statRow('Users Logged in with last 30 days', lastMonthUsers, icon.loggedInRecently('my-auto')) }}
+					{{ table.statRow('Users never logged in', neverLoggedInUsers, icon.neverLoggedIn('my-auto')) }}
+					{{ table.statRow('Users who have left UIUC', leftCampusUsers, icon.leftCampus('my-auto')) }}
+					{{ table.statRow('Non-UIUC Users', nonCampusUsers, icon.nonCampus('my-auto')) }}
+					{{ table.statRow('Classroom Users', classroomUsers, icon.classroom('my-auto')) }}
+					{{ table.statRow('Groups', totalGroups, icon.group('my-auto text-dark')) }}
+					{{ table.statRow('Empty Groups', emptyGroups, icon.group('my-auto text-muted')) }}
+				</table>
+			</div>
+
+			<div class="content py-2">
+				<div id="created-chart">
+					<div class="spinner-border"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xxl-6">
+			<div class="content py-2">
+				<div id="password-chart"></div>
+			</div>
+		</div>
+	</div>
+	{#	<div class="row">#}
+	{#		<div class="col-12">#}
+	{#			<svg id="d3chart" width="1110" height="1110"></svg>#}
+	{#		</div>#}
+	{#	</div>#}
+{% endblock %}
+
+{% block scripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+        $(document).ready(function () {
+            google.charts.setOnLoadCallback(drawCreatedUserChart);
+            google.charts.setOnLoadCallback(drawPasswordSetChart);
+        });
+	</script>
+	<script src="https://d3js.org/d3.v5.js"></script>
+	<script src="includes/moment.js"></script>
+	{#	<script type="text/javascript">#}
+	{#        let width = 1110; // TODO resize when the div resizes#}
+	{#        let cellWid = (width - 50) / 53,#}
+	{#            cellHei = Math.max(17, cellWid),#}
+	{#            yearHeight = cellHei * 9;#}
+
+	{#        const dateFormat = d3.timeFormat("%x");#}
+	{#        const dateURLFormat = d3.timeFormat("%Y-%m-%d");#}
+
+	{#        let chart = d3.select('#d3chart')#}
+	{#            .attr("width", width);#}
+	{#        d3.csv("graph.php?graph=d3passcal", function (d) {#}
+	{#            return {#}
+	{#                date: moment(d.date),#}
+	{#                count: +d.count#}
+	{#            };#}
+	{#        }).then(function (data) {#}
+	{#            let color = d3.scaleSequential([0, d3.max(data, function (d) {#}
+	{#                return d.count#}
+	{#            })], d3.interpolateCool);#}
+
+	{#            // Group dates by year#}
+	{#            var years = d3.nest()#}
+	{#                .key(function (d) {#}
+	{#                    return d.date.year()#}
+	{#                })#}
+	{#                .sortKeys(d3.ascending)#}
+	{#                .key(function (d) {#}
+	{#                    return d.date.month()#}
+	{#                })#}
+	{#                .sortKeys(d3.ascending)#}
+	{#                .entries(data);#}
+
+	{#            chart.attr("height", yearHeight * years.length);#}
+
+	{#            const year = chart.selectAll("g")#}
+	{#                .data(years)#}
+	{#                .join("g")#}
+	{#                .attr("transform", function (d, i) {#}
+	{#                    return "translate(50," + (yearHeight * i + cellHei * 1.5) + ")";#}
+	{#                });#}
+	{#            // Year labels#}
+	{#            year.append("text")#}
+	{#                .attr("x", -5)#}
+	{#                .attr("y", -5)#}
+	{#                .attr("font-weight", "bold")#}
+	{#                .attr("text-anchor", "end")#}
+	{#                .text(function (d) {#}
+	{#                    return d.key;#}
+	{#                });#}
+	{#            // Day labels#}
+	{#            year.append("g")#}
+	{#                .attr("text-anchor", "end")#}
+	{#                .selectAll("text")#}
+	{#                .data(d3.range(7))#}
+	{#                .join("text")#}
+	{#                .attr("x", -5)#}
+	{#                .attr("y", function (d) {#}
+	{#                    return (d + 0.5) * cellHei#}
+	{#                })#}
+	{#                .attr("dy", "0.31em")#}
+	{#                .text(function (d) {#}
+	{#                    return "SMTWTFS"[d]#}
+	{#                });#}
+	{#            // Empty cells#}
+	{#            // TODO don't draw the ones outside the year#}
+	{#            year.append("g")#}
+	{#                .selectAll("rect")#}
+	{#                .data(d3.cross(d3.range(7), d3.range(53)))#}
+	{#                .join("rect")#}
+	{#                .attr("width", cellWid - 1)#}
+	{#                .attr("height", cellHei - 1)#}
+	{#                .attr("x", function (d) {#}
+	{#                    return d[1] * cellWid;#}
+	{#                })#}
+	{#                .attr("y", function (d) {#}
+	{#                    return d[0] * cellHei;#}
+	{#                })#}
+	{#                .attr("fill", "#eee");#}
+	{#            // Months#}
+	{#            const month = year.append("g")#}
+	{#                .selectAll("g")#}
+	{#                .data(function (d) {#}
+	{#                    return d.values#}
+	{#                })#}
+	{#                .join("g");#}
+	{#            month.append("path")#}
+	{#                .attr("stroke", "#ccc")#}
+	{#                .attr("stroke-width", 1)#}
+	{#                .attr("fill", "none")#}
+	{#                .attr("d", function (d) {#}
+	{#                    return monthPath(d);#}
+	{#                });#}
+
+	{#            // Day Rectangles#}
+	{#            month.append("g")#}
+	{#                .selectAll("rect")#}
+	{#                .data(function (d) {#}
+	{#                    return d.values;#}
+	{#                }) // The dates for the year#}
+	{#                .join("rect")#}
+	{#                .attr("width", cellWid - 1)#}
+	{#                .attr("height", cellHei - 1)#}
+	{#                .attr("x", function (d) {#}
+	{#                    return dateX(d.date);#}
+	{#                })#}
+	{#                .attr("y", function (d) {#}
+	{#                    return dateY(d.date)#}
+	{#                })#}
+	{#                .attr("fill", function (d) {#}
+	{#                    return color(d.count)#}
+	{#                })#}
+	{#                .style("cursor", "pointer")#}
+	{#                .on("click", function (d) {#}
+	{#                    window.location = "list_users.php?password_set=" + dateURLFormat(d.date);#}
+	{#                })#}
+	{#                .append("title")#}
+	{#                .text(function (d) {#}
+	{#                    return dateFormat(d.date) + ": " + d.count;#}
+	{#                });#}
+	{#        });#}
+
+	{#        function monthPath(d) { // TODO something in here isn't right#}
+	{#            let someDay = d.values[0].date;#}
+	{#            let firstDay = moment(someDay);#}
+	{#            firstDay.startOf('month');#}
+	{#            let lastDay = moment(someDay);#}
+	{#            lastDay.endOf('month');#}
+
+	{#            let path = d3.path();#}
+	{#            path.moveTo(dateX(firstDay), dateY(firstDay));#}
+	{#            path.lineTo(dateX(firstDay), 7 * cellHei);#}
+	{#            path.lineTo(dateX(lastDay), 7 * cellHei);#}
+	{#            path.lineTo(dateX(lastDay), dateY(lastDay) + cellHei);#}
+	{#            path.lineTo(dateX(lastDay) + cellWid, dateY(lastDay) + cellHei);#}
+	{#            path.lineTo(dateX(lastDay) + cellWid, 0);#}
+	{#            path.lineTo(dateX(firstDay) + cellWid, 0);#}
+	{#            path.lineTo(dateX(firstDay) + cellWid, dateY(firstDay));#}
+	{#            path.closePath();#}
+	{#            return path;#}
+	{#        }#}
+
+	{#        // x-value of left side of date rect#}
+	{#        function dateX(date) {#}
+	{#            return date.week() * cellWid;#}
+	{#        }#}
+
+	{#        // y-value of top of date rect#}
+	{#        function dateY(date) {#}
+	{#            return date.day() * cellHei;#}
+	{#        }#}
+	{#	</script>#}
+{% endblock %}

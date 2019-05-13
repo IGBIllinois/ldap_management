@@ -1,7 +1,6 @@
 <?php
-	$title = "Host List";
-	$sitearea = "hosts";
-	require_once 'includes/header.inc.php';
+include_once('includes/main.inc.php');
+include_once('includes/session.inc.php');
 
 	$get_array = array();
 	$start = 0;
@@ -30,20 +29,9 @@
 		$get_array['asc'] = $asc;
 	}
 	
-	$hosts = host::get_all_hosts($ldap,true);
-	$hosts_html = "";
-	
-	$hosts_html = html::get_hosts_rows($hosts);
-	
-	?>
-	
-	<div class="minijumbo"><div class="container">Hosts</div></div>
-	<div class="container">
-	
-	<div class="card">
-		<table class="table table-sm table-striped table-igb-bordered table-responsive-md mb-0">
-			<?php echo $hosts_html; ?>
-		</table>
-	</div>
-<?php
-	require_once 'includes/footer.inc.php';
+	$hosts = Host::all();
+
+	renderTwigTemplate('host/index.html.twig', array(
+		'siteArea'=>'hosts',
+		'hosts'=>$hosts,
+	));

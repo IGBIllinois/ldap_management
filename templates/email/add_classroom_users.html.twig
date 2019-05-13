@@ -1,0 +1,11 @@
+<html lang="en">
+<head></head>
+<body>
+	<p>The following classroom users have been added:</p>
+	<pre>
+		{%- for user in added_users -%}
+		{{- (user.username~"\t"~user.password~"\n")|raw -}}
+		{%- endfor -%}
+	</pre>
+</body>
+</html>

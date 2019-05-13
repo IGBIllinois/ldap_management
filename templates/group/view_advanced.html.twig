@@ -1,0 +1,9 @@
+{% extends 'view_advanced.html.twig' %}
+
+{% block title %}{{ parent() }} - Group LDAP Entry: {{ group.name }}{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item"><a href="list_groups.php">Groups</a></li>
+	<li class="breadcrumb-item"><a href="group.php?gid={{ group.name }}">{{ group.name }}</a></li>
+	<li class="breadcrumb-item active">LDAP Entry</li>
+{% endblock %}

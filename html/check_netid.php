@@ -3,7 +3,7 @@
 	if(isset($_REQUEST['username'])){
 		include_once 'includes/main.inc.php';
 		
-		if(user::is_ad_user($_REQUEST['username'])){
+		if(User::isInAD($_REQUEST['username'])){
 			echo '1';
 		} else {
 			echo '0';

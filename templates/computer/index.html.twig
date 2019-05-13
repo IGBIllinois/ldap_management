@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% import 'macros/table.html.twig' as table %}
+
+{% block title %}{{ parent() }} - Domain Computer List{% endblock %}
+
+{% block jumbotron %}Domain Computers{% endblock %}
+
+{% block content %}
+	<div class="content">
+		<div class="m-3">
+			<form method="get" class="form-inline">
+				<div class="input-group mr-auto">
+					<input type="text" name="search" class="form-control" value="{{ search.search }}" placeholder="Search" />
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-primary"><span class="fa fa-search"></span></button>
+					</div>
+				</div>
+				<input type="hidden" name="sort" value="{{ search.sort }}" />
+				<input type="hidden" name="asc" value="{{ search.asc }}" />
+			</form>
+		</div>
+
+		<table class="table table-sm table-striped table-responsive-md table-igb-bordered mb-0">
+			<thead>
+			<tr>
+				<th class="sortable-th pl-2" onclick="sort_table('name')">Name{{ table.sortIcon('name',search) }}</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for computer in computers %}
+				<tr>
+					<td class="pl-2"><a href="computer.php?uid={{ computer.name }}">{{ computer.name }}</a></td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	{{ table.paginator('list_computers.php', search, search.start, totalComputers, 30) }}
+{% endblock %}
+
+{% block scripts %}
+	{{ parent() }}
+{% endblock %}

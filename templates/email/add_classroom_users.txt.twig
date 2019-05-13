@@ -1,0 +1,5 @@
+The following classroom users have been added:
+
+{% for user in added_users %}
+{{ (user.username~"\t"~user.password)|raw }}
+{% endfor %}

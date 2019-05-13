@@ -1,0 +1,10 @@
+{
+    "require": {
+        "twig/twig": "~1.0",
+        "ext-openssl": "*",
+        "ext-iconv": "*",
+        "ext-json": "*",
+        "ext-ldap": "*",
+      "ext-curl": "*"
+    }
+}

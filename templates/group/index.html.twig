@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+{% import 'macros/table.html.twig' as table %}
+
+{% block title %}{{ parent() }} - Groups{% endblock %}
+
+{% block jumbotron %}Groups{% endblock %}
+
+{% block content %}
+	<div class="content">
+		<div class="m-3">
+			<form method="get" class="form-inline">
+				<div class="input-group mr-auto">
+					<input type="text" name="search" class="form-control" value="{{ search.search }}" placeholder="Search" />
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-primary"><span class="fa fa-search"></span></button>
+					</div>
+				</div>
+
+				<div class="btn-group">
+					<button type="button" class="btn {% if search.filter=='showUsers' %}btn-primary{% else %}btn-light{% endif %}" id="showUsers-button" onclick="filter_table('showUsers')"><span class="fa fa-user"></span> Show User Groups</button>
+				</div>
+				<input type="hidden" name="sort" value="{{ search.sort }}" />
+				<input type="hidden" name="asc" value="{{ search.asc }}" />
+			</form>
+		</div>
+
+		<table class="table table-sm table-striped table-responsive-md table-igb-bordered mb-0 border-bottom-0">
+			<thead>
+				<tr>
+					<th class="sortable-th" onclick="sort_table('name')">Name{{ table.sortIcon('name', search) }}</th>
+					<th class="sortable-th" onclick="sort_table('description')">Description{{ table.sortIcon('description', search) }}</th>
+					<th class="sortable-th" onclick="sort_table('owner')">Owner{{ table.sortIcon('owner', search) }}</th>
+					<th>Managed Directories</th>
+					<th class="sortable-th" onclick="sort_table('members')">Members{{ table.sortIcon('members', search) }}</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for group in groups %}
+			<tr>
+				<td><a href="group.php?gid={{ group.name }}">{{ group.name }}</a></td>
+				<td>{{ group.description }}</td>
+				<td>{{ group.owner }}</td>
+				<td>{{ group.directories|join(', ') }}</td>
+				<td>{{ group.members|length }}</td>
+			</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	{{ table.paginator('list_groups.php', search, search.start, totalGroups, 30) }}
+{% endblock %}
+
+{% block scripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+        $('#showUsers-button').on('click',function(){
+            const $this = $(this);
+            toggleClasses($this,'btn-light','btn-primary active');
+        });
+	</script>
+{% endblock %}

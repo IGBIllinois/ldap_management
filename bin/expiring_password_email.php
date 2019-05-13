@@ -10,15 +10,21 @@ function __autoload($class_name) {
 
 include_once '../conf/settings.inc.php';
 
+/**
+ * @param User $user
+ * @param string $subject
+ * @param string $duration
+ */
 function emailmessage($user, $subject, $duration){
-	$to = $user->get_email();
-	$emailmessage = $user->get_name().",<br><br>You are receiving this email because your IGB account password will expire in $duration (".date('F j, Y', $user->get_password_expiration())."). This will not affect your University of Illinois account password.<br><br> To change your password, go to https://illinoisauth.igb.illinois.edu/password/ and log in with either your current IGB password or your University of Illinois AD password. <br><br>If you do not change your password before ".date('F j, Y', $user->get_password_expiration()).", you will not be able to log into IGB services such as IGB Wi-Fi, the IGB file-server, and the Biocluster. <br/><br/>If you have any questions, please contact us at help@igb.illinois.edu. <br/><br/>Computer and Network Resource Group<br/>Carl R. Woese Institute for Genomic Biology<br/>help@igb.illinois.edu";
+	$to = $user->getEmail();
+	// TODO use a twig template
+	$emailmessage = $user->getName().",<br><br>You are receiving this email because your IGB account password will expire in $duration (".date('F j, Y', $user->getPasswordExpiration())."). This will not affect your University of Illinois account password.<br><br> To change your password, go to https://illinoisauth.igb.illinois.edu/password/ and log in with either your current IGB password or your University of Illinois AD password. <br><br>If you do not change your password before ".date('F j, Y', $user->getPasswordExpiration()).", you will not be able to log into IGB services such as IGB Wi-Fi, the IGB file-server, and the Biocluster. <br/><br/>If you have any questions, please contact us at help@igb.illinois.edu. <br/><br/>Computer and Network Resource Group<br/>Carl R. Woese Institute for Genomic Biology<br/>help@igb.illinois.edu";
 
 	$headers = "From: do-not-reply@igb.illinois.edu\r\n";
 	$headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
 	$headers .= "Reply-To: help@igb.illinois.edu\r\n";
  	mail($to,$subject,$emailmessage,$headers," -f " . __ADMIN_EMAIL__);
-	log::log_message("Expiration email sent to ".$user->get_username().".");
+	Log::info("Expiration email sent to ".$user->getUsername().".");
 }
 
 $sapi_type = php_sapi_name();
@@ -28,22 +34,25 @@ if ($sapi_type != 'cli') {
 } else {
 	echo "Analyzing users...";
 	// Connect to ldap
-	$ldap = new ldap(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__);
-	$ldap->set_bind_user(__LDAP_BIND_USER__);
-	$ldap->set_bind_pass(__LDAP_BIND_PASS__);
-	$users = user::get_all_users($ldap);
-	$onemonth = array();
-	$oneweek = array();
-	$emailtoday = array();
+	Ldap::init(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__);
+    Ldap::getInstance()->set_bind_user(__LDAP_BIND_USER__);
+    Ldap::getInstance()->set_bind_pass(__LDAP_BIND_PASS__);
+	$users = User::all();
+    /** @var User[] $onemonth */
+    $onemonth = array();
+    /** @var User[] $oneweek */
+    $oneweek = array();
+    /** @var User[] $emailtoday */
+    $emailtoday = array();
 	$digestmonth = "";
 	$digestweek = "";
 	$digestexpired = "";
 	$userexpdate = date_format(date_add(date_create(),new DateInterval('P6M')),'U');
 	$userexpreason = "Password expired";
 	foreach($users as $uid){
-		$user = new user($ldap,$uid);
-		if($user->get_password_expiration()!=null && $user->get_email()!=null){
-			$expiration = $user->get_password_expiration();
+		$user = new User($uid);
+		if($user->getPasswordExpiration()!=null && $user->getEmail()!=null){
+			$expiration = $user->getPasswordExpiration();
 			$timetoexp = intval(($expiration-time())/(60*60*24));
 
 			if( $timetoexp == 6 ){
@@ -55,11 +64,11 @@ if ($sapi_type != 'cli') {
 			}
 
 		} 
-		if ($user->is_password_expired() && !$user->is_locked()){
-			echo "Password expired for ".$user->get_username()."\n";
+		if ($user->isPasswordExpired() && !$user->isLocked()){
+			echo "Password expired for ".$user->getUsername()."\n";
 			$user->lock();
-			if($user->get_expiration() == null){ // Don't extend the user's expiration date if they're already set to expire
-				$user->set_expiration($userexpdate,$userexpreason);
+			if($user->getExpiration() == null){ // Don't extend the user's expiration date if they're already set to expire
+				$user->setExpiration($userexpdate,$userexpreason);
 			}
 		}
 	}
@@ -67,25 +76,25 @@ if ($sapi_type != 'cli') {
 	if(count($onemonth)>0){
 		echo "\n==== Expiring in One Month ====\n";
 		foreach($onemonth as $user){
-			echo date('Y-m-d',$user->get_password_expiration())."\t".$user->get_username()."  \t".$user->get_name()."\n";
+			echo date('Y-m-d',$user->getPasswordExpiration())."\t".$user->getUsername()."  \t".$user->getName()."\n";
 		}
 		echo "Sending mail...";
 		foreach($onemonth as $user){
-			$digestmonth .= $user->get_username()."<br>";
+			$digestmonth .= $user->getUsername()."<br>";
   			emailmessage($user, "IGB Password Expiration", "one month");
 		}
 	} else {
 		echo "\nNo users expiring in one month.\n";
 	}
 	
-	if(count($oneweek)>0){
+	if(false and count($oneweek)>0){
 		echo "\n==== Expiring in One Week ====\n";
 		foreach($oneweek as $user){
-			echo date('Y-m-d',$user->get_password_expiration())."\t".$user->get_username()."  \t".$user->get_name()."\n";
+			echo date('Y-m-d',$user->getPasswordExpiration())."\t".$user->getUsername()."  \t".$user->getName()."\n";
 		}
 		echo "Sending mail...";
 		foreach($oneweek as $user){
-			$digestweek .= $user->get_username()."<br>";
+			$digestweek .= $user->getUsername()."<br>";
   			emailmessage($user, "IGB Password Expiration Final Notice", "one week");
 		}
 	} else {
@@ -98,7 +107,7 @@ if ($sapi_type != 'cli') {
 		$to = "jleigh@illinois.edu";
 		$emailmessage = "The following users will be emailed password expiration notices today:<br><pre>";
 		for($i=0; $i<count($emailtoday); $i++){
-			$emailmessage .= $emailtoday[$i]->get_username()."\t".date('F j, Y', $emailtoday[$i]->get_password_expiration())."\n";
+			$emailmessage .= $emailtoday[$i]->getUsername()."\t".date('F j, Y', $emailtoday[$i]->getPasswordExpiration())."\n";
 		}
 		$emailmessage .= "</pre><br><br>--IGBLAM";
 		

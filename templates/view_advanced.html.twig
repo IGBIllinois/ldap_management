@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block jumbotron %}
+	LDAP Entry
+	<nav>
+		<ol class="breadcrumb">
+			{% block breadcrumb %}
+			{% endblock %}
+		</ol>
+	</nav>
+{% endblock %}
+
+{% block content %}
+	<div class="content">
+		<table class="table table-striped table-sm table-responsive-md mb-0">
+			{% for attribute in attributes|sort %}
+				{% for attrNum in 0..attributeValues[attribute]['count']-1 %}
+					<tr>
+						<th>{{ attribute }}</th>
+						<td>{{ attributeValues[attribute][attrNum] }}</td>
+					</tr>
+				{% endfor %}
+			{% endfor %}
+		</table>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	{{ parent() }}
+{% endblock %}

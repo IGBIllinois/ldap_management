@@ -26,12 +26,12 @@ if ($sapi_type != 'cli') {
 	echo "Error: This script can only be run from the command line.\n";
 } else {
 	// Connect to ldap
-	$ldap = new ldap(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__);
+	Ldap::init(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__);
 	
 	$filter = "(postalAddress=*)";
 	$ou = __LDAP_PEOPLE_OU__;
 	$attributes = array('uid','postalAddress');
-	$results = $ldap->search($filter, $ou, $attributes);
+	$results = Ldap::getInstance()->search($filter, $ou, $attributes);
 	unset($results['count']);
 	usort($results,"cmp");
 	for ($i=0; $i<count($results); $i++){

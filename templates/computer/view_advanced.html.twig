@@ -1,0 +1,9 @@
+{% extends 'view_advanced.html.twig' %}
+
+{% block title %}{{ parent() }} - Domain Computer LDAP Entry: {{ computer.name }}{% endblock %}
+
+{% block breadcrumb %}
+	<li class="breadcrumb-item"><a href="list_computers.php">Domain</a></li>
+	<li class="breadcrumb-item"><a href="computer.php?uid={{ computer.name }}">{{ computer.name }}</a></li>
+	<li class="breadcrumb-item active">LDAP Entry</li>
+{% endblock %}

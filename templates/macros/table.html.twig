@@ -1,0 +1,100 @@
+{% macro sortIcon(column, search) %}
+	{% if column == search.sort %}
+		{% if search.asc == 'true' %}
+			<span class="fa fa-sort-amount-up"></span>
+		{% else %}
+			<span class="fa fa-sort-amount-down"></span>
+		{% endif %}
+	{% endif %}
+{% endmacro %}
+
+{% macro pageurl(baseurl, query, start) %}
+	{% set query = query|merge({'start':start}) %}
+	{{ baseurl }}?{{ query|url_encode }}
+{% endmacro %}
+
+{% macro paginator(baseurl, query, start, total, perpage) %}
+	{% import _self as table %}
+	{% set totalPages = (total/perpage)|round(0, 'ceil') %}
+	{% set currentPage = (start/perpage+1)|round(0, 'floor') %}
+	{% set pagesToPad = 5 %}
+	{% set pagesToShow = 10 %}
+	{% set startPage = max(1,currentPage-pagesToPad) %}
+	{% set endPage = min(totalPages,startPage+pagesToShow) %}
+	{% if endPage-startPage < pagesToShow %}{% set startPage = max(1,endPage-pagesToShow) %}{% endif %}
+
+	<nav class="mt-2">
+		<ul class="pagination justify-content-center">
+			<li class="page-item{% if currentPage == 1 %} disabled{% endif %}">
+				<a class="page-link" href="{% if currentPage >= 2 %}{{ table.pageurl(baseurl, query, 0)|raw }}{% else %}#{% endif %}"><span class="fa fa-angle-double-left"></span></a>
+			</li>
+			<li class="page-item{% if currentPage == 1 %} disabled{% endif %}">
+				<a class="page-link" href="{% if currentPage >= 2 %}{{ table.pageurl(baseurl, query, start-perpage)|raw }}{% else %}#{% endif %}">
+					<span class="fa fa-angle-left"></span>
+				</a>
+			</li>
+
+			{% if startPage > 1 %}
+				<li class="page-item disabled"><a class="page-link" href="#">...</a></li>{% endif %}
+			{% for page in range(startPage,endPage) %}
+				<li class="page-item{% if page == currentPage %} active{% endif %}">
+					<a class="page-link" href="{{ table.pageurl(baseurl, query, (page-1)*perpage) }}">{{ page }}</a>
+				</li>
+			{% endfor %}
+			{% if totalPages > endPage %}
+				<li class="page-item disabled"><a class="page-link" href="#">...</a></li>{% endif %}
+
+			<li class="page-item{% if currentPage == totalPages %} disabled{% endif %}">
+				<a class="page-link" href="{% if currentPage < totalPages %}{{ table.pageurl(baseurl, query, start+perpage)|raw }}{% else %}#{% endif %}"><span class="fa fa-angle-right"></span></a>
+			</li>
+			<li class="page-item{% if currentPage == totalPages %} disabled{% endif %}">
+				<a class="page-link" href="{% if currentPage < totalPages %}{{ table.pageurl(baseurl, query, (totalPages-1)*perpage)|raw }}{% else %}#{% endif %}"><span class="fa fa-angle-double-right"></span></a>
+			</li>
+		</ul>
+	</nav>
+
+{% endmacro %}
+
+{% macro sectionHead(text) %}
+	<tr class="table-header">
+		<td colspan="3">{{ text }}</td>
+	</tr>
+{% endmacro %}
+
+{% macro infoRow(key, value, button) %}
+	<tr>
+		<th class="shrink">{{ key }}</th>
+		{% if button is null %}
+			<td colspan="2">{{ value|raw }}</td>
+		{% else %}
+			<td class="border-right-0">{{ value|raw }}</td>
+			<td class="shrink text-right border-left-0 td-btn-sm">
+				<a href="{{ button.url }}" class="btn btn-sm {{ button.class }}">{% if button.icon is not empty %}
+						<span class="{{ button.icon }}"></span> {% endif %}{{ button.text }}</a></td>
+		{% endif %}
+	</tr>
+{% endmacro %}
+
+{% macro headlessRow(value, button) %}
+	<tr>
+		{% if button is null %}
+			<td colspan="2">
+				{{ value|raw }}
+			</td>
+		{% else %}
+			<td class="border-right-0">
+				{{ value|raw }}
+			</td>
+			<td class="shrink text-right border-left-0 td-btn-sm">
+				<a href="{{ button.url }}" class="btn btn-sm {{ button.class }}">{% if button.icon is not empty %}
+						<span class="{{ button.icon }}"></span> {% endif %}{{ button.text }}</a></td>
+		{% endif %}
+	</tr>
+{% endmacro %}
+
+{% macro statRow(key, value, icon) %}
+	<tr>
+		<td class="d-flex"><span class="mr-auto">{{ key }}</span> {{ icon }}</td>
+		<td>{{ value }}</td>
+	</tr>
+{% endmacro %}

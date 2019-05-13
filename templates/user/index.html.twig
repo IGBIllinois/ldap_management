@@ -1,0 +1,139 @@
+{% extends 'base.html.twig' %}
+{% import 'macros/table.html.twig' as table %}
+{% import 'macros/icon.html.twig' as icon %}
+
+{% block title %}{{ parent() }} - {% if classroom is not null %}Classroom {% endif %}Users{% endblock %}
+
+{% block jumbotron %}{% if classroom is not null %}Classroom {% endif %}Users{% endblock %}
+
+{% block content %}
+	<div class="content">
+		<div class="m-3">
+			<form method="get" class="form-inline">
+				<div class="input-group mr-auto">
+					<input type="text" name="search" class="form-control" value="{{ search.search }}" placeholder="Search"/>
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-primary"><span class="fa fa-search"></span></button>
+					</div>
+				</div>
+				<input type="hidden" name="sort" value="{{ search.sort }}"/>
+				<input type="hidden" name="asc" value="{{ search.asc }}"/>
+
+				<button type="button" class="btn {% if search.filter=='expiring' %}btn-warning{% else %}btn-light{% endif %} mr-1" id="expiring-button" onclick="filter_table('expiring')">
+					<span class="far fa-clock"></span> Expiring
+				</button>
+				<button type="button" class="btn {% if search.filter=='expired' %}btn-danger{% else %}btn-light{% endif %} mr-1" id="expired-button" onclick="filter_table('expired')">
+					<span class="far fa-clock"></span> Expired
+				</button>
+				<button type="button" class="btn {% if search.filter=='passwordexpired' %}btn-danger{% else %}btn-light{% endif %} mr-1" id="passwordexpired-button" onclick="filter_table('passwordexpired')">
+					<span class="fa fa-key"></span> Password Expired
+				</button>
+				<button type="button" class="btn {% if search.filter=='left' %}btn-warning{% else %}btn-light{% endif %}" id="ad-button" onclick="filter_table('left')">
+					<span class="fa fa-graduation-cap"></span> Left Campus
+				</button>
+			</form>
+		</div>
+
+		<table class="table table-sm table-striped table-responsive-md table-igb-bordered mb-0">
+			<thead>
+			<tr>
+				{#				<th><input type="checkbox" id="select-all"/></th>#}
+				<th class="sortable-th pl-2" onclick="sort_table('username')">
+					NetID{{ table.sortIcon('username',search) }}</th>
+				{% if classroom is not null %}
+					<th class="sortable-th" onclick="sort_table('description')">
+						Description{{ table.sortIcon('description',search) }}</th>
+					<th>Groups</th>
+					<th class="sortable-th" onclick="sort_table('expiration')">
+						Expiration{{ table.sortIcon('expiration',search) }}</th>
+				{% else %}
+					<th class="sortable-th" onclick="sort_table('name')">Name{{ table.sortIcon('name',search) }}</th>
+					<th class="sortable-th" onclick="sort_table('emailforward')">Forwarding
+						Email{{ table.sortIcon('emailforward',search) }}</th>
+					<th class="sortable-th" onclick="sort_table('password_expiration')">Password
+						Expiration{{ table.sortIcon('password_expiration',search) }}</th>
+					<th class="d-xxl-table-cell d-none sortable-th" onclick="sort_table('passwordSet')">Password Last
+						Set{{ table.sortIcon('passwordSet',search) }}</th>
+					{% if search.filter=='expired' or search.filter=='expiring' %}
+						<th class="sortable-th" onclick="sort_table('expiration')">
+							Expiration{{ table.sortIcon('expiration',search) }}</th>
+						<th class="d-xxl-table-cell d-none sortable-th" onclick="sort_table('expirationreason')">
+							Expiration Reason{{ table.sortIcon('expirationreason',search) }}</th>
+					{% endif %}
+				{% endif %}
+				<th class="sortable-th" onclick="sort_table('last_login')">Last
+					Login{{ table.sortIcon('last_login',search) }}</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for user in users %}
+				<tr>
+					<td class="pl-2 d-flex">
+						<a class="mr-auto" href="user.php?uid={{ user.username }}">{{ user.username }}</a>{{ icon.userIcons(user, 'my-auto ml-1') }}
+					</td>
+					{% if classroom is not null %}
+						<td>{{ user.description }}</td>
+						<td>{{ user.groups|join(', ') }}</td>
+						<td>{{ user.expiration is null?'':(user.expiration|date('n/j/Y')) }}</td>
+					{% else %}
+						<td>{{ user.name }}</td>
+						<td>{{ user.forwardingEmail }}</td>
+						<td>{{ user.passwordExpiration|date('m/d/Y') }}</td>
+						<td class="d-xxl-table-cell d-none">{{ user.passwordLastSet|date('m/d/Y') }}</td>
+						{% if search.filter=='expired' or search.filter=='expiring' %}
+							<td>{{ user.expiration|date('m/d/Y') }}</td>
+							<td class="d-xxl-table-cell d-none">{{ user.expirationReason }}</td>
+						{% endif %}
+					{% endif %}
+					<td>{{ user.lastLogin is empty ? "Never" : user.lastLogin|date('m/d/Y') }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		<div class="m-3 text-muted">
+			<div class="mt-2">
+				{{ icon.expiring }}=expiration set &nbsp;
+				{{ icon.expired }}=expired &nbsp;
+				{{ icon.leftCampus }}=left campus &nbsp;
+				{{ icon.nonCampus }}=non-campus &nbsp;
+				{{ icon.crashplan }}=has crashplan &nbsp;
+				{{ icon.passwordExpired }}=password expired &nbsp;
+				{{ icon.passwordExpiring }}=password expiring soon &nbsp;
+				{{ icon.classroom }}=classroom user &nbsp;
+				{{ icon.loggedInRecently }}=logged in within 30 days &nbsp;
+				{{ icon.neverLoggedIn }}=never logged in
+			</div>
+		</div>
+	</div>
+	{{ table.paginator(classroom is null?'list_users.php':'list_classroom_users.php',search,search.start,totalUsers,30) }}
+{% endblock %}
+
+{% block scripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+        $('#expiring-button').on('click', function () {
+            const $this = $(this);
+            toggleClasses($this, 'btn-light', 'btn-warning active');
+        });
+        $('#expired-button').on('click', function () {
+            var $this = $(this);
+            toggleClasses($this, 'btn-light', 'btn-danger active');
+        });
+        $('#ad-button').on('click', function () {
+            var $this = $(this);
+            toggleClasses($this, 'btn-light', 'btn-warning active');
+        });
+        $('#noncampus-button').on('click', function () {
+            var $this = $(this);
+            toggleClasses($this, 'btn-light', 'btn-info active');
+        });
+        $('#select-all').change(function () {
+            var $checkboxes = $(this).closest("form").find("input[type=checkbox]");
+            if (this.checked) {
+                $checkboxes.prop("checked", true);
+            } else {
+                $checkboxes.prop("checked", false);
+            }
+        })
+	</script>
+{% endblock %}

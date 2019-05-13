@@ -18,18 +18,18 @@ if ($sapi_type != 'cli') {
 	echo "Connecting to IGB LDAP...\n";
 	
 	// Connect to ldap
-	$ldap = new ldap(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__, __LDAP_TLS__);
-	$ldap->set_bind_user(__LDAP_BIND_USER__);
-	$ldap->set_bind_pass(__LDAP_BIND_PASS__);
+	Ldap::init(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__, __LDAP_TLS__);
+    Ldap::getInstance()->set_bind_user(__LDAP_BIND_USER__);
+    Ldap::getInstance()->set_bind_pass(__LDAP_BIND_PASS__);
 
 	echo "Connecting to AD...\n";
-	$adldap = new ldap(__AD_LDAP_HOST__,__AD_LDAP_SSL__,__AD_LDAP_PORT__,__AD_LDAP_PEOPLE_OU__, __AD_LDAP_TLS__);
+	$adldap = new Ldap(__AD_LDAP_HOST__,__AD_LDAP_SSL__,__AD_LDAP_PORT__,__AD_LDAP_PEOPLE_OU__, __AD_LDAP_TLS__);
     $adldap->set_bind_user(__AD_LDAP_BIND_USER__);
     $adldap->set_bind_pass(__AD_LDAP_BIND_PASS__);
 
     echo "Fetching IGB Users...\n";
-	$users_group = new group($ldap,'igb_users');
-	$igb_users = $users_group->get_users();
+	$users_group = new Group('igb_users');
+	$igb_users = $users_group->getMemberUIDs();
 	$users = array();
 	foreach ($igb_users as $igb_user){
 	    $users[$igb_user] = false;
@@ -66,25 +66,25 @@ if ($sapi_type != 'cli') {
     }
 	echo "Done.\n";
 	foreach($users as $user=>$active){
-	    $user_obj = new user($ldap, $user);
+	    $user_obj = new User($user);
         echo $user.": ";
-        if(!$user_obj->get_classroom()){
-            if(!$user_obj->get_noncampus()){
+        if(!$user_obj->isClassroom()){
+            if(!$user_obj->getNonCampus()){
                 if($active){
                     // Active AD user
-                    if($user_obj->get_leftcampus()){
+                    if($user_obj->getLeftCampus()){
                         echo "on campus";
-                        $user_obj->set_leftcampus(false);
+                        $user_obj->setLeftCampus(false);
                     } else {
                         echo "on campus (already knew)";
                     }
                 } else {
                     // Not active AD user
-                    if($user_obj->get_leftcampus()){
+                    if($user_obj->getLeftCampus()){
                         echo "left campus (already knew)";
                     } else {
                         echo "left campus";
-                        $user_obj->set_leftcampus(true);
+                        $user_obj->setLeftCampus(true);
                     }
                 }
             } else {

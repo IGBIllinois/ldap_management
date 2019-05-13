@@ -1,0 +1,8 @@
+vendor
+sbin
+composer.lock
+log/*
+conf/settings.inc.php
+conf/settings.inc.igb.php
+sbin
+.idea

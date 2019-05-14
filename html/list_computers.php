@@ -23,9 +23,9 @@ if ( isset($_GET['sort']) ) {
     $get_array['sort'] = $sort;
 }
 
-$asc = "true";
+$asc = true;
 if ( isset($_GET['asc']) ) {
-    $asc = $_GET['asc'];
+    $asc = $_GET['asc'] == 'true';
     $get_array['asc'] = $asc;
 }
 

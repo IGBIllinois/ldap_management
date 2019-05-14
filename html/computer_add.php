@@ -2,7 +2,7 @@
 include_once('includes/main.inc.php');
 include_once('includes/session.inc.php');
 
-$error = "";
+$errors = array();
 if ( count($_POST) > 0 ) {
     $_POST = array_map("trim", $_POST);
 
@@ -12,7 +12,7 @@ if ( count($_POST) > 0 ) {
     if ( $result['RESULT'] == true ) {
         header("Location: computer.php?uid=" . $result['uid']);
     } else if ( $result['RESULT'] == false ) {
-        $error = $result['MESSAGE'];
+        $errors[] =$result['MESSAGE'];
     }
 }
 
@@ -23,5 +23,5 @@ renderTwigTemplate('edit.html.twig', array(
         array('attr' => 'name', 'name' => 'Name', 'type' => 'text'),
     ),
     'button' => array('color' => 'success', 'text' => 'Add computer'),
-    'error' => $error,
+    'errors' => $errors,
 ));

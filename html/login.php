@@ -2,7 +2,7 @@
 include_once 'includes/main.inc.php';
 
 $session = new session(__SESSION_NAME__);
-$message = "";
+$errors = "";
 $webpage = $dir = dirname($_SERVER['PHP_SELF']) . "/index.php";
 if ($session->get_var('webpage') != "") {
 	$webpage = $session->get_var('webpage');
@@ -18,11 +18,11 @@ if (isset($_POST['login'])) {
 	$error = false;
 	if ($username == "") {
 		$error = true;
-		$message .= html::error_message("Please enter your username.");
+		$errors[]= "Please enter your username.";
 	}
 	if ($password == "") {
 		$error = true;
-		$message .= html::error_message("Please enter your password.");
+		$errors[] = "Please enter your password.";
 	}
 	if ($error == false) {
 // 		Ldap::init(__LDAP_HOST__,__LDAP_SSL__,__LDAP_PORT__,__LDAP_BASE_DN__);
@@ -44,12 +44,12 @@ if (isset($_POST['login'])) {
         	header("Location: " . $location);
 		}
 		else {
-			$message .= html::error_message("Invalid username or password. Please try again. Error: ".$success);
+			$errors[] = "Invalid username or password. Please try again. Error: ".$success;
 		}
 	}
 }
 
 renderTwigTemplate('default/login.html.twig', array(
-	'username'=>$username,
-	'message'=>$message,
+    'username'=>$username,
+    'errors'=>$errors,
 ));

@@ -2,21 +2,21 @@
 include_once('includes/main.inc.php');
 include_once('includes/session.inc.php');
 
-$error = "";
+$errors = array();
 $show_users = false;
 if ( count($_POST) > 0 ) {
     $_POST = array_map("trim", $_POST);
     if ( !isset($_POST['prefix']) ) {
-        $error = html::error_message("Please enter a username prefix.");
+        $errors[] ="Please enter a username prefix.";
     }
     if ( !isset($_POST['start']) || !is_numeric($_POST['start']) ) {
-        $error = html::error_message("Please enter a valid start.");
+        $errors[] ="Please enter a valid start.";
     }
     if ( !isset($_POST['end']) || !is_numeric($_POST['end']) ) {
-        $error = html::error_message("Please enter a valid end.");
+        $errors[] ="Please enter a valid end.";
     }
 
-    if ( $error == "" ) {
+    if ( $errors == "" ) {
         $_POST['start'] = intval($_POST['start']);
         $_POST['end'] = intval($_POST['end']);
         $passwords = array();
@@ -53,7 +53,7 @@ if ( count($_POST) > 0 ) {
                 $grouptoremove = new Group();
                 for ( $j = 0; $j < count($groups); $j++ ) {
                     if ( $groups[$j] != $username && $groups[$j] != 'classroom_queue' ) {
-                        $grouptoremove->load_by_name($groups[$j]);
+                        $grouptoremove->load_by_id($groups[$j]);
                         $grouptoremove->removeUser($username);
                     }
                 }
@@ -130,7 +130,7 @@ if ( count($_POST) > 0 ) {
     }
 }
 
-$allGroups = Group::search("", -1, -1, 'name', "true", false);
+$allGroups = Group::search("");
 $groups = array();
 foreach ( $allGroups as $group ) {
     $groups[] = $group->getName();
@@ -148,6 +148,6 @@ renderTwigTemplate('edit.html.twig', array(
         array('attr' => 'group', 'name' => 'Group', 'type' => 'select', 'options' => $groups, 'blankOption' => true),
     ),
     'button' => array('color' => 'success', 'text' => 'Add classroom users'),
-    'error' => $error,
+    'errors' => $errors,
     'validation' => 'show_add_classroom_text',
 ));

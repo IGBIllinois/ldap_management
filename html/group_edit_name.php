@@ -5,21 +5,21 @@ include_once('includes/session.inc.php');
 $gid = requireGetKey('gid');
 $group = new Group($gid);
 
-$error = "";
+$errors = array();
 if ( count($_POST) > 0 ) {
     $_POST = array_map("trim", $_POST);
 
     if ( $_POST['name'] == "" ) {
-        $error .= html::error_message("Name cannot be blank.");
+        $errors[] = "Name cannot be blank.";
     }
 
-    if ( $error == "" ) {
+    if ( $errors == "" ) {
         $result = $group->setName($_POST['name']);
 
         if ( $result['RESULT'] == true ) {
             header("Location: group.php?gid=" . $result['gid']);
         } else if ( $result['RESULT'] == false ) {
-            $error = $result['MESSAGE'];
+            $errors[] = $result['MESSAGE'];
         }
     }
 }
@@ -32,5 +32,5 @@ renderTwigTemplate('group/edit.html/twig', array(
         array('attr' => 'name', 'name' => 'New Name', 'type' => 'text', 'value' => $group->getName()),
     ),
     'validation' => 'change_groupName_errors',
-    'error' => $error,
+    'errors' => $errors,
 ));

@@ -1,8 +1,8 @@
 <?php
 
-class User
+class User extends LdapObject
 {
-
+    protected static $ou = __LDAP_PEOPLE_OU__;
     ////////////////Private Variables//////////
 
     private $username;
@@ -35,30 +35,25 @@ class User
     private $passwordSet = null;
     private $passwordExpiration = null;
 
-    private $raw_data = null;
-
-    private static $lastSearch = array();
-
-    private static $fullAttributes = array("uid", "cn", 'sn', 'givenname', "homeDirectory", "loginShell", "mail", "shadowExpire", "creatorsName", "createTimestamp", "modifiersName", "modifyTimestamp", "uidnumber", 'sambaPwdLastSet', 'postalAddress', 'employeetype', 'telexNumber', 'facsimiletelephonenumber', 'description', 'destinationindicator', 'initials', 'authTimestamp');
-
     ////////////////Public Functions///////////
 
-    public function __construct($username = "")
-    {
+    public function __construct($username = "") {
         if ( $username != "" ) {
-            $this->load_by_username($username);
+            $this->load_by_id($username);
         }
     }
 
 
-    public function __destruct()
-    {
-    }
-
-
-    // Inserts a user into the database with the given values, then loads that user into this object. Displays errors if there are any.
-    public function create($username, $firstname, $lastname, $password)
-    {
+    /**
+     * Inserts a user into the database with the given values, then loads that user into this object. Displays errors
+     * if there are any.
+     * @param $username
+     * @param $firstname
+     * @param $lastname
+     * @param $password
+     * @return LdapStatus
+     */
+    public function create($username, $firstname, $lastname, $password) {
         $username = trim($username);
         $firstname = trim($firstname);
         $lastname = trim($lastname);
@@ -69,35 +64,38 @@ class User
         //Verify Username
         if ( $username == "" ) {
             $error = true;
-            $message = html::error_message("Please enter a username.");
+            $message = "Please enter a username.";
         } else if ( User::exists($username) ) {
             $error = true;
-            $message = html::error_message("User already exists.");
+            $message = "User already exists.";
         } else if ( Group::exists($username) ) {
             $error = true;
-            $message = html::error_message("Username already exists as group");
+            $message = "Username already exists as group";
         }
         if ( $firstname == "" ) {
             $error = true;
-            $message .= html::error_message("Please enter a first name.");
+            $message .= "Please enter a first name.";
         }
         if ( $lastname == "" ) {
             $error = true;
-            $message .= html::error_message("Please enter a last name.");
+            $message .= "Please enter a last name.";
         }
         if ( $password == "" ) {
             $error = true;
-            $message .= html::error_message("Please enter a password.");
+            $message .= "Please enter a password.";
         }
 
         //If Errors, return with error messages
         if ( $error ) {
-            return array('RESULT' => false,
-                'MESSAGE' => $message);
+            return new LdapStatus(false, $message);
         } //Everything looks good, add user
         else {
             // Get all users' uidnumber, gidnumber
-            $users = Ldap::getInstance()->search("(!(uid=ftp_*))", __LDAP_PEOPLE_OU__, array('uid', 'uidnumber', 'gidnumber'));
+            $users = Ldap::getInstance()->search("(!(uid=ftp_*))", static::$ou, array(
+                'uid',
+                'uidnumber',
+                'gidnumber',
+            ));
             $uidnumbers = array();
             $gidnumbers = array();
             for ( $i = 0; $i < $users['count']; $i++ ) {
@@ -125,9 +123,7 @@ class User
             $gidnumber = $uidnumber;
 
             $passwd = "";
-            if ( __PASSWD_HASH__ == "MD5" ) {
-                $passwd = self::MD5Hash($password);
-            }
+
             if ( __PASSWD_HASH__ == "SSHA" ) {
                 $passwd = self::SSHAHash($password);
             }
@@ -142,10 +138,16 @@ class User
             }
 
             // Add LDAP user
-            $dn = "uid=" . $username . "," . __LDAP_PEOPLE_OU__;
+            $dn = "uid=" . $username . "," . static::$ou;
             $data = array(
                 'uid' => $username,
-                'objectClass' => array('inetOrgPerson', 'posixAccount', 'shadowAccount', 'sambaSamAccount', 'account'),
+                'objectClass' => array(
+                    'inetOrgPerson',
+                    'posixAccount',
+                    'shadowAccount',
+                    'sambaSamAccount',
+                    'account',
+                ),
                 'cn' => $name,
                 'sn' => $lastname,
                 'givenName' => $firstname,
@@ -164,27 +166,21 @@ class User
                 'facsimiletelephonenumber' => time() + 60 * 60 * 24 * 365,
             );
             if ( !Ldap::getInstance()->add($dn, $data) ) {
-                return array(
-                    'RESULT' => false,
-                    'MESSAGE' => html::error_message('LDAP error when adding user: ' . Ldap::getInstance()->get_error()),
-                );
+                return new LdapStatus(false, 'LDAP error when adding user: ' . Ldap::getInstance()->get_error());
             }
-            $this->load_by_username($username);
+            $this->load_by_id($username);
             Log::info("Added user " . $this->getUsername() . " (" . $this->getName() . ")");
 
             // Add LDAP group
             $group = new Group();
             $group->createUserGroup($username, $username, $gidnumber);
 
-            return array('RESULT' => true,
-                'MESSAGE' => html::success_message('User successfully added.'),
-                'uid' => $username);
+            return new LdapStatus(true, 'User successfully added.', $this);
         }
 
     }
 
-    public function remove()
-    {
+    public function remove() {
         $dn = $this->getRDN();
         if ( Ldap::getInstance()->remove($dn) ) {
             if ( __RUN_SHELL_SCRIPTS__ ) {
@@ -202,209 +198,156 @@ class User
             }
 
             Log::info("Removed user " . $this->getUsername());
-            return array('RESULT' => true,
-                'MESSAGE' => 'User deleted.',
-                'uid' => $this->username);
+            return array('RESULT' => true, 'MESSAGE' => 'User deleted.', 'uid' => $this->username);
         }
     }
 
-    public function getLdapAttributes()
-    {
-        $this->load_ldap_result();
-        if ( $this->raw_data ) {
-            return ldap_get_attributes(Ldap::getInstance()->get_resource(), $this->raw_data);
-        }
-        return false;
-    }
-
-    private function load_ldap_result()
-    { // TODO should this be used during loading also?
-        if ( $this->raw_data == null ) {
-            $filter = "(uid=" . $this->getUsername() . ")";
-            $result = Ldap::getInstance()->search_result($filter, __LDAP_PEOPLE_OU__);
-            if ( $result != false ) {
-                $this->raw_data = ldap_first_entry(Ldap::getInstance()->get_resource(), $result);
-            }
-        }
-    }
-
-    public function getUsername()
-    {
+    public function getUsername() {
         return $this->username;
     }
 
-    public function getEmail()
-    {
+    public function getEmail() {
         return $this->email;
     }
 
-    public function getForwardingEmail()
-    {
+    public function getForwardingEmail() {
         return $this->emailforward;
     }
 
-    public function setForwardingEmail($emailforward)
-    {
-        $dn = "uid=" . $this->getUsername() . "," . __LDAP_PEOPLE_OU__;
+    public function setForwardingEmail($emailforward) {
+        $dn = "uid=" . $this->getUsername() . "," . static::$ou;
         $data = array("postalAddress" => $emailforward);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->emailforward = $emailforward;
             Log::info("Set email forwarding for " . $this->getUsername() . " to " . $emailforward);
-            return array('RESULT' => true,
-                'MESSAGE' => 'Email forwarding set',
-                'uid' => $this->getUsername());
+            return array('RESULT' => true, 'MESSAGE' => 'Email forwarding set', 'uid' => $this->getUsername());
         }
     }
 
-    public function getCrashplan()
-    {
+    public function getCrashplan() {
         return $this->crashplan;
     }
 
-    public function setCrashplan($crashplan)
-    {
+    public function setCrashplan($crashplan) {
         $value = 0;
         if ( $crashplan ) {
             $value = 1;
         }
-        $dn = "uid=" . $this->getUsername() . "," . __LDAP_PEOPLE_OU__;
+        $dn = "uid=" . $this->getUsername() . "," . static::$ou;
         $data = array("telexNumber" => $value);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->crashplan = $value;
             Log::info("Set crashplan for " . $this->getUsername() . " to " . ($crashplan ? 'active' : 'inactive'));
-            return array('RESULT' => true,
-                'MESSAGE' => 'Crashplan set',
-                'uid' => $this->getUsername());
+            return array('RESULT' => true, 'MESSAGE' => 'Crashplan set', 'uid' => $this->getUsername());
         }
     }
 
-    public function getLoginShell()
-    {
+    public function getLoginShell() {
         return $this->loginShell;
     }
 
-    public function setLoginShell($shell)
-    {
+    public function setLoginShell($shell) {
         $dn = $this->getRDN();
         $data = array("loginShell" => $shell);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             Log::info("Set login shell for " . $this->getUsername() . " to " . $shell);
-            return array('RESULT' => true,
-                'MESSAGE' => 'Login shell changed.',
-                'uid' => $this->username);
+            return array('RESULT' => true, 'MESSAGE' => 'Login shell changed.', 'uid' => $this->username);
         } else {
-            return array('RESULT' => false,
+            return array(
+                'RESULT' => false,
                 'MESSAGE' => 'LDAP Error: ' . Ldap::getInstance()->get_error(),
-                'uid' => $this->username);
+                'uid' => $this->username,
+            );
         }
     }
 
-    public function getHomeDirectory()
-    {
+    public function getHomeDirectory() {
         return $this->homeDirectory;
     }
 
-    public function getHomeSubFolder()
-    {
+    public function getHomeSubFolder() {
         return $this->homeSubfolder;
     }
 
-    public function setHomeSubFolder($subfolder)
-    {
+    public function setHomeSubFolder($subfolder) {
         $dn = $this->getRDN();
         $data = array("initials" => $subfolder);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             Log::info("Set home subfolder for " . $this->getUsername() . " to " . $subfolder);
-            return array('RESULT' => true,
-                'MESSAGE' => 'Home Subfolder changed.',
-                'uid' => $this->username);
+            return array('RESULT' => true, 'MESSAGE' => 'Home Subfolder changed.', 'uid' => $this->username);
         } else {
-            return array('RESULT' => false,
+            return array(
+                'RESULT' => false,
                 'MESSAGE' => 'LDAP Error: ' . Ldap::getInstance()->get_error(),
-                'uid' => $this->username);
+                'uid' => $this->username,
+            );
         }
     }
 
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
-    public function getFirstName()
-    {
+    public function getFirstName() {
         return $this->givenName;
     }
 
-    public function getLastName()
-    {
+    public function getLastName() {
         return $this->sn;
     }
 
-    public function getExpiration()
-    {
+    public function getExpiration() {
         return $this->expiration;
     }
 
-    public function getPasswordExpiration()
-    {
+    public function getPasswordExpiration() {
         return $this->passwordExpiration;
     }
 
-    public function isExpired()
-    {
+    public function isExpired() {
         return ($this->expiration != null && $this->expiration <= time());
     }
 
-    public function isExpiring()
-    {
+    public function isExpiring() {
         return ($this->expiration != null && $this->expiration > time());
     }
 
-    public function isPasswordExpired()
-    {
+    public function isPasswordExpired() {
         return ($this->passwordExpiration != null && $this->passwordExpiration <= time());
     }
 
-    public function getLastLogin()
-    {
+    public function getLastLogin() {
         return $this->lastLogin;
     }
 
-    public function getUidNumber()
-    {
+    public function getUidNumber() {
         return $this->uidnumber;
     }
 
-    public function getCreator()
-    {
+    public function getCreator() {
         return $this->creator;
     }
 
-    public function getCreateTime()
-    {
+    public function getCreateTime() {
         return $this->createTime;
     }
 
-    public function getModifier()
-    {
+    public function getModifier() {
         return $this->modifier;
     }
 
-    public function getModifyTime()
-    {
+    public function getModifyTime() {
         return $this->modifyTime;
     }
 
-    public function getPasswordLastSet()
-    {
+    public function getPasswordLastSet() {
         return $this->passwordSet;
     }
 
     /**
      * @return array
      */
-    public function getHosts()
-    {
+    public function getHosts() {
         if ( $this->hosts == null ) {
             $filter = "(uid=" . $this->getUsername() . ")";
             $attributes = array('Host');
@@ -421,8 +364,7 @@ class User
     }
 
 
-    public function getGroups()
-    {
+    public function getGroups() {
         if ( $this->groups == null ) {
             $filter = "(&(cn=*)(memberUid=" . $this->getUsername() . "))";
             $attributes = array('cn');
@@ -438,12 +380,11 @@ class User
     }
 
 
-    public function addHost($host)
-    {
+    public function addHost($host) {
         if ( Host::exists($host) && (!$this->getHosts() || !in_array($host, $this->getHosts())) ) {
-            $dn = "uid=" . $this->getUsername() . "," . __LDAP_PEOPLE_OU__;
+            $dn = "uid=" . $this->getUsername() . "," . static::$ou;
             $filter = "(&(uid=" . $this->getUsername() . ")(objectClass=account))";
-            $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, array());
+            $result = Ldap::getInstance()->search($filter, static::$ou, array());
 
             if ( $result['count'] == 0 ) {
                 $data = array("objectClass" => 'account');
@@ -453,45 +394,43 @@ class User
             $data = array("host" => $host);
             if ( Ldap::getInstance()->mod_add($dn, $data) ) {
                 Log::info("Gave host access for " . $host . " to " . $this->getUsername());
-                return array('RESULT' => true,
+                return array(
+                    'RESULT' => true,
                     'MESSAGE' => 'Machine rights successfully added.',
-                    'uid' => $this->getUsername());
+                    'uid' => $this->getUsername(),
+                );
             } else {
-                return array('RESULT' => false,
-                    'MESSAGE' => 'Error: ' . Ldap::getInstance()->get_error());
+                return array('RESULT' => false, 'MESSAGE' => 'Error: ' . Ldap::getInstance()->get_error());
             }
         }
     }
 
-    public function removeHost($host)
-    {
+    public function removeHost($host) {
         if ( Host::exists($host) || ($this->getHosts() && in_array($host, $this->getHosts())) ) {
-            $dn = "uid=" . $this->getUsername() . "," . __LDAP_PEOPLE_OU__;
+            $dn = "uid=" . $this->getUsername() . "," . static::$ou;
             $data = array("host" => $host);
             if ( @Ldap::getInstance()->mod_del($dn, $data) ) {
                 Log::info("Removed host access to " . $host . " from " . $this->getUsername());
-                return array('RESULT' => true,
+                return array(
+                    'RESULT' => true,
                     'MESSAGE' => 'Machine rights successfully removed.',
-                    'uid' => $this->getUsername());
+                    'uid' => $this->getUsername(),
+                );
             }
         }
     }
 
-    public function setName($firstname, $lastname)
-    {
+    public function setName($firstname, $lastname) {
         $dn = $this->getRDN();
         $name = $firstname . " " . $lastname;
         $data = array("cn" => $name, "sn" => $lastname, "givenName" => $firstname, "gecos" => $name);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             Log::info("Changed name for " . $this->getUsername() . " to \"$name\"");
-            return array('RESULT' => true,
-                'MESSAGE' => 'Name successfully changed.',
-                'uid' => $this->getUsername());
+            return array('RESULT' => true, 'MESSAGE' => 'Name successfully changed.', 'uid' => $this->getUsername());
         }
     }
 
-    public function setUsername($username)
-    {
+    public function setUsername($username) {
         $dn = $this->getRDN();
         $old_username = $this->getUsername();
         if ( $username < 'n' ) {
@@ -529,17 +468,12 @@ class User
             exec("sudo ../bin/change_username.pl $safeusername $safenewusername");
         }
 
-        return array('RESULT' => true,
-            'MESSAGE' => 'Username changed.',
-            'uid' => $username);
+        return array('RESULT' => true, 'MESSAGE' => 'Username changed.', 'uid' => $username);
     }
 
-    public function setPassword($password)
-    {
+    public function setPassword($password) {
         $passwd = "";
-        if ( __PASSWD_HASH__ == "MD5" ) {
-            $passwd = self::MD5Hash($password);
-        }
+
         if ( __PASSWD_HASH__ == "SSHA" ) {
             $passwd = self::SSHAHash($password);
         }
@@ -548,82 +482,79 @@ class User
         $lmpasswd = self::LMHash($password);
 
         $dn = $this->getRDN();
-        $data = array('userPassword' => $passwd,
+        $data = array(
+            'userPassword' => $passwd,
             'sambaLMPassword' => $lmpasswd,
             'sambaNTPassword' => $ntpasswd,
-            'sambaPwdLastSet' => time());
+            'sambaPwdLastSet' => time(),
+        );
         if ( $this->getPasswordExpiration() != null ) {
             // If user is not exempt, set password expiration date to one year hence
             $data['facsimiletelephonenumber'] = time() + 60 * 60 * 24 * 365;
         }
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             Log::info("Changed password for " . $this->getUsername());
-            return array('RESULT' => true,
-                'MESSAGE' => 'Password successfully set.',
-                'uid' => $this->getUsername());
+            return array('RESULT' => true, 'MESSAGE' => 'Password successfully set.', 'uid' => $this->getUsername());
         } else {
-            return array('RESULT' => false,
-                'MESSAGE' => 'Set Password Failed: ' . Ldap::getInstance()->get_error());
+            return array('RESULT' => false, 'MESSAGE' => 'Set Password Failed: ' . Ldap::getInstance()->get_error());
         }
     }
 
-    public function lock()
-    {
+    public function lock() {
         $filter = "(uid=" . $this->getUsername() . ")";
         $attributes = array("userPassword", "sambaLMPassword", "sambaNTPassword");
-        $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, $attributes);
+        $result = Ldap::getInstance()->search($filter, static::$ou, $attributes);
         if ( $result['count'] > 0 ) {
             $dn = $this->getRDN();
-            $data = array('userPassword' => '!' . $result[0]['userpassword'][0], 'sambaLMPassword' => '!' . $result[0]['sambalmpassword'][0], 'sambaNTPassword' => '!' . $result[0]['sambantpassword'][0]);
+            $data = array(
+                'userPassword' => '!' . $result[0]['userpassword'][0],
+                'sambaLMPassword' => '!' . $result[0]['sambalmpassword'][0],
+                'sambaNTPassword' => '!' . $result[0]['sambantpassword'][0],
+            );
             if ( Ldap::getInstance()->modify($dn, $data) ) {
                 Log::info("User " . $this->getUsername() . " locked");
-                return array('RESULT' => true,
-                    'MESSAGE' => 'User locked.',
-                    'uid' => $this->getUsername());
+                return array('RESULT' => true, 'MESSAGE' => 'User locked.', 'uid' => $this->getUsername());
             }
         }
-        return array('RESULT' => false,
-            'MESSAGE' => 'Lock failed: ' . Ldap::getInstance()->get_error());
+        return array('RESULT' => false, 'MESSAGE' => 'Lock failed: ' . Ldap::getInstance()->get_error());
     }
 
-    public function unlock()
-    {
+    public function unlock() {
         $filter = "(uid=" . $this->getUsername() . ")";
         $attributes = array("userPassword", "sambaLMPassword", "sambaNTPassword");
-        $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, $attributes);
+        $result = Ldap::getInstance()->search($filter, static::$ou, $attributes);
         if ( $result['count'] > 0 ) {
             if ( substr($result[0]['userpassword'][0], 0, 1) == '!' ) {
-                if ( substr($result[0]['sambalmpassword'][0], 0, 1) == '!' ) { // If the user was locked before this change, their samba password won't have been locked
+                if ( substr($result[0]['sambalmpassword'][0], 0,
+                            1) == '!' ) { // If the user was locked before this change, their samba password won't have been locked
                     $dn = $this->getRDN();
-                    $data = array('userPassword' => substr($result[0]['userpassword'][0], 1), 'sambaLMPassword' => substr($result[0]['sambalmpassword'][0], 1), 'sambaNTPassword' => substr($result[0]['sambantpassword'][0], 1));
+                    $data = array(
+                        'userPassword' => substr($result[0]['userpassword'][0], 1),
+                        'sambaLMPassword' => substr($result[0]['sambalmpassword'][0], 1),
+                        'sambaNTPassword' => substr($result[0]['sambantpassword'][0], 1),
+                    );
                     if ( Ldap::getInstance()->modify($dn, $data) ) {
                         Log::info("User " . $this->getUsername() . " unlocked");
-                        return array('RESULT' => true,
-                            'MESSAGE' => 'User unlocked.',
-                            'uid' => $this->getUsername());
+                        return array('RESULT' => true, 'MESSAGE' => 'User unlocked.', 'uid' => $this->getUsername());
                     }
                 } else {
                     $dn = $this->getRDN();
                     $data = array('userPassword' => substr($result[0]['userpassword'][0], 1));
                     if ( Ldap::getInstance()->modify($dn, $data) ) {
                         Log::info("User " . $this->getUsername() . " unlocked");
-                        return array('RESULT' => true,
-                            'MESSAGE' => 'User unlocked.',
-                            'uid' => $this->getUsername());
+                        return array('RESULT' => true, 'MESSAGE' => 'User unlocked.', 'uid' => $this->getUsername());
                     }
                 }
 
             }
         }
-        return array('RESULT' => false,
-            'MESSAGE' => 'Unlock failed: ' . Ldap::getInstance()->get_error());
+        return array('RESULT' => false, 'MESSAGE' => 'Unlock failed: ' . Ldap::getInstance()->get_error());
     }
 
-    public function isLocked()
-    {
+    public function isLocked() {
         $filter = "(uid=" . $this->getUsername() . ")";
         $attributes = array("userPassword");
-        $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, $attributes);
+        $result = Ldap::getInstance()->search($filter, static::$ou, $attributes);
         if ( $result['count'] > 0 ) {
             if ( isset($result[0]['userpassword']) && substr($result[0]['userpassword'][0], 0, 1) == '!' ) {
                 return true;
@@ -634,48 +565,42 @@ class User
         return false;
     }
 
-    public function setExpiration($expiration, $reason = "")
-    {
-        $dn = "uid=" . $this->getUsername() . "," . __LDAP_PEOPLE_OU__;
+    public function setExpiration($expiration, $reason = "") {
+        $dn = "uid=" . $this->getUsername() . "," . static::$ou;
         $data = array("shadowExpire" => $expiration);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->expiration = $expiration;
             if ( $reason != "" ) {
                 $this->setExpirationReason($reason);
             }
-            Log::info("Set expiration for " . $this->getUsername() . " to " . strftime('%m/%d/%Y', $this->getExpiration()));
-            return array('RESULT' => true,
-                'MESSAGE' => 'Expiration successfully set.',
-                'uid' => $this->getUsername());
+            Log::info("Set expiration for " . $this->getUsername() . " to " . strftime('%m/%d/%Y',
+                                                                                       $this->getExpiration()));
+            return array('RESULT' => true, 'MESSAGE' => 'Expiration successfully set.', 'uid' => $this->getUsername());
         }
     }
 
-    public function removeExpiration()
-    {
+    public function removeExpiration() {
         $dn = $this->getRDN();
         $data = array("shadowexpire" => array());
         if ( Ldap::getInstance()->mod_del($dn, $data) ) {
             Log::info("Cancelled expiration for user " . $this->getUsername());
-            return array('RESULT' => true,
-                'MESSAGE' => 'Expiration cancelled.',
-                'uid' => $this->getUsername());
+            return array('RESULT' => true, 'MESSAGE' => 'Expiration cancelled.', 'uid' => $this->getUsername());
         }
     }
 
-    public function getExpirationReason()
-    {
+    public function getExpirationReason() {
         return $this->expirationReason;
     }
 
-    public function setExpirationReason($reason)
-    {
-        $dn = "uid=" . $this->getUsername() . "," . __LDAP_PEOPLE_OU__;
+    public function setExpirationReason($reason) {
+        $dn = "uid=" . $this->getUsername() . "," . static::$ou;
         if ( $reason == "" ) { // Delete
             $data = array("destinationindicator" => array());
             if ( Ldap::getInstance()->mod_del($dn, $data) ) {
                 $this->expirationReason = "";
                 Log::info("Removed expiration reason for " . $this->getUsername());
-                return array('RESULT' => true,
+                return array(
+                    'RESULT' => true,
                     'MESSAGE' => 'Removed expiration reason',
                     'uid' => $this->getUsername(),
                 );
@@ -685,76 +610,78 @@ class User
             if ( Ldap::getInstance()->modify($dn, $data) ) {
                 $this->expirationReason = $reason;
                 Log::info("Set expiration reason for " . $this->getUsername() . " to '" . $this->getExpirationReason() . "'");
-                return array('RESULT' => true,
+                return array(
+                    'RESULT' => true,
                     'MESSAGE' => 'Expiration reason successfully set.',
-                    'uid' => $this->getUsername());
+                    'uid' => $this->getUsername(),
+                );
             }
         }
     }
 
-    public function setPasswordExpiration($expiration)
-    {
-        $dn = "uid=" . $this->getUsername() . "," . __LDAP_PEOPLE_OU__;
+    public function setPasswordExpiration($expiration) {
+        $dn = "uid=" . $this->getUsername() . "," . static::$ou;
         $data = array("facsimiletelephonenumber" => $expiration);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->passwordExpiration = $expiration;
-            Log::info("Set password expiration for " . $this->getUsername() . " to " . strftime('%m/%d/%Y', $this->getPasswordExpiration()));
-            return array('RESULT' => true,
+            Log::info("Set password expiration for " . $this->getUsername() . " to " . strftime('%m/%d/%Y',
+                                                                                                $this->getPasswordExpiration()));
+            return array(
+                'RESULT' => true,
                 'MESSAGE' => 'Password expiration successfully set.',
-                'uid' => $this->getUsername());
+                'uid' => $this->getUsername(),
+            );
         }
     }
 
-    public function removePasswordExpiration()
-    {
+    public function removePasswordExpiration() {
         $dn = $this->getRDN();
         $data = array("facsimiletelephonenumber" => array());
         if ( Ldap::getInstance()->mod_del($dn, $data) ) {
             Log::info("Cancelled password expiration for user " . $this->getUsername());
-            return array('RESULT' => true,
+            return array(
+                'RESULT' => true,
                 'MESSAGE' => 'Password expiration cancelled.',
-                'uid' => $this->getUsername());
+                'uid' => $this->getUsername(),
+            );
         }
     }
 
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         if ( $this->getDescription() != $description ) {
-            $dn = "uid=" . $this->getUsername() . "," . __LDAP_PEOPLE_OU__;
+            $dn = "uid=" . $this->getUsername() . "," . static::$ou;
             if ( $description == "" ) { // Delete
                 $data = array("description" => array());
                 if ( Ldap::getInstance()->mod_del($dn, $data) ) {
                     $this->description = "";
                     Log::info("Removed description for " . $this->getUsername());
-                    return array('RESULT' => true,
-                        'MESSAGE' => 'Removed description',
-                        'uid' => $this->getUsername(),
-                    );
+                    return array('RESULT' => true, 'MESSAGE' => 'Removed description', 'uid' => $this->getUsername(),);
                 }
             } else { // Update
                 $data = array("description" => $description);
                 if ( Ldap::getInstance()->modify($dn, $data) ) {
                     $this->description = $description;
                     Log::info("Set description for " . $this->getUsername() . " to " . $this->getDescription());
-                    return array('RESULT' => true,
+                    return array(
+                        'RESULT' => true,
                         'MESSAGE' => 'Description successfully set.',
-                        'uid' => $this->getUsername());
+                        'uid' => $this->getUsername(),
+                    );
                 }
             }
         }
     }
 
-    public function authenticate($password)
-    {
+    public function authenticate($password) {
         $rdn = $this->getRDN();
         if ( Ldap::getInstance()->bind($rdn, $password) ) {
             if ( User::exists($this->username) ) {
-                $in_admin_group = Ldap::getInstance()->search("(memberuid=" . $this->username . ")", __LDAP_ADMIN_GROUP__);
+                $in_admin_group = Ldap::getInstance()->search("(memberuid=" . $this->username . ")",
+                                                              __LDAP_ADMIN_GROUP__);
                 if ( $in_admin_group['count'] > 0 ) {
                     return 0;
                 } else {
@@ -769,46 +696,53 @@ class User
         }
     }
 
-    public static function randomPassword($length = 8)
-    {
+    public static function randomPassword($length = 8) {
         $passwordchars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@$%&';
         do {
             $password = "";
             for ( $i = 0; $i < $length; $i++ ) {
                 $password .= $passwordchars{self::openssl_rand(0, strlen($passwordchars) - 1)};
             }
-        } while ( !(preg_match("/[A-Z]/u", $password) && preg_match("/[a-z]/u", $password) && preg_match("/[^A-Za-z]/u", $password)) );
+        } while ( !(preg_match("/[A-Z]/u", $password) && preg_match("/[a-z]/u", $password) && preg_match("/[^A-Za-z]/u",
+                                                                                                         $password)) );
         return $password;
     }
 
-    public static function all()
-    {
+    public static function all() {
         $users_array = array();
         $filter = "(uid=*)";
         $attributes = array('uid');
-        $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, $attributes);
+        $result = Ldap::getInstance()->search($filter, static::$ou, $attributes);
         for ( $i = 0; $i < $result['count']; $i++ ) {
             array_push($users_array, $result[$i]['uid'][0]);
         }
-        usort($users_array, 'html::username_cmp');
+        usort($users_array, 'LdapObject::username_cmp');
         return $users_array;
     }
 
-    public static function search($search, $start = 0, $count = 30, $sort = "username", $asc = "true", $userfilter = 'none', $passwordSet = null)
-    {
+    public static function search(
+        $search,
+        $start = 0,
+        $count = 30,
+        $sort = "username",
+        $asc = true,
+        $userfilter = 'none',
+        $passwordSet = null
+    ) {
         // TODO asc shouldnt be a string
         if ( $search == "" ) {
             $filter = "(uid=*)";
         } else {
             $filter = "(|(|(uid=*$search*)(cn=*$search*))(uidnumber=$search))";
         }
-        $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, self::$fullAttributes);
+        $result = Ldap::getInstance()->search($filter, static::$ou, self::$fullAttributes);
         $users = array();
         for ( $i = 0; $i < $result['count']; $i++ ) {
             $user = new User();
             $user->load_from_result($result[$i]);
 
-            if ( $passwordSet === null || strftime("%Y%m%d", $user->getPasswordLastSet()) === strftime("%Y%m%d", strtotime($passwordSet)) ) {
+            if ( $passwordSet === null || strftime("%Y%m%d", $user->getPasswordLastSet()) === strftime("%Y%m%d",
+                                                                                                       strtotime($passwordSet)) ) {
                 if ( $userfilter != 'none' ) {
                     if ( $userfilter == 'expiring' ) {
                         if ( $user->isExpiring() && !$user->isClassroom() ) {
@@ -843,37 +777,13 @@ class User
             }
         }
 
-        usort($users, self::sorter($sort, $asc));
-        self::$lastSearch = $users;
+        usort($users, static::sorter($sort, $asc));
+        static::$lastSearch = $users;
         return array_slice($users, $start, $count);
     }
 
-    public static function lastSearchCount()
-    {
-        return count(self::$lastSearch);
-    }
 
-
-    /**
-     * @param string $username
-     * @return bool
-     */
-    public static function exists($username)
-    {
-        $username = trim($username);
-        $filter = "(uid=" . $username . ")";
-        $attributes = array('');
-        $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, $attributes);
-        if ( $result['count'] ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    public static function isInAD($username)
-    {
+    public static function isInAD($username) {
         if ( $username == "" ) {
             return false;
         }
@@ -892,72 +802,63 @@ class User
         }
     }
 
-    public function getLeftCampus()
-    {
+    public function getLeftCampus() {
         return $this->leftCampus;
     }
 
-    public function setLeftCampus($leftCampus)
-    {
-        $dn = "uid=" . $this->getUsername() . "," . __LDAP_PEOPLE_OU__;
+    public function setLeftCampus($leftCampus) {
+        $dn = "uid=" . $this->getUsername() . "," . static::$ou;
         $data = array("employeetype" => ($leftCampus ? 'leftcampus' : array()));
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->leftCampus = $leftCampus;
             Log::info("Set left-campus for " . $this->getUsername() . " to " . $this->getLeftCampus());
-            return array('RESULT' => true,
-                'MESSAGE' => 'Leftcampus successfully set.',
-                'uid' => $this->getUsername());
+            return array('RESULT' => true, 'MESSAGE' => 'Leftcampus successfully set.', 'uid' => $this->getUsername());
         } else {
             return array(
                 'RESULT' => false,
-                'MESSAGE' => html::error_message('LDAP error when setting leftcampus: ' . Ldap::getInstance()->get_error()),
+                'MESSAGE' => 'LDAP error when setting leftcampus: ' . Ldap::getInstance()->get_error(),
             );
         }
     }
 
-    public function getNonCampus()
-    {
+    public function getNonCampus() {
         return $this->nonCampus;
     }
 
-    public function setNonCampus($nonCampus)
-    {
-        $dn = "uid=" . $this->getUsername() . "," . __LDAP_PEOPLE_OU__;
+    public function setNonCampus($nonCampus) {
+        $dn = "uid=" . $this->getUsername() . "," . static::$ou;
         $data = array("employeetype" => ($nonCampus ? 'noncampus' : array()));
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->nonCampus = $nonCampus;
             Log::info("Set non-campus for " . $this->getUsername() . " to " . $this->getNonCampus());
-            return array('RESULT' => true,
-                'MESSAGE' => 'Noncampus successfully set.',
-                'uid' => $this->getUsername());
+            return array('RESULT' => true, 'MESSAGE' => 'Noncampus successfully set.', 'uid' => $this->getUsername());
         } else {
             return array(
                 'RESULT' => false,
-                'MESSAGE' => html::error_message('LDAP error when setting noncampus: ' . Ldap::getInstance()->get_error()),
+                'MESSAGE' => 'LDAP error when setting noncampus: ' . Ldap::getInstance()->get_error(),
             );
         }
     }
 
-    public function isClassroom()
-    {
+    public function isClassroom() {
         return $this->classroom;
     }
 
-    public function setClassroom($classroom)
-    {
-        $dn = "uid=" . $this->getUsername() . "," . __LDAP_PEOPLE_OU__;
+    public function setClassroom($classroom) {
+        $dn = "uid=" . $this->getUsername() . "," . static::$ou;
         $data = array("employeetype" => ($classroom ? 'classroom' : array()));
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->classroom = $classroom;
             Log::info("Set classroom-user for " . $this->getUsername() . " to " . $this->isClassroom());
-            return array('RESULT' => true,
+            return array(
+                'RESULT' => true,
                 'MESSAGE' => 'Classroom-user successfully set.',
-                'uid' => $this->getUsername());
+                'uid' => $this->getUsername(),
+            );
         }
     }
 
-    public function serializable()
-    {
+    public function serializable() { // TODO what *is* this?
         $data = array(
             'username' => $this->username,
             'name' => $this->name,
@@ -972,17 +873,9 @@ class User
 
 //////////////////Private Functions//////////
 
-    public function load_by_username($username)
-    {
-        $filter = "(uid=" . $username . ")";
-        $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, self::$fullAttributes);
-        if ( $result['count'] > 0 ) {
-            $this->load_from_result($result[0]);
-        }
-    }
-
-    private function load_from_result($result)
-    {
+    protected function load_from_result($result) {
+        // TODO someday this can be reworked to all happen in the parent class
+        parent::load_from_result($result);
         $this->name = $result['cn'][0];
         $this->sn = $result['sn'][0];
         if ( isset($result['givenname']) ) {
@@ -1039,21 +932,8 @@ class User
         }
     }
 
-    public function getRDN()
-    {
-        $filter = "(uid=" . $this->getUsername() . ")";
-        $attributes = array('dn');
-        $result = Ldap::getInstance()->search($filter, '', $attributes);
-        if ( isset($result[0]['dn']) ) {
-            return $result[0]['dn'];
-        } else {
-            return false;
-        }
-    }
-
     // returns random int between $min,$max inclusive
-    private static function openssl_rand($min = 0, $max = 0x7FFFFFFF)
-    {
+    private static function openssl_rand($min = 0, $max = 0x7FFFFFFF) {
         $diff = $max - $min;
         if ( $diff < 0 || $diff > 0x7FFFFFFF ) {
             throw new RuntimeException("Bad range");
@@ -1068,35 +948,13 @@ class User
         return intval(round($fp * $diff) + $min);
     }
 
-    private static function sorter($key, $asc)
-    {
-        $key = "get" . ucfirst($key);
-        if ( $asc == "true" ) {
-            return function ($a, $b) use ($key) {
-                return html::username_cmp($a->$key(), $b->$key());
-            };
-        } else {
-            return function ($a, $b) use ($key) {
-                return html::username_cmp($b->$key(), $a->$key());
-            };
-        }
-    }
-
-    private static function MD5Hash($password)
-    {
-        $saltchars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/.';
-        $salt = $saltchars[rand(0, 63)] . $saltchars[rand(0, 63)] . $saltchars[rand(0, 63)] . $saltchars[rand(0, 63)] . $saltchars[rand(0, 63)] . $saltchars[rand(0, 63)] . $saltchars[rand(0, 63)] . $saltchars[rand(0, 63)];
-        return '{CRYPT}' . Md5Crypt::unix($password, $salt);
-    }
-
-    private static function SSHAHash($password)
-    {
-        $salt = substr(str_shuffle(str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 4)), 0, 4);
+    private static function SSHAHash($password) {
+        $salt = substr(str_shuffle(str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 4)), 0,
+                       4);
         return '{SSHA}' . base64_encode(sha1($password . $salt, true) . $salt);
     }
 
-    private static function NTLMHash($cleartext)
-    {
+    private static function NTLMHash($cleartext) {
         // Convert to UTF16 little endian
         $cleartext = iconv('UTF-8', 'UTF-16LE', $cleartext);
         //Encrypt with MD4
@@ -1105,8 +963,7 @@ class User
         return $NTLMHash;
     }
 
-    private static function LMhash($string)
-    {
+    private static function LMhash($string) {
         $string = strtoupper(substr($string, 0, 14));
 
         $p1 = self::LMhash_DESencrypt(substr($string, 0, 7));
@@ -1115,14 +972,12 @@ class User
         return strtoupper($p1 . $p2);
     }
 
-    private static function LMhash_DESencrypt($string)
-    {
+    private static function LMhash_DESencrypt($string) {
         $key = array();
         $tmp = array();
         $len = strlen($string);
 
-        for ( $i = 0; $i < 7; ++$i )
-            $tmp[] = $i < $len ? ord($string[$i]) : 0;
+        for ( $i = 0; $i < 7; ++$i ) $tmp[] = $i < $len ? ord($string[$i]) : 0;
 
         $key[] = $tmp[0] & 254;
         $key[] = ($tmp[0] << 7) | ($tmp[1] >> 1);
@@ -1135,8 +990,7 @@ class User
 
         $key0 = "";
 
-        foreach ( $key as $k )
-            $key0 .= chr($k);
+        foreach ( $key as $k ) $key0 .= chr($k);
 
         $crypt = openssl_encrypt("KGS!@#$%", 'des-ecb', $key0, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING);
 

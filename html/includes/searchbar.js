@@ -26,7 +26,7 @@ function searchbarResultsProcessor(searchtext) {
             if (results.hasOwnProperty('users') && results.users.count > 0) {
                 showingResults = true;
                 $searchresults.append('<h6 class="dropdown-header">Users</h6>');
-                for (var i = 0; i < results.users.results.length; i++) {
+                for (let i = 0; i < results.users.results.length; i++) {
                     $searchresults.append('<a class="searchbar-result dropdown-item" data-searchbarindex="' + index + '" href="user.php?uid=' + results.users.results[i].username + '">' + results.users.results[i].name + " (" + results.users.results[i].username + ")</a>");
                     index++;
                 }

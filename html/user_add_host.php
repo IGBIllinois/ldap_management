@@ -6,14 +6,14 @@ $uid = requireGetKey('uid');
 $user = new User($uid);
 
 // Process POST data
-$error = "";
+$errors = array();
 if(count($_POST) > 0){
     $result = $user->addHost($_POST['host']);
 
     if($result['RESULT'] == true){
         header("Location: user.php?uid=".$_POST['uid']);
     } else if ($result['RESULT'] == false) {
-        $error = $result['MESSAGE'];
+        $errors[] =$result['MESSAGE'];
     }
 }
 
@@ -35,5 +35,5 @@ renderTwigTemplate('user/edit.html.twig', array(
         array('type'=>'select', 'name'=>'Host', 'attr'=>'host', 'options'=>$hosts)
     ),
     'button'=>array('color'=>'success', 'text'=>'Add'),
-    'error'=>$error
+    'errors' => $errors
 ));

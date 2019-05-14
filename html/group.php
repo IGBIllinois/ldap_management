@@ -7,7 +7,7 @@ $group = new Group($gid);
 $isUserGroup = User::exists($group->getName());
 
 $users = $group->getMemberUIDs();
-usort($users,"html::username_cmp");
+usort($users,"LdapObject::username_cmp");
 
 renderTwigTemplate('group/view.html.twig', array(
     'siteArea'=>'groups',

@@ -8,14 +8,14 @@ $user = new User($uid);
 $hid = requireGetKey('hid');
 $host = new Host($hid);
 
-$error = "";
+$errors = array();
 if ( count($_POST) > 0 ) {
     $result = $user->removeHost($_POST['host']);
 
     if ( $result['RESULT'] == true ) {
         header("Location: user.php?uid=" . $_POST['uid']);
     } else if ( $result['RESULT'] == false ) {
-        $error = $result['MESSAGE'];
+        $errors[] =$result['MESSAGE'];
     }
 }
 
@@ -27,5 +27,5 @@ renderTwigTemplate('user/edit.html.twig', array(
         array('type' => 'hidden', 'name' => 'Host', 'attr' => 'host', 'value' => $host->getName()),
     ),
     'button' => array('color' => 'danger', 'text' => 'Remove'),
-    'error' => $error,
+    'errors' => $errors,
 ));

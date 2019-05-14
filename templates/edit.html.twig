@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import 'macros/igblam.html.twig' as igblam %}
 
 {% block title %}{{ parent() }}{% endblock %}
 
@@ -65,10 +66,9 @@
 							<a class="btn btn-light" href="{% block cancelURL %}index.php{% endblock %}">Cancel</a>
 						</div>
 					</div>
-					{% if error is not empty %}
-						{#TODO make a macro for these errors#}
-						{{ error|raw }}
-					{% endif %}
+					{% for error in errors %}
+						{{ igblam.errorMessage(error) }}
+					{% endfor %}
 				</form>
 			</div>
 		</div>

@@ -18,9 +18,9 @@
 		$sort = $_GET['sort'];
 	}
 	
-	$asc = "true";
+	$asc = true;
 	if(isset($_GET['asc'])){
-		$asc = $_GET['asc'];
+		$asc = $_GET['asc'] == 'true';
 	}
 	
 	$filter = 'none';

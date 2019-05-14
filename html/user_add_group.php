@@ -6,7 +6,7 @@ $uid = requireGetKey('uid');
 $user = new User($uid);
 
 // Process POST data
-$error = "";
+$errors = array();
 if(count($_POST) > 0){
     $group = new Group($_POST['group']);
     $result = $group->addUser($uid);
@@ -14,7 +14,7 @@ if(count($_POST) > 0){
     if($result['RESULT'] == true){
         header("Location: user.php?uid=".$_POST['uid']);
     } else if ($result['RESULT'] == false) {
-        $error = $result['MESSAGE'];
+        $errors[] =$result['MESSAGE'];
     }
 }
 
@@ -36,5 +36,5 @@ renderTwigTemplate('user/edit.html.twig', array(
         array('type'=>'select', 'name'=>'Group', 'attr'=>'group', 'options'=>$groups)
     ),
     'button'=>array('color'=>'success', 'text'=>'Add'),
-    'error'=>$error
+    'errors' => $errors
 ));

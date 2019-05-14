@@ -2,3 +2,7 @@
 	{% import 'macros/icon.html.twig' as icon %}
 	<a href="user.php?uid={{ user.username }}">{{ user.username }}</a> <small>{{ icon.userIcons(user) }}</small>
 {% endmacro %}
+
+{% macro errorMessage(message) %}
+	<div class='alert alert-danger'>{{ message }}</div>
+{% endmacro %}

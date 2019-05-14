@@ -5,21 +5,21 @@ include_once('includes/session.inc.php');
 $hid = requireGetKey('hid');
 $host = new Host($hid);
 
-$error = "";
+$errors = array();
 if ( count($_POST) > 0 ) {
     $_POST = array_map("trim", $_POST);
 
     if ( $_POST['name'] == "" ) {
-        $error .= html::error_message("Hostname cannot be blank.");
+        $errors[] = "Hostname cannot be blank.";
     }
 
-    if ( $error == "" ) {
+    if ( $errors == "" ) {
         $result = $host->setName($_POST['name']);
 
         if ( $result['RESULT'] == true ) {
             header("Location: host.php?hid=" . $result['hid']);
         } else if ( $result['RESULT'] == false ) {
-            $error = $result['MESSAGE'];
+            $errors[] =$result['MESSAGE'];
         }
     }
 }
@@ -31,5 +31,5 @@ renderTwigTemplate('host/edit.html.twig', array(
     'inputs' => array(
         array('attr' => 'name', 'name' => 'New Hostname', 'type' => 'text', 'value' => $host->getName()),
     ),
-    'error' => $error,
+    'errors' => $errors,
 ));

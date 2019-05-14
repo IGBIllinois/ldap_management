@@ -6,7 +6,7 @@ $hid = requireGetKey('hid');
 $host = new Host($hid);
 $uid = requireGetKey('uid');
 
-$error = "";
+$errors = array();
 if ( count($_POST) > 0 ) {
     $user = new User($_POST['username']);
     $result = $user->removeHost($hid);
@@ -14,7 +14,7 @@ if ( count($_POST) > 0 ) {
     if ( $result['RESULT'] == true ) {
         header("Location: host.php?hid=" . $hid);
     } else if ( $result['RESULT'] == false ) {
-        $error = $result['MESSAGE'];
+        $errors[] =$result['MESSAGE'];
     }
 
 }
@@ -27,5 +27,5 @@ renderTwigTemplate('host/edit.html.twig', array(
         array('type' => 'hidden', 'name' => 'User', 'attr' => 'username', 'value' => $uid),
     ),
     'button' => array('color' => 'danger', 'text' => 'Remove'),
-    'error' => $error,
+    'errors' => $errors,
 ));

@@ -8,27 +8,27 @@ if ( $uid == "" ) {
 }
 $user = new User($uid);
 
-$error = "";
+$errors = array();
 if ( count($_POST) > 0 ) {
     $_POST = array_map("trim", $_POST);
 
     if ( $_POST['uid'] == "" ) {
-        $error .= html::error_message("Username cannot be blank. Please stop trying to break my web interface.");
+        $errors[] = "Username cannot be blank. Please stop trying to break my web interface.";
     }
     if ( $_POST['password'] == "" ) {
-        $error .= html::error_message("Password cannot be blank.");
+        $errors[] = "Password cannot be blank.";
     } else if ( $_POST['password'] != $_POST['confirmPassword'] ) {
-        $error .= html::error_message("Passwords do not match.");
+        $errors[] = "Passwords do not match.";
     }
 
-    if ( $error == "" ) {
+    if ( $errors == "" ) {
         $user = new User($_POST['uid']);
         $result = $user->setPassword($_POST['password']);
 
         if ( $result['RESULT'] == true ) {
             header("Location: user.php?uid=" . $result['uid']);
         } else if ( $result['RESULT'] == false ) {
-            $error = html::error_message($result['MESSAGE']);
+            $errors[] =$result['MESSAGE'];
         }
     }
 }
@@ -42,7 +42,7 @@ renderTwigTemplate('user/edit.html.twig', array(
         array('attr' => 'confirmPassword', 'name' => 'Confirm Password', 'type' => 'password'),
     ),
     'message' => '<button class="btn btn-light" id="password-button" type="button">Generate Password</button><span id="password-text" class="ml-2"></span>',
-    'error' => $error,
+    'errors' => $errors,
     'validation' => 'change_password_errors',
     'readyScripts' => "$('#password-button').on('click',function(){generate_password();change_password_errors();});",
 ));

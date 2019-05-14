@@ -8,7 +8,7 @@ if ( $uid == "" ) {
 }
 $user = new User($uid);
 
-$error = "";
+$errors = array();
 if ( count($_POST) > 0 ) {
     $user = new User($_POST['uid']);
     $result = $user->unlock();
@@ -16,7 +16,7 @@ if ( count($_POST) > 0 ) {
     if ( $result['RESULT'] == true ) {
         header("Location: user.php?uid=" . $_POST['uid']);
     } else if ( $result['RESULT'] == false ) {
-        $error = $result['MESSAGE'];
+        $errors[] =$result['MESSAGE'];
     }
 }
 
@@ -28,5 +28,5 @@ renderTwigTemplate('user/edit.html.twig', array(
     'inputs' => array(),
     'message' => "Are you sure you want to unlock this user?",
     'button' => array('color' => 'warning', 'text' => 'Unlock'),
-    'error' => $error,
+    'errors' => $errors,
 ));

@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
+{% import 'macros/igblam.html.twig' as igblam %}
 
 {% block title %}{{ parent() }}{% endblock %}
 
 {% block jumbotron %}
 	<h1 class="display-3 igb-jumbo">
 		<img src="images/Illinois-Logo-Full-Color-RGB.png" class="uiuclogo mx-2 align-text-top mt-2">
-		IGB LDAP Account Management
-	</h1>
+		IGB LDAP Account Management </h1>
 	<p class="lead">View and manage IGB User Accounts</p>
 {% endblock %}
 
@@ -20,7 +20,8 @@
 						<div class="col-sm-9">
 							<div class="input-group">
 								<input class='form-control' type='text' name='username' id="username" tabindex='1' placeholder='Username' value='{{ username }}'>
-								<div class="input-group-append"><span class="input-group-text"><span class='fa fa-user'></span></span></div>
+								<div class="input-group-append">
+									<span class="input-group-text"><span class='fa fa-user'></span></span></div>
 							</div>
 						</div>
 					</div>
@@ -29,18 +30,23 @@
 						<div class="col-sm-9">
 							<div class="input-group">
 								<input class='form-control' type='password' name='password' placeholder='Password' tabindex='2'>
-								<div class="input-group-append"><span class="input-group-text"><span class='fa fa-lock'></span></span></div>
+								<div class="input-group-append">
+									<span class="input-group-text"><span class='fa fa-lock'></span></span></div>
 							</div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-sm-9 offset-sm-3">
-							<button type='submit' name='login' class='btn btn-primary'><span class="fas fa-sign-in-alt"></span> Login</button>
+							<button type='submit' name='login' class='btn btn-primary'>
+								<span class="fas fa-sign-in-alt"></span> Login
+							</button>
 						</div>
 					</div>
 				</form>
 			</div>
-			{{ message|raw }}
+			{% for error in errors %}
+				{{ igblam.errorMessage(error) }}
+			{% endfor %}
 		</div>
 	</div>
 {% endblock %}

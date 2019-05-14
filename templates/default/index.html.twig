@@ -4,11 +4,10 @@
 {% block title %}{{ parent() }}{% endblock %}
 
 {% block jumbotron %}
-<h1 class="display-3">
-	<img src="images/Illinois-Logo-Full-Color-RGB.png" class="uiuclogo mx-2 align-text-top mt-2">
-	IGB LDAP Account Management
-</h1>
-<p class="lead">View and manage IGB User Accounts</p>
+	<h1 class="display-3">
+		<img src="images/Illinois-Logo-Full-Color-RGB.png" class="uiuclogo mx-2 align-text-top mt-2">
+		IGB LDAP Account Management </h1>
+	<p class="lead">View and manage IGB User Accounts</p>
 {% endblock %}
 
 {% block content %}
@@ -16,11 +15,11 @@
 		<div class="col-md-4">
 			<div class="card">
 				<div class="card-body">
-					<h2 class="display-5 text-center">{{ icon.user() }}<br/>Users</h2>
-					<p><div class="btn-group d-flex">
+					<h2 class="display-5 text-center">{{ icon.user() }}<br>Users</h2>
+					<div class="btn-group d-flex">
 						<a class="btn btn-primary w-100" href="list_users.php"><span class="fa fa-list"></span> List</a>
 						<a class="btn btn-success w-100" href="user_add.php"><span class="fa fa-plus-circle"></span> Add</a>
-					</div></p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -28,10 +27,12 @@
 			<div class="card">
 				<div class="card-body">
 					<h2 class="display-5 text-center">{{ icon.group() }}<br/>Groups</h2>
-					<p><div class="btn-group d-flex">
-						<a class="btn btn-primary w-100" href="list_groups.php"><span class="fa fa-list"></span> List</a>
-						<a class="btn btn-success w-100" href="group_add.php"><span class="fa fa-plus-circle"></span> Add</a>
-					</div></p>
+					<div class="btn-group d-flex">
+						<a class="btn btn-primary w-100" href="list_groups.php"><span class="fa fa-list"></span>
+							List</a>
+						<a class="btn btn-success w-100" href="group_add.php"><span class="fa fa-plus-circle"></span>
+							Add</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -39,10 +40,10 @@
 			<div class="card">
 				<div class="card-body">
 					<h2 class="display-5 text-center">{{ icon.host() }}<br/>Hosts</h2>
-					<p><div class="btn-group d-flex">
+					<div class="btn-group d-flex">
 						<a class="btn btn-primary w-100" href="list_hosts.php"><span class="fa fa-list"></span> List</a>
 						<a class="btn btn-success w-100" href="host_add.php"><span class="fa fa-plus-circle"></span> Add</a>
-					</div></p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -52,11 +53,14 @@
 			<div class="card">
 				<div class="card-body">
 					<h2 class="display-5 text-center"><span class="fa fa-book"> </span><br/>Classroom Users</h2>
-					<p><div class="btn-group d-flex">
-						<a class="btn btn-primary w-100" href="list_classroom_users.php"><span class="fa fa-list"></span> List</a>
-						<a class="btn btn-success w-100" href="user_add_classroom.php"><span class="fa fa-plus-circle"></span> Add</a>
-						<a class="btn btn-danger w-100" href="user_remove_classroom.php"><span class="fa fa-minus-circle"></span> Delete</a>
-					</div></p>
+					<div class="btn-group d-flex">
+						<a class="btn btn-primary w-100" href="list_classroom_users.php"><span class="fa fa-list"></span>
+							List</a>
+						<a class="btn btn-success w-100" href="user_add_classroom.php"><span class="fa fa-plus-circle"></span>
+							Add</a>
+						<a class="btn btn-danger w-100" href="user_remove_classroom.php"><span class="fa fa-minus-circle"></span>
+							Delete</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -64,10 +68,11 @@
 			<div class="card">
 				<div class="card-body">
 					<h2 class="display-5 text-center">{{ icon.domain() }}<br/>Domain Computers</h2>
-					<p><div class="btn-group d-flex">
+					<div class="btn-group d-flex">
 						<a class="btn btn-primary w-100" href="list_computers.php"><span class="fa fa-list"></span> List</a>
-						<a class="btn btn-success w-100" href="computer_add.php"><span class="fa fa-plus-circle"></span> Add</a>
-					</div></p>
+						<a class="btn btn-success w-100" href="computer_add.php"><span class="fa fa-plus-circle"></span>
+							Add</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -75,9 +80,10 @@
 			<div class="card">
 				<div class="card-body">
 					<h2 class="display-5 text-center">{{ icon.statistics() }}<br/>Statistics</h2>
-					<p><div class="btn-group d-flex">
-						<a class="btn btn-primary w-100" href="statistics.php"><span class="fas fa-chart-bar"></span> View</a>
-					</div></p>
+					<div class="btn-group d-flex">
+						<a class="btn btn-primary w-100" href="statistics.php"><span class="fas fa-chart-bar"></span>
+							View</a>
+					</div>
 				</div>
 			</div>
 		</div>

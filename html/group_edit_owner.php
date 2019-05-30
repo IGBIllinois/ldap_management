@@ -15,7 +15,7 @@ if ( count($_POST) > 0 ) {
         $errors[] = "Invalid username. Please stop trying to break my web interface.";
     }
 
-    if ( $errors == "" ) {
+    if ( count($errors) == 0 ) {
         $result = $group->setOwner($_POST['owner']);
 
         if ( $result['RESULT'] == true ) {

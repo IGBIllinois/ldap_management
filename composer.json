@@ -5,6 +5,7 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-ldap": "*",
-      "ext-curl": "*"
+      "ext-curl": "*",
+      "ext-pdo": "*"
     }
 }

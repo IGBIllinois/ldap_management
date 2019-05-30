@@ -13,7 +13,7 @@ if ( count($_POST) > 0 ) {
         $errors[] = "Hostname cannot be blank. Please stop trying to break my web interface.";
     }
 
-    if ( $errors == "" ) {
+    if ( count($errors) == 0 ) {
         $host = new Host($_POST['hid']);
         $result = $host->remove();
 

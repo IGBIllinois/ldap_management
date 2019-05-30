@@ -13,7 +13,7 @@ if ( count($_POST) > 0 ) {
         $errors[] = "Hostname cannot be blank.";
     }
 
-    if ( $errors == "" ) {
+    if ( count($errors) == 0 ) {
         $result = $host->setName($_POST['name']);
 
         if ( $result['RESULT'] == true ) {

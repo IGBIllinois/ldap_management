@@ -16,7 +16,7 @@ if ( count($_POST) > 0 ) {
         $errors[] = "Please enter a directory.";
     }
 
-    if ( $errors == "" ) {
+    if ( count($errors) == 0 ) {
         $result = $group->addDirectory($_POST['host'], $_POST['directory']);
 
         if ( $result['RESULT'] == true ) {

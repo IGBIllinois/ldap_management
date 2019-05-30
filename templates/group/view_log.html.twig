@@ -1,0 +1,14 @@
+{% extends 'view_log.html.twig' %}
+
+{% block title %}{{ parent() }} - Group Logs: {{ group.name }}{% endblock %}
+
+{% block jumbotron %}
+	{{ group.name }} - Logs
+	<nav>
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="list_groups.php">Groups</a></li>
+			<li class="breadcrumb-item"><a href="group.php?gid={{ group.name }}">{{ group.name }}</a></li>
+			<li class="breadcrumb-item active">Logs</li>
+		</ol>
+	</nav>
+{% endblock %}

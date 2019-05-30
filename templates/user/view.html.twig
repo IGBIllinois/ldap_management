@@ -85,7 +85,7 @@
 					{{ table.infoRow("Login Shell", user.loginShell, {'url':"user_edit_loginshell.php?uid="~user.username, 'class':'btn-primary', 'icon':'fas fa-edit', 'text':'Change Login Shell'}) }}
 
 					{{ table.sectionHead("Expirations") }}
-					{{ table.infoRow("Account Expiration ", (icon.userExpirationIcons(user,'mr-2'))~(user.expiration is null?"Not expiring":user.expiration|date("n/j/Y")), {'url':'expire_user.php?uid='~user.username, 'class':'btn-warning', 'icon':'far fa-clock', 'text':'Set Expiration'}) }}
+					{{ table.infoRow("Account Expiration ", (icon.userExpirationIcons(user,'mr-2'))~(user.expiration is null?"Not expiring":user.expiration|date("n/j/Y")), {'url':'user_edit_expiration.php?uid='~user.username, 'class':'btn-warning', 'icon':'far fa-clock', 'text':'Set Expiration'}) }}
 					{% if user.expiration is not null %}
 						{{ table.infoRow("Expiration Reason", user.expirationReason) }}
 					{% endif %}

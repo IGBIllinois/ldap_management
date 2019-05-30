@@ -10,7 +10,7 @@ if ( count($_POST) > 0 ) {
         $errors[] ="Passwords do not match.";
     }
 
-    if ( $errors == "" ) {
+    if ( count($errors) == 0 ) {
         $user = new User();
         $result = $user->create($_POST['username'], $_POST['firstName'], $_POST['lastName'], $_POST['password']);
         if ( $_POST['forwardingEmail'] != "" ) {

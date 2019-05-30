@@ -15,7 +15,7 @@ if ( count($_POST) > 0 ) {
         $errors[] ="Please enter a valid end number.";
     }
 
-    if ( $errors == "" ) {
+    if ( count($errors) == 0 ) {
         $_POST['start'] = intval($_POST['start']);
         $_POST['end'] = intval($_POST['end']);
         $passwords = array();

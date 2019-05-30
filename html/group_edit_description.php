@@ -13,7 +13,7 @@ if ( count($_POST) > 0 ) {
         $errors[] = "Description cannot be blank.";
     }
 
-    if ( $errors == "" ) {
+    if ( count($errors) == 0 ) {
         $result = $group->setDescription($_POST['description']);
 
         if ( $result['RESULT'] == true ) {

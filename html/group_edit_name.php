@@ -13,7 +13,7 @@ if ( count($_POST) > 0 ) {
         $errors[] = "Name cannot be blank.";
     }
 
-    if ( $errors == "" ) {
+    if ( count($errors) == 0 ) {
         $result = $group->setName($_POST['name']);
 
         if ( $result['RESULT'] == true ) {
@@ -24,7 +24,7 @@ if ( count($_POST) > 0 ) {
     }
 }
 
-renderTwigTemplate('group/edit.html/twig', array(
+renderTwigTemplate('group/edit.html.twig', array(
     'siteArea' => 'groups',
     'group' => $group,
     'header' => 'Edit Name',

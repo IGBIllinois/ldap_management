@@ -43,8 +43,10 @@ class Host extends LdapObject
 
         //If Errors, return with error messages
         if ( $error ) {
-            return array('RESULT' => false,
-                         'MESSAGE' => $message);
+            return array(
+                'RESULT' => false,
+                'MESSAGE' => $message,
+            );
         } //Everything looks good, add host
         else {
             // Add to LDAP
@@ -54,10 +56,15 @@ class Host extends LdapObject
 
             $this->load_by_id($name);
 
-            Log::info("Added host " . $this->getName());
-            return array('RESULT' => true,
-                         'MESSAGE' => 'Host successfully added.',
-                         'hid' => $name);
+            Log::info(
+                "Added host " . $this->getName(),
+                Log::HOST_ADD,
+                $this);
+            return array(
+                'RESULT' => true,
+                'MESSAGE' => 'Host successfully added.',
+                'hid' => $name,
+            );
         }
 
     }
@@ -65,11 +72,16 @@ class Host extends LdapObject
     public function remove() {
         $dn = $this->getRDN();
         if ( Ldap::getInstance()->remove($dn) ) {
-            Log::info("Removed host " . $this->getName());
+            Log::info(
+                "Removed host " . $this->getName(),
+                Log::HOST_REMOVE,
+                $this);
 
-            return array('RESULT' => true,
-                         'MESSAGE' => 'Host removed.',
-                         'gid' => $this->name);
+            return array(
+                'RESULT' => true,
+                'MESSAGE' => 'Host removed.',
+                'gid' => $this->name,
+            );
         }
     }
 
@@ -128,19 +140,28 @@ class Host extends LdapObject
         $old_name = $this->getName();
         $dn = "cn=" . $old_name . "," . static::$ou;
         if ( Ldap::getInstance()->mod_rename($dn, "cn=" . $name) ) {
-            Log::info("Changed host name from $old_name to $name.");
-
             $users = $this->getUserUIDs();
+            $this->name = $name;
+            $this->setId($name);
+            Log::info(
+                "Changed host name from $old_name to $name.",
+                Log::HOST_SET_NAME,
+                $this,
+                null,
+                $name,
+                null,
+                $old_name);
+
             foreach ( $users as $username ) {
                 $user = new User($username);
-                $user->removeHost($old_name);
-                $user->addHost($name);
+                $user->removeHost($old_name, true);
+                $user->addHost($name, true);
             }
-
-            $this->name = $name;
-            return array('RESULT' => true,
-                         'MESSAGE' => 'Name changed',
-                         'hid' => $name);
+            return array(
+                'RESULT' => true,
+                'MESSAGE' => 'Name changed',
+                'hid' => $name,
+            );
         }
     }
 
@@ -148,11 +169,18 @@ class Host extends LdapObject
         $dn = "cn=" . $this->getName() . "," . static::$ou;
         $data = array("ipHostNumber" => $ip);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
-            Log::info("Changed host ip for " . $this->getName() . " to '$ip'");
+            Log::info(
+                "Changed host ip for " . $this->getName() . " to '$ip'",
+                Log::HOST_SET_IP,
+                $this,
+                null,
+                $ip);
             $this->ip = $ip;
-            return array('RESULT' => true,
-                         'MESSAGE' => 'IP changed',
-                         'hid' => $this->getName());
+            return array(
+                'RESULT' => true,
+                'MESSAGE' => 'IP changed',
+                'hid' => $this->getName(),
+            );
         }
     }
 

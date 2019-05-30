@@ -91,11 +91,14 @@ class User extends LdapObject
         } //Everything looks good, add user
         else {
             // Get all users' uidnumber, gidnumber
-            $users = Ldap::getInstance()->search("(!(uid=ftp_*))", static::$ou, array(
-                'uid',
-                'uidnumber',
-                'gidnumber',
-            ));
+            $users = Ldap::getInstance()->search(
+                "(!(uid=ftp_*))",
+                static::$ou,
+                array(
+                    'uid',
+                    'uidnumber',
+                    'gidnumber',
+                ));
             $uidnumbers = array();
             $gidnumbers = array();
             for ( $i = 0; $i < $users['count']; $i++ ) {
@@ -169,7 +172,10 @@ class User extends LdapObject
                 return new LdapStatus(false, 'LDAP error when adding user: ' . Ldap::getInstance()->get_error());
             }
             $this->load_by_id($username);
-            Log::info("Added user " . $this->getUsername() . " (" . $this->getName() . ")");
+            Log::info(
+                "Added user " . $this->getUsername() . " (" . $this->getName() . ")",
+                Log::USER_ADD,
+                $this);
 
             // Add LDAP group
             $group = new Group();
@@ -197,7 +203,10 @@ class User extends LdapObject
                 $group->removeUser($this->username);
             }
 
-            Log::info("Removed user " . $this->getUsername());
+            Log::info(
+                "Removed user " . $this->getUsername(),
+                Log::USER_REMOVE,
+                $this);
             return array('RESULT' => true, 'MESSAGE' => 'User deleted.', 'uid' => $this->username);
         }
     }
@@ -219,7 +228,12 @@ class User extends LdapObject
         $data = array("postalAddress" => $emailforward);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->emailforward = $emailforward;
-            Log::info("Set email forwarding for " . $this->getUsername() . " to " . $emailforward);
+            Log::info(
+                "Set email forwarding for " . $this->getUsername() . " to " . $emailforward,
+                Log::USER_SET_FORWARD,
+                $this,
+                null,
+                $emailforward);
             return array('RESULT' => true, 'MESSAGE' => 'Email forwarding set', 'uid' => $this->getUsername());
         }
     }
@@ -237,7 +251,12 @@ class User extends LdapObject
         $data = array("telexNumber" => $value);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->crashplan = $value;
-            Log::info("Set crashplan for " . $this->getUsername() . " to " . ($crashplan ? 'active' : 'inactive'));
+            Log::info(
+                "Set crashplan for " . $this->getUsername() . " to " . ($crashplan ? 'active' : 'inactive'),
+                Log::USER_SET_CRASHPLAN,
+                $this,
+                null,
+                $value);
             return array('RESULT' => true, 'MESSAGE' => 'Crashplan set', 'uid' => $this->getUsername());
         }
     }
@@ -250,7 +269,12 @@ class User extends LdapObject
         $dn = $this->getRDN();
         $data = array("loginShell" => $shell);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
-            Log::info("Set login shell for " . $this->getUsername() . " to " . $shell);
+            Log::info(
+                "Set login shell for " . $this->getUsername() . " to " . $shell,
+                Log::USER_SET_LOGIN,
+                $this,
+                null,
+                $shell);
             return array('RESULT' => true, 'MESSAGE' => 'Login shell changed.', 'uid' => $this->username);
         } else {
             return array(
@@ -273,7 +297,12 @@ class User extends LdapObject
         $dn = $this->getRDN();
         $data = array("initials" => $subfolder);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
-            Log::info("Set home subfolder for " . $this->getUsername() . " to " . $subfolder);
+            Log::info(
+                "Set home subfolder for " . $this->getUsername() . " to " . $subfolder,
+                Log::USER_SET_SUBFOLDER,
+                $this,
+                null,
+                $subfolder);
             return array('RESULT' => true, 'MESSAGE' => 'Home Subfolder changed.', 'uid' => $this->username);
         } else {
             return array(
@@ -380,7 +409,7 @@ class User extends LdapObject
     }
 
 
-    public function addHost($host) {
+    public function addHost($host, $silent = false) {
         if ( Host::exists($host) && (!$this->getHosts() || !in_array($host, $this->getHosts())) ) {
             $dn = "uid=" . $this->getUsername() . "," . static::$ou;
             $filter = "(&(uid=" . $this->getUsername() . ")(objectClass=account))";
@@ -393,7 +422,13 @@ class User extends LdapObject
 
             $data = array("host" => $host);
             if ( Ldap::getInstance()->mod_add($dn, $data) ) {
-                Log::info("Gave host access for " . $host . " to " . $this->getUsername());
+                if ( !$silent ) {
+                    Log::info(
+                        "Gave host access for " . $host . " to " . $this->getUsername(),
+                        Log::USER_ADD_HOST,
+                        $this,
+                        new Dummy($host));
+                }
                 return array(
                     'RESULT' => true,
                     'MESSAGE' => 'Machine rights successfully added.',
@@ -405,12 +440,18 @@ class User extends LdapObject
         }
     }
 
-    public function removeHost($host) {
+    public function removeHost($host, $silent = false) {
         if ( Host::exists($host) || ($this->getHosts() && in_array($host, $this->getHosts())) ) {
             $dn = "uid=" . $this->getUsername() . "," . static::$ou;
             $data = array("host" => $host);
             if ( @Ldap::getInstance()->mod_del($dn, $data) ) {
-                Log::info("Removed host access to " . $host . " from " . $this->getUsername());
+                if ( !$silent ) {
+                    Log::info(
+                        "Removed host access to " . $host . " from " . $this->getUsername(),
+                        Log::USER_REMOVE_HOST,
+                        $this,
+                        new Dummy($host));
+                }
                 return array(
                     'RESULT' => true,
                     'MESSAGE' => 'Machine rights successfully removed.',
@@ -425,7 +466,12 @@ class User extends LdapObject
         $name = $firstname . " " . $lastname;
         $data = array("cn" => $name, "sn" => $lastname, "givenName" => $firstname, "gecos" => $name);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
-            Log::info("Changed name for " . $this->getUsername() . " to \"$name\"");
+            Log::info(
+                "Changed name for " . $this->getUsername() . " to \"$name\"",
+                Log::USER_SET_NAME,
+                $this,
+                null,
+                $name);
             return array('RESULT' => true, 'MESSAGE' => 'Name successfully changed.', 'uid' => $this->getUsername());
         }
     }
@@ -444,16 +490,26 @@ class User extends LdapObject
         $data = array("mail" => $username . __MAIL_SUFFIX__, "homeDirectory" => "/home/" . $homesub . "/" . $username);
         if ( Ldap::getInstance()->mod_rename($dn, "uid=" . $username) ) {
             $this->username = $username;
+            $this->setId($username);
             $dn = $this->getRDN();
             Ldap::getInstance()->modify($dn, $data);
-            Log::info("Changed username for $old_username to $username.");
+            Log::info(
+                "Changed username for $old_username to $username.",
+                Log::USER_SET_USERNAME,
+                $this,
+                null,
+                $username,
+                null,
+                $old_username);
         }
+
+        $this->setHomeSubFolder($homesub);
 
         // Change username in groups user is a member of
         for ( $i = 0; $i < count($groups); $i++ ) {
             $group = new Group($groups[$i]);
-            $group->removeUser($old_username);
-            $group->addUser($username);
+            $group->removeUser($old_username, true);
+            $group->addUser($username, true);
         }
 
         // Change name of user group
@@ -493,7 +549,10 @@ class User extends LdapObject
             $data['facsimiletelephonenumber'] = time() + 60 * 60 * 24 * 365;
         }
         if ( Ldap::getInstance()->modify($dn, $data) ) {
-            Log::info("Changed password for " . $this->getUsername());
+            Log::info(
+                "Changed password for " . $this->getUsername(),
+                Log::USER_SET_PASS,
+                $this);
             return array('RESULT' => true, 'MESSAGE' => 'Password successfully set.', 'uid' => $this->getUsername());
         } else {
             return array('RESULT' => false, 'MESSAGE' => 'Set Password Failed: ' . Ldap::getInstance()->get_error());
@@ -512,7 +571,10 @@ class User extends LdapObject
                 'sambaNTPassword' => '!' . $result[0]['sambantpassword'][0],
             );
             if ( Ldap::getInstance()->modify($dn, $data) ) {
-                Log::info("User " . $this->getUsername() . " locked");
+                Log::info(
+                    "User " . $this->getUsername() . " locked",
+                    Log::USER_LOCK,
+                    $this);
                 return array('RESULT' => true, 'MESSAGE' => 'User locked.', 'uid' => $this->getUsername());
             }
         }
@@ -525,8 +587,10 @@ class User extends LdapObject
         $result = Ldap::getInstance()->search($filter, static::$ou, $attributes);
         if ( $result['count'] > 0 ) {
             if ( substr($result[0]['userpassword'][0], 0, 1) == '!' ) {
-                if ( substr($result[0]['sambalmpassword'][0], 0,
-                            1) == '!' ) { // If the user was locked before this change, their samba password won't have been locked
+                if ( substr(
+                        $result[0]['sambalmpassword'][0],
+                        0,
+                        1) == '!' ) { // If the user was locked before this change, their samba password won't have been locked
                     $dn = $this->getRDN();
                     $data = array(
                         'userPassword' => substr($result[0]['userpassword'][0], 1),
@@ -534,14 +598,20 @@ class User extends LdapObject
                         'sambaNTPassword' => substr($result[0]['sambantpassword'][0], 1),
                     );
                     if ( Ldap::getInstance()->modify($dn, $data) ) {
-                        Log::info("User " . $this->getUsername() . " unlocked");
+                        Log::info(
+                            "User " . $this->getUsername() . " unlocked",
+                            Log::USER_UNLOCK,
+                            $this);
                         return array('RESULT' => true, 'MESSAGE' => 'User unlocked.', 'uid' => $this->getUsername());
                     }
                 } else {
                     $dn = $this->getRDN();
                     $data = array('userPassword' => substr($result[0]['userpassword'][0], 1));
                     if ( Ldap::getInstance()->modify($dn, $data) ) {
-                        Log::info("User " . $this->getUsername() . " unlocked");
+                        Log::info(
+                            "User " . $this->getUsername() . " unlocked",
+                            Log::USER_UNLOCK,
+                            $this);
                         return array('RESULT' => true, 'MESSAGE' => 'User unlocked.', 'uid' => $this->getUsername());
                     }
                 }
@@ -570,11 +640,20 @@ class User extends LdapObject
         $data = array("shadowExpire" => $expiration);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->expiration = $expiration;
-            if ( $reason != "" ) {
+            if ( $reason !== "" ) {
                 $this->setExpirationReason($reason);
             }
-            Log::info("Set expiration for " . $this->getUsername() . " to " . strftime('%m/%d/%Y',
-                                                                                       $this->getExpiration()));
+            Log::info(
+                "Set expiration for " . $this->getUsername() . " to " . strftime(
+                    '%m/%d/%Y',
+                    $this->getExpiration()),
+                Log::USER_SET_EXP,
+                $this,
+                null,
+                null,
+                strftime(
+                    '%Y-%m-%d %H:%M:%S',
+                    $this->getExpiration()));
             return array('RESULT' => true, 'MESSAGE' => 'Expiration successfully set.', 'uid' => $this->getUsername());
         }
     }
@@ -583,7 +662,10 @@ class User extends LdapObject
         $dn = $this->getRDN();
         $data = array("shadowexpire" => array());
         if ( Ldap::getInstance()->mod_del($dn, $data) ) {
-            Log::info("Cancelled expiration for user " . $this->getUsername());
+            Log::info(
+                "Cancelled expiration for user " . $this->getUsername(),
+                Log::USER_REMOVE_EXP,
+                $this);
             return array('RESULT' => true, 'MESSAGE' => 'Expiration cancelled.', 'uid' => $this->getUsername());
         }
     }
@@ -594,11 +676,14 @@ class User extends LdapObject
 
     public function setExpirationReason($reason) {
         $dn = "uid=" . $this->getUsername() . "," . static::$ou;
-        if ( $reason == "" ) { // Delete
+        if ( $reason === "" ) { // Delete
             $data = array("destinationindicator" => array());
             if ( Ldap::getInstance()->mod_del($dn, $data) ) {
                 $this->expirationReason = "";
-                Log::info("Removed expiration reason for " . $this->getUsername());
+                Log::info(
+                    "Removed expiration reason for " . $this->getUsername(),
+                    Log::USER_REMOVE_EXP_REASON,
+                    $this);
                 return array(
                     'RESULT' => true,
                     'MESSAGE' => 'Removed expiration reason',
@@ -609,7 +694,12 @@ class User extends LdapObject
             $data = array("destinationindicator" => $reason);
             if ( Ldap::getInstance()->modify($dn, $data) ) {
                 $this->expirationReason = $reason;
-                Log::info("Set expiration reason for " . $this->getUsername() . " to '" . $this->getExpirationReason() . "'");
+                Log::info(
+                    "Set expiration reason for " . $this->getUsername() . " to '" . $this->getExpirationReason() . "'",
+                    Log::USER_SET_EXP_REASON,
+                    $this,
+                    null,
+                    $reason);
                 return array(
                     'RESULT' => true,
                     'MESSAGE' => 'Expiration reason successfully set.',
@@ -624,8 +714,17 @@ class User extends LdapObject
         $data = array("facsimiletelephonenumber" => $expiration);
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->passwordExpiration = $expiration;
-            Log::info("Set password expiration for " . $this->getUsername() . " to " . strftime('%m/%d/%Y',
-                                                                                                $this->getPasswordExpiration()));
+            Log::info(
+                "Set password expiration for " . $this->getUsername() . " to " . strftime(
+                    '%m/%d/%Y',
+                    $this->getPasswordExpiration()),
+                Log::USER_SET_PASS_EXP,
+                $this,
+                null,
+                null,
+                strftime(
+                    '%Y-%m-%d %H:%M:%S',
+                    $this->getPasswordExpiration()));
             return array(
                 'RESULT' => true,
                 'MESSAGE' => 'Password expiration successfully set.',
@@ -638,7 +737,10 @@ class User extends LdapObject
         $dn = $this->getRDN();
         $data = array("facsimiletelephonenumber" => array());
         if ( Ldap::getInstance()->mod_del($dn, $data) ) {
-            Log::info("Cancelled password expiration for user " . $this->getUsername());
+            Log::info(
+                "Cancelled password expiration for user " . $this->getUsername(),
+                Log::USER_REMOVE_PASS_EXP,
+                $this);
             return array(
                 'RESULT' => true,
                 'MESSAGE' => 'Password expiration cancelled.',
@@ -658,14 +760,22 @@ class User extends LdapObject
                 $data = array("description" => array());
                 if ( Ldap::getInstance()->mod_del($dn, $data) ) {
                     $this->description = "";
-                    Log::info("Removed description for " . $this->getUsername());
+                    Log::info(
+                        "Removed description for " . $this->getUsername(),
+                        Log::USER_REMOVE_DESC,
+                        $this);
                     return array('RESULT' => true, 'MESSAGE' => 'Removed description', 'uid' => $this->getUsername(),);
                 }
             } else { // Update
                 $data = array("description" => $description);
                 if ( Ldap::getInstance()->modify($dn, $data) ) {
                     $this->description = $description;
-                    Log::info("Set description for " . $this->getUsername() . " to " . $this->getDescription());
+                    Log::info(
+                        "Set description for " . $this->getUsername() . " to " . $this->getDescription(),
+                        Log::USER_SET_DESC,
+                        $this,
+                        null,
+                        $description);
                     return array(
                         'RESULT' => true,
                         'MESSAGE' => 'Description successfully set.',
@@ -680,8 +790,9 @@ class User extends LdapObject
         $rdn = $this->getRDN();
         if ( Ldap::getInstance()->bind($rdn, $password) ) {
             if ( User::exists($this->username) ) {
-                $in_admin_group = Ldap::getInstance()->search("(memberuid=" . $this->username . ")",
-                                                              __LDAP_ADMIN_GROUP__);
+                $in_admin_group = Ldap::getInstance()->search(
+                    "(memberuid=" . $this->username . ")",
+                    __LDAP_ADMIN_GROUP__);
                 if ( $in_admin_group['count'] > 0 ) {
                     return 0;
                 } else {
@@ -703,8 +814,9 @@ class User extends LdapObject
             for ( $i = 0; $i < $length; $i++ ) {
                 $password .= $passwordchars{self::openssl_rand(0, strlen($passwordchars) - 1)};
             }
-        } while ( !(preg_match("/[A-Z]/u", $password) && preg_match("/[a-z]/u", $password) && preg_match("/[^A-Za-z]/u",
-                                                                                                         $password)) );
+        } while ( !(preg_match("/[A-Z]/u", $password) && preg_match("/[a-z]/u", $password) && preg_match(
+                "/[^A-Za-z]/u",
+                $password)) );
         return $password;
     }
 
@@ -741,8 +853,9 @@ class User extends LdapObject
             $user = new User();
             $user->load_from_result($result[$i]);
 
-            if ( $passwordSet === null || strftime("%Y%m%d", $user->getPasswordLastSet()) === strftime("%Y%m%d",
-                                                                                                       strtotime($passwordSet)) ) {
+            if ( $passwordSet === null || strftime("%Y%m%d", $user->getPasswordLastSet()) === strftime(
+                    "%Y%m%d",
+                    strtotime($passwordSet)) ) {
                 if ( $userfilter != 'none' ) {
                     if ( $userfilter == 'expiring' ) {
                         if ( $user->isExpiring() && !$user->isClassroom() ) {
@@ -811,7 +924,12 @@ class User extends LdapObject
         $data = array("employeetype" => ($leftCampus ? 'leftcampus' : array()));
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->leftCampus = $leftCampus;
-            Log::info("Set left-campus for " . $this->getUsername() . " to " . $this->getLeftCampus());
+            Log::info(
+                "Set left-campus for " . $this->getUsername() . " to " . ($this->getLeftCampus() ? "1" : "0"),
+                Log::USER_SET_LEFT,
+                $this,
+                null,
+                $leftCampus);
             return array('RESULT' => true, 'MESSAGE' => 'Leftcampus successfully set.', 'uid' => $this->getUsername());
         } else {
             return array(
@@ -830,7 +948,12 @@ class User extends LdapObject
         $data = array("employeetype" => ($nonCampus ? 'noncampus' : array()));
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->nonCampus = $nonCampus;
-            Log::info("Set non-campus for " . $this->getUsername() . " to " . $this->getNonCampus());
+            Log::info(
+                "Set non-campus for " . $this->getUsername() . " to " . ($this->getNonCampus() ? "1" : "0"),
+                Log::USER_SET_NONCAMPUS,
+                $this,
+                null,
+                $nonCampus);
             return array('RESULT' => true, 'MESSAGE' => 'Noncampus successfully set.', 'uid' => $this->getUsername());
         } else {
             return array(
@@ -849,7 +972,12 @@ class User extends LdapObject
         $data = array("employeetype" => ($classroom ? 'classroom' : array()));
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             $this->classroom = $classroom;
-            Log::info("Set classroom-user for " . $this->getUsername() . " to " . $this->isClassroom());
+            Log::info(
+                "Set classroom-user for " . $this->getUsername() . " to " . $this->isClassroom(),
+                Log::USER_SET_CLASSROOM,
+                $this,
+                null,
+                $classroom);
             return array(
                 'RESULT' => true,
                 'MESSAGE' => 'Classroom-user successfully set.',
@@ -949,8 +1077,10 @@ class User extends LdapObject
     }
 
     private static function SSHAHash($password) {
-        $salt = substr(str_shuffle(str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 4)), 0,
-                       4);
+        $salt = substr(
+            str_shuffle(str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', 4)),
+            0,
+            4);
         return '{SSHA}' . base64_encode(sha1($password . $salt, true) . $salt);
     }
 

@@ -2,9 +2,9 @@
 /*********
  *
  * settings.inc.php
- * 
+ *
  * Settings for accounts php scripts
- * 
+ *
  * Joe Leigh 2015
  *
  *********/
@@ -58,6 +58,10 @@ define("__ADMIN_EMAIL__","do-not-reply@igb.illinois.edu");
 define("__SESSION_NAME__","account_management");
 define("__SESSION_TIMEOUT__",36000);
 define("__RUN_SHELL_SCRIPTS",false);
- 
+
 define("__LOG_FILE__","");
 define("__ENABLE_LOG__",true);
+define("__LOG_DB_HOST__", "");
+define("__LOG_DB_NAME__", "");
+define("__LOG_DB_USER__", "");
+define("__LOG_DB_PASS__", "");

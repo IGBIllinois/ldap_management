@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'view_log.html.twig' %}
 
 {% block title %}{{ parent() }} - User Logs: {{ user.username }}{% endblock %}
 
@@ -11,27 +11,4 @@
 			<li class="breadcrumb-item active">Log</li>
 		</ol>
 	</nav>
-{% endblock %}
-
-{% block content %}
-	<div class="content">
-		<table class="table table-striped table-sm table-bordered table-responsive-md mb-0">
-			<tr>
-				<th>Time</th>
-				<th>User</th>
-				<th>Message</th>
-			</tr>
-			{% for log in logs %}
-				<tr>
-					<td class="shrink">{{ log.time|date("m/d/Y h:i:s") }}</td>
-					<td>{% if log.uid=='guest' %}script{% else %}<a href="user.php?uid={{ log.uid }}">{{ log.uid }}</a>{% endif %}</td>
-					<td>{{ log.msg }}</td>
-				</tr>
-			{% endfor %}
-		</table>
-	</div>
-{% endblock %}
-
-{% block scripts %}
-	{{ parent() }}
 {% endblock %}

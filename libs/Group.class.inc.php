@@ -58,8 +58,10 @@ class Group extends LdapObject
 
         //If Errors, return with error messages
         if ( $error ) {
-            return array('RESULT' => false,
-                         'MESSAGE' => $message);
+            return array(
+                'RESULT' => false,
+                'MESSAGE' => $message,
+            );
         } //Everything looks good, add group
         else {
 
@@ -77,20 +79,24 @@ class Group extends LdapObject
 
             // Add to LDAP
             $dn = "cn=" . $name . "," . static::$ou;
-            $data = array("cn" => $name,
-                          "objectClass" => array('posixGroup', 'sambaGroupMapping'),
-                          "gidNumber" => $gidnumber,
-                          "description" => $description,
-                          'sambaGroupType' => 2,
-                          'sambaSID' => __SAMBA_ID__ . "-" . $gidnumber);
+            $data = array(
+                "cn" => $name,
+                "objectClass" => array('posixGroup', 'sambaGroupMapping'),
+                "gidNumber" => $gidnumber,
+                "description" => $description,
+                'sambaGroupType' => 2,
+                'sambaSID' => __SAMBA_ID__ . "-" . $gidnumber,
+            );
             Ldap::getInstance()->add($dn, $data);
 
             $this->load_by_id($name);
 
-            Log::info("Added group " . $this->getName());
-            return array('RESULT' => true,
-                         'MESSAGE' => 'Group successfully added.',
-                         'gid' => $name);
+            Log::info("Added group " . $this->getName(), Log::GROUP_ADD, $this);
+            return array(
+                'RESULT' => true,
+                'MESSAGE' => 'Group successfully added.',
+                'gid' => $name,
+            );
         }
 
     }
@@ -99,10 +105,12 @@ class Group extends LdapObject
     public function remove() {
         $dn = $this->getRDN();
         if ( Ldap::getInstance()->remove($dn) ) {
-            Log::info("Removed group " . $this->getName());
-            return array('RESULT' => true,
-                         'MESSAGE' => 'Group removed.',
-                         'gid' => $this->name);
+            Log::info("Removed group " . $this->getName(), Log::GROUP_REMOVE, $this);
+            return array(
+                'RESULT' => true,
+                'MESSAGE' => 'Group removed.',
+                'gid' => $this->name,
+            );
         }
     }
 
@@ -121,24 +129,30 @@ class Group extends LdapObject
 
         //If Errors, return with error messages
         if ( $error ) {
-            return array('RESULT' => false,
-                         'MESSAGE' => $message);
+            return array(
+                'RESULT' => false,
+                'MESSAGE' => $message,
+            );
         } //Everything looks good, add group
         else {
             // Add to LDAP
             $dn = "cn=" . $name . "," . static::$ou;
-            $data = array("cn" => $name,
-                          "objectClass" => array('posixGroup'),
-                          "gidNumber" => $gidnumber,
-                          "description" => $description,
-                          "memberUid" => $name);
+            $data = array(
+                "cn" => $name,
+                "objectClass" => array('posixGroup'),
+                "gidNumber" => $gidnumber,
+                "description" => $description,
+                "memberUid" => $name,
+            );
             Ldap::getInstance()->add($dn, $data);
             $this->load_by_id($name);
-            Log::info("Added group " . $this->getName());
-            Log::info("Added user " . $name . " to group " . $name);
-            return array('RESULT' => true,
-                         'MESSAGE' => 'Group successfully added.',
-                         'gid' => $name);
+            Log::info("Added group " . $this->getName(), Log::GROUP_ADD, $this);
+            Log::info("Added user " . $name . " to group " . $name, Log::GROUP_ADD_USER, $this, new Dummy($name));
+            return array(
+                'RESULT' => true,
+                'MESSAGE' => 'Group successfully added.',
+                'gid' => $name,
+            );
         }
 
     }
@@ -211,7 +225,7 @@ class Group extends LdapObject
     }
 
 
-    public function addUser($username) {
+    public function addUser($username, $silent = false) {
         if ( User::exists($username) && !in_array($username, $this->getMemberUIDs()) ) {
             $dn = "cn=" . $this->getName() . "," . static::$ou;
             if ( $this->isGroupOfNames ) {
@@ -220,22 +234,34 @@ class Group extends LdapObject
                 $data = array("memberUid" => $username);
             }
             if ( Ldap::getInstance()->mod_add($dn, $data) ) {
-                Log::info("Added user " . $username . " to group " . $this->getName());
-                return array('RESULT' => true,
-                             'MESSAGE' => 'User added to group.',
-                             'gid' => $this->getName(),
-                             'uid' => $username);
+                if ( !$silent ) {
+                    Log::info(
+                        "Added user " . $username . " to group " . $this->getName(),
+                        Log::GROUP_ADD_USER,
+                        $this,
+                        new Dummy($username));
+                }
+                return array(
+                    'RESULT' => true,
+                    'MESSAGE' => 'User added to group.',
+                    'gid' => $this->getName(),
+                    'uid' => $username,
+                );
             } else {
-                return array('RESULT' => false,
-                             'MESSAGE' => 'Failed adding user to group: LDAP error: ' . Ldap::getInstance()->get_error());
+                return array(
+                    'RESULT' => false,
+                    'MESSAGE' => 'Failed adding user to group: LDAP error: ' . Ldap::getInstance()->get_error(),
+                );
             }
         }
-        return array('RESULT' => false,
-                     'MESSAGE' => 'Failed adding user to group: invalid username or user already in group.');
+        return array(
+            'RESULT' => false,
+            'MESSAGE' => 'Failed adding user to group: invalid username or user already in group.',
+        );
     }
 
 
-    public function removeUser($username) {
+    public function removeUser($username, $silent = false) {
         if ( in_array($username, $this->getMemberUIDs()) ) {
             $dn = "cn=" . $this->getName() . "," . static::$ou;
             if ( $this->isGroupOfNames ) {
@@ -244,11 +270,17 @@ class Group extends LdapObject
                 $data = array("memberUid" => $username);
             }
             if ( Ldap::getInstance()->mod_del($dn, $data) ) {
-                Log::info("Removed user " . $username . " from group " . $this->getName());
-                return array('RESULT' => true,
-                             'MESSAGE' => 'User removed from group.',
-                             'gid' => $this->getName(),
-                             'uid' => $username);
+                if ( !$silent ) Log::info(
+                    "Removed user " . $username . " from group " . $this->getName(),
+                    Log::GROUP_REMOVE_USER,
+                    $this,
+                    new Dummy($username));
+                return array(
+                    'RESULT' => true,
+                    'MESSAGE' => 'User removed from group.',
+                    'gid' => $this->getName(),
+                    'uid' => $username,
+                );
             }
         }
     }
@@ -258,11 +290,21 @@ class Group extends LdapObject
         $old_name = $this->getName();
         $dn = "cn=" . $old_name . "," . static::$ou;
         if ( Ldap::getInstance()->mod_rename($dn, "cn=" . $name) ) {
-            Log::info("Changed group name from $old_name to $name.");
             $this->name = $name;
-            return array('RESULT' => true,
-                         'MESSAGE' => 'Name changed',
-                         'gid' => $name);
+            $this->setId($name);
+            Log::info(
+                "Changed group name from $old_name to $name.",
+                Log::GROUP_SET_NAME,
+                $this,
+                null,
+                $name,
+                null,
+                $old_name);
+            return array(
+                'RESULT' => true,
+                'MESSAGE' => 'Name changed',
+                'gid' => $name,
+            );
         }
     }
 
@@ -271,10 +313,17 @@ class Group extends LdapObject
         $this->description = $description;
 
         if ( $this->set_desc_obj() ) {
-            Log::info("Changed group description for " . $this->getName() . " to '$description'");
-            return array('RESULT' => true,
-                         'MESSAGE' => 'Description changed',
-                         'gid' => $this->getName());
+            Log::info(
+                "Changed group description for " . $this->getName() . " to '$description'",
+                Log::GROUP_SET_DESC,
+                $this,
+                null,
+                $description);
+            return array(
+                'RESULT' => true,
+                'MESSAGE' => 'Description changed',
+                'gid' => $this->getName(),
+            );
         }
     }
 
@@ -283,10 +332,17 @@ class Group extends LdapObject
         array_push($this->serverdirs, $serverdir);
 
         if ( $this->set_desc_obj() ) {
-            Log::info("Added server directory '$server: $dir' for " . $this->getName());
-            return array('RESULT' => true,
-                         'MESSAGE' => 'Server directory added',
-                         'gid' => $this->getName());
+            Log::info(
+                "Added server directory '$server: $dir' for " . $this->getName(),
+                Log::GROUP_ADD_DIR,
+                $this,
+                null,
+                "$server: $dir");
+            return array(
+                'RESULT' => true,
+                'MESSAGE' => 'Server directory added',
+                'gid' => $this->getName(),
+            );
         }
     }
 
@@ -300,10 +356,17 @@ class Group extends LdapObject
         $this->serverdirs = $serverdirs;
 
         if ( $this->set_desc_obj() ) {
-            Log::info("Removed server directory '$serverdir' from " . $this->getName());
-            return array('RESULT' => true,
-                         'MESSAGE' => 'Server directory removed',
-                         'gid' => $this->getName());
+            Log::info(
+                "Removed server directory '$serverdir' from " . $this->getName(),
+                Log::GROUP_REMOVE_DIR,
+                $this,
+                null,
+                $serverdir);
+            return array(
+                'RESULT' => true,
+                'MESSAGE' => 'Server directory removed',
+                'gid' => $this->getName(),
+            );
         }
     }
 
@@ -311,27 +374,39 @@ class Group extends LdapObject
         if ( User::exists($owner) ) {
             $this->owner = $owner;
             if ( $this->set_desc_obj() ) {
-                Log::info("Set owner to $owner for group " . $this->getName());
-                return array('RESULT' => true,
-                             'MESSAGE' => 'Group owner set',
-                             'gid' => $this->getName());
+                Log::info(
+                    "Set owner to $owner for group " . $this->getName(),
+                    Log::GROUP_SET_OWNER,
+                    $this,
+                    new Dummy($owner));
+                return array(
+                    'RESULT' => true,
+                    'MESSAGE' => 'Group owner set',
+                    'gid' => $this->getName(),
+                );
             } else {
-                return array('RESULT' => false,
-                             'MESSAGE' => 'LDAP modify failed',
-                             'gid' => $this->getName());
+                return array(
+                    'RESULT' => false,
+                    'MESSAGE' => 'LDAP modify failed',
+                    'gid' => $this->getName(),
+                );
             }
         } else {
-            return array('RESULT' => false,
-                         'MESSAGE' => 'No such user',
-                         'gid' => $this->getName());
+            return array(
+                'RESULT' => false,
+                'MESSAGE' => 'No such user',
+                'gid' => $this->getName(),
+            );
         }
     }
 
     private function set_desc_obj() {
         $dn = "cn=" . $this->getName() . "," . static::$ou;
-        $descObj = array('description' => $this->description,
-                         'directories' => $this->serverdirs,
-                         'owner' => $this->owner);
+        $descObj = array(
+            'description' => $this->description,
+            'directories' => $this->serverdirs,
+            'owner' => $this->owner,
+        );
         $data = array("description" => json_encode($descObj));
         if ( Ldap::getInstance()->modify($dn, $data) ) {
             return true;
@@ -353,7 +428,7 @@ class Group extends LdapObject
      * @param int     $start
      * @param int     $count
      * @param string  $sort
-     * @param boolean  $asc
+     * @param boolean $asc
      * @param boolean $showUsers
      * @return Group[]
      */
@@ -370,7 +445,10 @@ class Group extends LdapObject
             $filter = "(cn=*)";
         } else {
             // This ugly str_replace brought to you by our version of php being too old to support JSON_UNESCAPED_SLASHES
-            $filter = "(|(|(cn=*$search*)(description=*" . str_replace("/", "\\\\/", $search) . "*))(gidnumber=$search))";
+            $filter = "(|(|(cn=*$search*)(description=*" . str_replace(
+                    "/",
+                    "\\\\/",
+                    $search) . "*))(gidnumber=$search))";
         }
 
         if ( !$showUsers ) {

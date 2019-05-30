@@ -40,6 +40,8 @@
 
 	ob_end_flush();
 
+	// TODO pagination buttons screw up the asc order
+// TODO sort by password expiration doesnt work
 	renderTwigTemplate('user/index.html.twig', array(
 		'siteArea'=>'users',
 		'search'=>array('search'=>$search,'sort'=>$sort,'asc'=>$asc,'filter'=>$filter,'start'=>$start),

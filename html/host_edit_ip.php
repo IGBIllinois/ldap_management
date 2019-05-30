@@ -13,7 +13,7 @@ if ( count($_POST) > 0 ) {
         $_POST['ip'] = gethostbyname($_POST['hid']);
     }
 
-    if ( $errors == "" ) {
+    if ( count($errors) == 0 ) {
         $host = new Host($_POST['hid']);
         $result = $host->setIp($_POST['ip']);
 

@@ -43,8 +43,10 @@ class Computer extends LdapObject
 
         //If Errors, return with error messages
         if ( $error ) {
-            return array('RESULT' => false,
-                         'MESSAGE' => $message);
+            return array(
+                'RESULT' => false,
+                'MESSAGE' => $message,
+            );
         } //Everything looks good, add computer
         else {
             // Find first unused uidNumber,gidNumber
@@ -70,27 +72,31 @@ class Computer extends LdapObject
 
             // Add LDAP entry
             $dn = "uid=" . $machine . "," . static::$ou;
-            $data = array('uid' => $machine,
-                          'sambasid' => $sid,
-                          'objectClass' => array('inetOrgPerson', 'posixAccount', 'sambaSamAccount', 'account'),
-                          'displayname' => $machine,
-                          'cn' => 'Computer',
-                          'sn' => 'Computer',
-                          'uidNumber' => $uidnumber,
-                          'gidNumber' => $gidnumber,
-                          'sambaAcctFlags' => '[W        ]',
-                          'sambaPwdMustChange' => 0,
-                          'sambaPwdCanChange' => 0,
-                          'sambaPwdLastSet' => time(),
-                          'homeDirectory' => '/dev/null',
-                          'loginShell' => '/bin/false',);
+            $data = array(
+                'uid' => $machine,
+                'sambasid' => $sid,
+                'objectClass' => array('inetOrgPerson', 'posixAccount', 'sambaSamAccount', 'account'),
+                'displayname' => $machine,
+                'cn' => 'Computer',
+                'sn' => 'Computer',
+                'uidNumber' => $uidnumber,
+                'gidNumber' => $gidnumber,
+                'sambaAcctFlags' => '[W        ]',
+                'sambaPwdMustChange' => 0,
+                'sambaPwdCanChange' => 0,
+                'sambaPwdLastSet' => time(),
+                'homeDirectory' => '/dev/null',
+                'loginShell' => '/bin/false',
+            );
             Ldap::getInstance()->add($dn, $data);
             $this->load_by_id($machine);
 
-            Log::info("Added domain computer " . $this->getName());
-            return array('RESULT' => true,
-                         'MESSAGE' => 'Computer successfully added.',
-                         'uid' => $machine);
+            Log::info("Added domain computer " . $this->getName(), Log::DOMAIN_ADD, $this);
+            return array(
+                'RESULT' => true,
+                'MESSAGE' => 'Computer successfully added.',
+                'uid' => $machine,
+            );
         }
 
     }
@@ -98,10 +104,12 @@ class Computer extends LdapObject
     public function remove() {
         $dn = $this->getRDN();
         if ( Ldap::getInstance()->remove($dn) ) {
-            Log::info("Removed domain computer " . $this->getName());
-            return array('RESULT' => true,
-                         'MESSAGE' => 'Computer deleted.',
-                         'uid' => $this->name);
+            Log::info("Removed domain computer " . $this->getName(), Log::DOMAIN_REMOVE, $this);
+            return array(
+                'RESULT' => true,
+                'MESSAGE' => 'Computer deleted.',
+                'uid' => $this->name,
+            );
         }
     }
 

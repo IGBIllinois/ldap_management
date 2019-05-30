@@ -12,7 +12,7 @@ if ( count($_POST) > 0 ) {
         $_POST['ip'] = gethostbyname($_POST['name']);
     }
 
-    if ( $errors == "" ) {
+    if ( count($errors) == 0 ) {
         $host = new Host();
         $result = $host->create($_POST['name'], $_POST['ip']);
 

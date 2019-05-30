@@ -13,7 +13,7 @@ if ( count($_POST) > 0 ) {
         $errors[] = "Computer cannot be blank. Please stop trying to break my web interface.";
     }
 
-    if ( $errors == "" ) {
+    if ( count($errors) == 0 ) {
         $computer = new Computer($_POST['uid']);
         $result = $computer->remove();
 

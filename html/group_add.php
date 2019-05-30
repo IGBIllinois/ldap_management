@@ -6,7 +6,7 @@ $errors = array();
 if ( count($_POST) > 0 ) {
     $_POST = array_map("trim", $_POST);
 
-    if ( $errors == "" ) {
+    if ( count($errors) == 0 ) {
         $group = new Group();
         $result = $group->create($_POST['name'], $_POST['description']);
 

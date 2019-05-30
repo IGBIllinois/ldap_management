@@ -1,0 +1,14 @@
+{% extends 'view_log.html.twig' %}
+
+{% block title %}{{ parent() }} - Host Logs: {{ host.name }}{% endblock %}
+
+{% block jumbotron %}
+	{{ host.name }} - Logs
+	<nav>
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="list_hosts.php">Hosts</a></li>
+			<li class="breadcrumb-item"><a href="host.php?hid={{ host.name }}">{{ host.name }}</a></li>
+			<li class="breadcrumb-item active">Logs</li>
+		</ol>
+	</nav>
+{% endblock %}

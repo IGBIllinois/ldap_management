@@ -8,7 +8,7 @@ function __autoload($class_name) {
 	}
 }
 
-include_once '../conf/settings.inc.php';
+require_once '../conf/settings.inc.php';
 
 function cmp($a,$b){
 	if(isset($a['uid'][0]) && isset($b['uid'][0])){

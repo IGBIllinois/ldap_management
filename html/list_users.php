@@ -1,6 +1,6 @@
 <?php
-	include_once('includes/main.inc.php');
-	include_once('includes/session.inc.php');
+	require_once('includes/main.inc.php');
+	require_once('includes/session.inc.php');
 
 	$start = 0;
 	$count = 30;

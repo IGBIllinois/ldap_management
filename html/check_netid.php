@@ -1,7 +1,7 @@
 <?php
 	set_time_limit(10);
 	if(isset($_REQUEST['username'])){
-		include_once 'includes/main.inc.php';
+		require_once 'includes/main.inc.php';
 		
 		if(User::isInAD($_REQUEST['username'])){
 			echo '1';

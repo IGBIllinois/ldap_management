@@ -8,7 +8,7 @@ function __autoload($class_name) {
     }
 }
 
-include_once '../conf/settings.inc.php';
+require_once '../conf/settings.inc.php';
 
 /**
  * @param User   $user

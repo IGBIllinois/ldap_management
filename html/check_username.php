@@ -1,6 +1,6 @@
 <?php
 	if(isset($_POST['username'])){
-		include_once 'includes/main.inc.php';
+		require_once 'includes/main.inc.php';
 		$filter = "(uid=".$_POST['username'].")";
 		$results = Ldap::getInstance()->search($filter,__LDAP_PEOPLE_OU__);
 		if($results && $results['count']>0){

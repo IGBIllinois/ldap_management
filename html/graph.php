@@ -1,5 +1,5 @@
 <?php
-	include 'includes/main.inc.php';
+	require_once 'includes/main.inc.php';
 	if($_REQUEST['graph'] == 'usercal'){
 		$filter = "(!(employeeType=classroom))";
 		$attributes = array('createTimestamp');

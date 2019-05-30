@@ -1,6 +1,6 @@
 <?php
-include_once('includes/main.inc.php');
-include_once('includes/session.inc.php');
+require_once('includes/main.inc.php');
+require_once('includes/session.inc.php');
 
 renderTwigTemplate('default/stats.html.twig', array(
     'siteArea' => 'Statistics',

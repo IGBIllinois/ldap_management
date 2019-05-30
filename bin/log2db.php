@@ -8,7 +8,7 @@ function __autoload($class_name) {
     }
 }
 
-include_once '../conf/settings.inc.php';
+require_once '../conf/settings.inc.php';
 $sapi_type = php_sapi_name();
 // If run from command line
 if ( $sapi_type != 'cli' ) {

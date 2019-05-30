@@ -8,7 +8,7 @@ function __autoload($class_name) {
 	}
 }
 
-include_once '../conf/settings.inc.php';
+require_once '../conf/settings.inc.php';
 
 function has_crashplan($uid){
     $ch = curl_init(__CRASHPLAN_URL__."/api/User?username=$uid");

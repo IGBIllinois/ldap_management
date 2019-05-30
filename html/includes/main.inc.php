@@ -6,7 +6,7 @@ use Twig\Error\SyntaxError;
 
 ini_set('display_errors',1);
 set_include_path(get_include_path().":../libs:includes/PHPExcel_1.8.0/Classes");
-include_once('../conf/settings.inc.php');
+require_once('../conf/settings.inc.php');
 function my_autoloader($class_name) {
 	if(file_exists("../libs/" . $class_name . ".class.inc.php")) {
 		require_once $class_name . '.class.inc.php';
@@ -48,7 +48,7 @@ function renderTwigTemplate($template, $context){
 }
 
 // Initialize Twig
-include_once '../vendor/autoload.php';
+require_once '../vendor/autoload.php';
 $loader = new Twig_Loader_Filesystem('../templates');
 $twig = new Twig_Environment($loader, array());
 $twig->addGlobal('title', __TITLE__);

@@ -34,16 +34,16 @@
 										{% endfor %}
 									</select>
 								{% elseif input.type == 'date' %}
-									<input class="form-control" type="date" name="{{ input.attr }}" id="{{ input.attr }}_input" value="{{ input.value|date('Y-m-d') }}"/>
+									<input class="form-control" type="date" name="{{ input.attr }}" id="{{ input.attr }}_input" value="{{ input.value|date('Y-m-d') }}" {% if loop.index==1 %}autofocus{% endif %}/>
 								{% elseif input.type == 'password' %}
-									<input class="form-control" type="password" name="{{ input.attr }}" id="{{ input.attr }}_input"/>
+									<input class="form-control" type="password" name="{{ input.attr }}" id="{{ input.attr }}_input" {% if loop.index==1 %}autofocus{% endif %}/>
 								{% elseif input.type == 'hidden' %}
 									{{ input.value }}
 									<input class="form-control" type="hidden" name="{{ input.attr }}" value="{{ input.value }}"/>
 								{% elseif input.type == 'checkbox' %}
 									<input type="checkbox" name="{{ input.attr }}" id="{{ input.attr }}_input" {% if input.value %}checked{% endif %}/>
 								{% else %}
-									<input class="form-control" type="text" name="{{ input.attr }}" id="{{ input.attr }}_input" value="{{ input.value }}" placeholder="{{ input.placeholder }}"/>
+									<input class="form-control" type="text" name="{{ input.attr }}" id="{{ input.attr }}_input" value="{{ input.value }}" placeholder="{{ input.placeholder }}" {% if loop.index==1 %}autofocus{% endif %}/>
 								{% endif %}
 							</div>
 						</div>

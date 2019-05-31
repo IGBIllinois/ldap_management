@@ -20,8 +20,8 @@ if ( $sapi_type != 'cli' ) {
 
     MySQL::getInstance()->query('truncate logs; truncate objects');
 
-    $object = new Dummy();
-    $related = new Dummy();
+    $object = new Dummy(null);
+    $related = new Dummy(null);
 
     $log_dir = dirname(__LOG_FILE__);
     $log_lines = array();

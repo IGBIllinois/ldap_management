@@ -9,6 +9,7 @@ function toggleClasses(e, onClass, offClass) {
 }
 
 function sort_table(column) {
+    // TODO there's got to be a better way to do this than regex
     // Build new url
     const currentURL = window.location.href;
     const URLMatch = currentURL.match(/sort=(.*?)(&|$)/);
@@ -25,11 +26,11 @@ function sort_table(column) {
         if (URLMatch[1] === column) {
             // Clicked twice, flip asc
             if (ascMatch == null) {
-                window.location.href = currentURL + "&asc=false";
-            } else if (ascMatch[1] === "true") {
-                window.location.href = currentURL.replace(/asc=(.*?)(&|$)/g, "asc=false");
+                window.location.href = currentURL + "&asc=0";
+            } else if (ascMatch[1] === "1") {
+                window.location.href = currentURL.replace(/asc=(.*?)(&|$)/g, "asc=0");
             } else {
-                window.location.href = currentURL.replace(/asc=(.*?)(&|$)/g, "asc=true");
+                window.location.href = currentURL.replace(/asc=(.*?)(&|$)/g, "asc=1");
             }
         } else {
             // New column, default asc

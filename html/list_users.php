@@ -20,7 +20,7 @@
 	
 	$asc = true;
 	if(isset($_GET['asc'])){
-		$asc = $_GET['asc'] == 'true';
+		$asc = $_GET['asc'] == '1';
 	}
 	
 	$filter = 'none';

@@ -48,21 +48,21 @@
 						Expiration{{ table.sortIcon('expiration',search) }}</th>
 				{% else %}
 					<th class="sortable-th" onclick="sort_table('name')">Name{{ table.sortIcon('name',search) }}</th>
-					<th class="sortable-th" onclick="sort_table('emailforward')">Forwarding
-						Email{{ table.sortIcon('emailforward',search) }}</th>
-					<th class="sortable-th" onclick="sort_table('password_expiration')">Password
-						Expiration{{ table.sortIcon('password_expiration',search) }}</th>
-					<th class="d-xxl-table-cell d-none sortable-th" onclick="sort_table('passwordSet')">Password Last
-						Set{{ table.sortIcon('passwordSet',search) }}</th>
+					<th class="sortable-th" onclick="sort_table('forwardingEmail')">Forwarding
+						Email{{ table.sortIcon('forwardingEmail',search) }}</th>
+					<th class="sortable-th" onclick="sort_table('passwordExpiration')">Password
+						Expiration{{ table.sortIcon('passwordExpiration',search) }}</th>
+					<th class="d-xxl-table-cell d-none sortable-th" onclick="sort_table('passwordLastSet')">Password Last
+						Set{{ table.sortIcon('passwordLastSet',search) }}</th>
 					{% if search.filter=='expired' or search.filter=='expiring' %}
 						<th class="sortable-th" onclick="sort_table('expiration')">
 							Expiration{{ table.sortIcon('expiration',search) }}</th>
-						<th class="d-xxl-table-cell d-none sortable-th" onclick="sort_table('expirationreason')">
-							Expiration Reason{{ table.sortIcon('expirationreason',search) }}</th>
+						<th class="d-xxl-table-cell d-none sortable-th" onclick="sort_table('expirationReason')">
+							Expiration Reason{{ table.sortIcon('expirationReason',search) }}</th>
 					{% endif %}
 				{% endif %}
-				<th class="sortable-th" onclick="sort_table('last_login')">Last
-					Login{{ table.sortIcon('last_login',search) }}</th>
+				<th class="sortable-th" onclick="sort_table('lastLogin')">Last
+					Login{{ table.sortIcon('lastLogin',search) }}</th>
 			</tr>
 			</thead>
 			<tbody>

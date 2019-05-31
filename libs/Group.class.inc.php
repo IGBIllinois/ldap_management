@@ -210,6 +210,10 @@ class Group extends LdapObject
         return $this->userUIDs;
     }
 
+    public function getMemberCount(){
+        return count($this->getMemberUIDs());
+    }
+
     /**
      * @return User[] array
      */
@@ -440,7 +444,6 @@ class Group extends LdapObject
         $asc = true,
         $showUsers = false
     ) {
-        // TODO asc shouldnt be a string
         if ( $search == "" ) {
             $filter = "(cn=*)";
         } else {
@@ -499,6 +502,7 @@ class Group extends LdapObject
     //////////////////Private Functions//////////
 
     public function load_from_result($result) {
+        // TODO presumably the memberUIDs should be loaded here rather than later
         parent::load_from_result($result);
         $this->name = $result['cn'][0];
 

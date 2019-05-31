@@ -31,7 +31,7 @@
 					<th class="sortable-th" onclick="sort_table('description')">Description{{ table.sortIcon('description', search) }}</th>
 					<th class="sortable-th" onclick="sort_table('owner')">Owner{{ table.sortIcon('owner', search) }}</th>
 					<th>Managed Directories</th>
-					<th class="sortable-th" onclick="sort_table('members')">Members{{ table.sortIcon('members', search) }}</th>
+					<th class="sortable-th" onclick="sort_table('memberCount')">Members{{ table.sortIcon('memberCount', search) }}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -41,7 +41,7 @@
 				<td>{{ group.description }}</td>
 				<td>{{ group.owner }}</td>
 				<td>{{ group.directories|join(', ') }}</td>
-				<td>{{ group.members|length }}</td>
+				<td>{{ group.memberCount }}</td>
 			</tr>
 			{% endfor %}
 			</tbody>

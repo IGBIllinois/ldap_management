@@ -841,7 +841,6 @@ class User extends LdapObject
         $userfilter = 'none',
         $passwordSet = null
     ) {
-        // TODO asc shouldnt be a string
         if ( $search == "" ) {
             $filter = "(uid=*)";
         } else {

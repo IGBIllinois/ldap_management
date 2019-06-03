@@ -9,13 +9,15 @@
 	<div class="content">
 		<div class="m-3">
 			<form method="get" class="form-inline">
-				<div class="input-group mr-auto">
+				<div class="input-group">
 					<input type="text" name="search" class="form-control" value="{{ search.search }}" placeholder="Search"/>
 					<div class="input-group-append">
 						<button type="submit" class="btn btn-primary"><span class="fa fa-search"></span></button>
 					</div>
 				</div>
-
+				<div class="ml-3 mr-auto text-muted">
+					Showing {{ search.start+1 }}-{{ search.start+groups|length }} of {{ totalGroups }} groups
+				</div>
 				<div class="btn-group">
 					<button type="button" class="btn {% if search.filter=='showUsers' %}btn-primary{% else %}btn-light{% endif %}" id="showUsers-button" onclick="filter_table('showUsers')">
 						<span class="fa fa-user"></span> Show User Groups

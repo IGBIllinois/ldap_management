@@ -15,6 +15,7 @@
 			</tr>
 			</thead>
 			<tbody>
+{#			TODO why is there no pagination or search for hosts? #}
 			{% for host in hosts %}
 				<tr>
 					<td><a href="host.php?hid={{ host.name }}">{{ host.name }}</a></td>

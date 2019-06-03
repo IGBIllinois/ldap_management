@@ -267,6 +267,7 @@ function change_password_errors() {
 }
 
 function check_username() {
+    // TODO this function is really laggy because of the synchronous ajax call
     const username = document.getElementById('username_input').value;
     let warning1 = false;
 
@@ -282,12 +283,13 @@ function check_username() {
     });
 
     showValidateWarning('username', 1, warning1, warning1 ? "Username matches a UIUC netid" : "Username does not match a UIUC netid");
-    if (document.getElementById('forwardingEmail') != null) {
+    // TODO this bit should probably be separate from validation
+    if (document.getElementById('forwardingEmail_input') != null) {
         if (warning1) {
-            document.getElementById('forwardingEmail').value = document.getElementById('username').value + "@illinois.edu";
+            document.getElementById('forwardingEmail_input').value = document.getElementById('username_input').value + "@illinois.edu";
         } else {
-            if (document.getElementById('forwardingEmail').value.includes('@illinois.edu')) {
-                document.getElementById('forwardingEmail').value = '';
+            if (document.getElementById('forwardingEmail_input').value.includes('@illinois.edu')) {
+                document.getElementById('forwardingEmail_input').value = '';
             }
         }
     }

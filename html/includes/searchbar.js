@@ -106,18 +106,10 @@ function searchbar_hover(e) {
     $("#searchbar-results a").removeClass("selected");
 }
 
-function searchbar_setcookies(e) {
-    Cookies.set('lastUserSearchSort', 'username', {'path': ''});
-    Cookies.set('lastUserSearchAsc', 'true', {'path': ''});
-    Cookies.set('lastUserSearchFilter', 'none', {'path': ''});
-    Cookies.set('lastUserSearch', $("#searchbar").val(), {'path': ''});
-}
-
 $(document).ready(function () {
     $('#searchbar').on('input', searchbar_search);
     $('#searchbar').on('keydown', searchbar_handle_keys);
     $('#searchbar').on('focus', searchbar_show);
     $('#searchbar-results').on('mouseenter', 'a', searchbar_hover);
-    $('#searchbar-results').on('click', 'a', searchbar_setcookies);
     $('body').on('click', searchbar_hide);
 });

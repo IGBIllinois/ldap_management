@@ -301,7 +301,10 @@ if ( $sapi_type != 'cli' ) {
                             null,
                             null,
                             strftime("%Y-%m-%d %H:%M:%S", strtotime($matches[2])));
-                    } else if ( preg_match('/(?:Cancelled expiration|Removed shadowexpire) for user ([^\\s]+)$/um', $message, $matches) ) {
+                    } else if ( preg_match(
+                        '/(?:Cancelled expiration|Removed shadowexpire) for user ([^\\s]+)$/um',
+                        $message,
+                        $matches) ) {
                         $object->setId($matches[1]);
                         Log::saveToDatabase(
                             $loggedInUser,
@@ -516,7 +519,7 @@ if ( $sapi_type != 'cli' ) {
                             $message,
                             Log::USER_REMOVE_CRASHPLAN,
                             $object);
-                    } else if(preg_match('/(?:Cleaned up|classroom_cleanup)/um', $message)){
+                    } else if ( preg_match('/(?:Cleaned up|classroom_cleanup)/um', $message) ) {
                         // Ignore
                     } else {
                         echo $line;

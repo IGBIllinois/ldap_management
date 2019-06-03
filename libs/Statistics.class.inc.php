@@ -3,14 +3,12 @@
 class Statistics
 {
 
-    public static function users()
-    {
+    public static function users() {
         $result = User::all();
         return count($result);
     }
 
-    public static function expiringUsers()
-    {
+    public static function expiringUsers() {
         $filter = "(&(shadowExpire=*)(!(employeetype=classroom)))";
         $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, array('shadowExpire'));
         $count = 0;
@@ -23,8 +21,7 @@ class Statistics
         return $count;
     }
 
-    public static function expiredUsers()
-    {
+    public static function expiredUsers() {
         $filter = "(&(shadowExpire=*)(!(employeetype=classroom)))";
         $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, array('shadowExpire'));
         $count = 0;
@@ -37,8 +34,7 @@ class Statistics
         return $count;
     }
 
-    public static function passwordExpiredUsers()
-    {
+    public static function passwordExpiredUsers() {
         $filter = "(facsimileTelephoneNumber=*)";
         $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, array('facsimileTelephoneNumber'));
         $count = 0;
@@ -51,29 +47,25 @@ class Statistics
         return $count;
     }
 
-    public static function leftCampusUsers()
-    {
+    public static function leftCampusUsers() {
         $filter = "(employeeType=leftcampus)";
         $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, array(''));
         return $result['count'];
     }
 
-    public static function nonCampusUsers()
-    {
+    public static function nonCampusUsers() {
         $filter = "(employeeType=noncampus)";
         $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, array(''));
         return $result['count'];
     }
 
-    public static function classroomUsers()
-    {
+    public static function classroomUsers() {
         $filter = "(employeeType=classroom)";
         $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, array(''));
         return $result['count'];
     }
 
-    public static function lastMonthUsers()
-    {
+    public static function lastMonthUsers() {
         $filter = "(authtimestamp=*)";
         $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, array('authtimestamp'));
         $count = 0;
@@ -86,22 +78,19 @@ class Statistics
         return $count;
     }
 
-    public static function neverLoggedInUsers()
-    {
+    public static function neverLoggedInUsers() {
         $filter = "(!(authtimestamp=*))";
         $result = Ldap::getInstance()->search($filter, __LDAP_PEOPLE_OU__, array('authtimestamp'));
         return $result['count'];
     }
 
-    public static function groups()
-    {
+    public static function groups() {
         $filter = "(cn=*)";
         $result = Ldap::getInstance()->search($filter, __LDAP_GROUP_OU__, array(''));
         return $result['count'];
     }
 
-    public static function emptyGroups()
-    {
+    public static function emptyGroups() {
         $filter = "(!(memberUid=*))";
         $result = Ldap::getInstance()->search($filter, __LDAP_GROUP_OU__, array(''));
         return $result['count'];

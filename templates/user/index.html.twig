@@ -52,7 +52,8 @@
 						Email{{ table.sortIcon('forwardingEmail',search) }}</th>
 					<th class="sortable-th" onclick="sort_table('passwordExpiration')">Password
 						Expiration{{ table.sortIcon('passwordExpiration',search) }}</th>
-					<th class="d-xxl-table-cell d-none sortable-th" onclick="sort_table('passwordLastSet')">Password Last
+					<th class="d-xxl-table-cell d-none sortable-th" onclick="sort_table('passwordLastSet')">Password
+						Last
 						Set{{ table.sortIcon('passwordLastSet',search) }}</th>
 					{% if search.filter=='expired' or search.filter=='expiring' %}
 						<th class="sortable-th" onclick="sort_table('expiration')">

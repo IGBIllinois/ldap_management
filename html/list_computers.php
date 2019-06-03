@@ -32,9 +32,11 @@ if ( isset($_GET['asc']) ) {
 $all_computers = Computer::search($search, $start, $count, $sort, $asc);
 $num_computers = Computer::lastSearchCount();
 
-renderTwigTemplate('computer/index.html.twig', array(
-    'siteArea' => 'domain',
-    'search' => array('search' => $search, 'sort' => $sort, 'asc' => $asc, 'filter' => '', 'start' => $start),
-    'computers' => $all_computers,
-    'totalComputers' => $num_computers,
-));
+renderTwigTemplate(
+    'computer/index.html.twig',
+    array(
+        'siteArea' => 'domain',
+        'search' => array('search' => $search, 'sort' => $sort, 'asc' => $asc, 'filter' => '', 'start' => $start),
+        'computers' => $all_computers,
+        'totalComputers' => $num_computers,
+    ));

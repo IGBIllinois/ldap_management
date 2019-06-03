@@ -11,7 +11,7 @@ function __autoload($class_name) {
 require_once '../conf/settings.inc.php';
 
 /**
- * @param User $user
+ * @param User   $user
  * @param string $subject
  * @param string $duration
  */

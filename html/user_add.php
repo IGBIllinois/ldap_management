@@ -7,7 +7,7 @@ if ( count($_POST) > 0 ) {
     $_POST = array_map("trim", $_POST);
 
     if ( $_POST['password'] != $_POST['confirmPassword'] ) {
-        $errors[] ="Passwords do not match.";
+        $errors[] = "Passwords do not match.";
     }
 
     if ( count($errors) == 0 ) {
@@ -34,55 +34,57 @@ if ( count($_POST) > 0 ) {
             }
             header("Location: user.php?uid=" . $result->getObject()->getId());
         } else {
-            $errors[] =$result->getMessage();
+            $errors[] = $result->getMessage();
         }
     }
 }
 
-renderTwigTemplate('edit.html.twig', array(
-    'siteArea' => 'users',
-    'header' => 'Add User',
-    'inputs' => array(
-        array(
-            'attr' => 'username',
-            'name' => 'Username',
-            'type' => 'text',
+renderTwigTemplate(
+    'edit.html.twig',
+    array(
+        'siteArea' => 'users',
+        'header' => 'Add User',
+        'inputs' => array(
+            array(
+                'attr' => 'username',
+                'name' => 'Username',
+                'type' => 'text',
+            ),
+            array(
+                'attr' => 'forwardingEmail',
+                'name' => 'Forwarding Email',
+                'type' => 'text',
+            ),
+            array(
+                'attr' => 'firstName',
+                'name' => 'First Name',
+                'type' => 'text',
+            ),
+            array(
+                'attr' => 'lastName',
+                'name' => 'Last Name',
+                'type' => 'text',
+            ),
+            array(
+                'attr' => 'password',
+                'name' => 'Password',
+                'type' => 'password',
+            ),
+            array(
+                'attr' => 'confirmPassword',
+                'name' => 'Confirm Password',
+                'type' => 'password',
+            ),
+            array(
+                'attr' => 'realPerson',
+                'name' => 'Real Person',
+                'type' => 'checkbox',
+                'value' => true,
+            ),
         ),
-        array(
-            'attr' => 'forwardingEmail',
-            'name' => 'Forwarding Email',
-            'type' => 'text',
-        ),
-        array(
-            'attr' => 'firstName',
-            'name' => 'First Name',
-            'type' => 'text',
-        ),
-        array(
-            'attr' => 'lastName',
-            'name' => 'Last Name',
-            'type' => 'text',
-        ),
-        array(
-            'attr' => 'password',
-            'name' => 'Password',
-            'type' => 'password',
-        ),
-        array(
-            'attr' => 'confirmPassword',
-            'name' => 'Confirm Password',
-            'type' => 'password',
-        ),
-        array(
-            'attr' => 'realPerson',
-            'name' => 'Real Person',
-            'type' => 'checkbox',
-            'value' => true,
-        ),
-    ),
-    'message' => '<button class="btn btn-light" id="password-button" type="button">Generate Password</button><span id="password-text" class="ml-2"></span>',
-    'button' => array('color' => 'success', 'text' => 'Add user'),
-    'errors' => $errors,
-    'validation' => 'add_user_errors',
-    'readyScripts' => "$('#password-button').on('click',function(){generate_password();change_password_errors();});",
-));
+        'message' => '<button class="btn btn-light" id="password-button" type="button">Generate Password</button><span id="password-text" class="ml-2"></span>',
+        'button' => array('color' => 'success', 'text' => 'Add user'),
+        'errors' => $errors,
+        'validation' => 'add_user_errors',
+        'readyScripts' => "$('#password-button').on('click',function(){generate_password();change_password_errors();});",
+    ));

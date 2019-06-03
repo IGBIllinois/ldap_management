@@ -2,7 +2,7 @@
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
-$uid = requireGetKey('uid');
+$uid = requireGetKey('uid', 'User');
 $user = new User($uid);
 
 if ( count($_POST) > 0 ) {
@@ -12,12 +12,14 @@ if ( count($_POST) > 0 ) {
     }
 }
 
-renderTwigTemplate('user/edit.html.twig', array(
-    'siteArea' => 'users',
-    'user' => $user,
-    'header' => 'Edit Name',
-    'inputs' => array(
-        array('attr' => 'firstName', 'name' => 'First Name', 'type' => 'text', 'value' => $user->getFirstName()),
-        array('attr' => 'lastName', 'name' => 'Last Name', 'type' => 'text', 'value' => $user->getLastName()),
-    ),
-));
+renderTwigTemplate(
+    'user/edit.html.twig',
+    array(
+        'siteArea' => 'users',
+        'user' => $user,
+        'header' => 'Edit Name',
+        'inputs' => array(
+            array('attr' => 'firstName', 'name' => 'First Name', 'type' => 'text', 'value' => $user->getFirstName()),
+            array('attr' => 'lastName', 'name' => 'Last Name', 'type' => 'text', 'value' => $user->getLastName()),
+        ),
+    ));

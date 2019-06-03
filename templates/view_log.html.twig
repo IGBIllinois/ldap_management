@@ -11,7 +11,8 @@
 			{% for log in logs %}
 				<tr>
 					<td class="shrink">{{ log.logtime|date("n/j/y g:ia") }}</td>
-					<td>{% if log.creator is null %}script{% else %}<a href="user.php?uid={{ log.creator }}">{{ log.creator }}</a>{% endif %}</td>
+					<td>{% if log.creator is null %}script{% else %}
+							<a href="user.php?uid={{ log.creator }}">{{ log.creator }}</a>{% endif %}</td>
 					<td>{{ log.message }}</td>
 				</tr>
 			{% endfor %}

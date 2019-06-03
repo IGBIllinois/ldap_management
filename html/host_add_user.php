@@ -2,7 +2,7 @@
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
-$hid = requireGetKey('hid');
+$hid = requireGetKey('hid', 'Host');
 $host = new Host($hid);
 
 $errors = array();
@@ -22,7 +22,7 @@ if ( count($_POST) > 0 ) {
         if ( $result['RESULT'] == true ) {
             header("Location: host.php?hid=" . $hid);
         } else if ( $result['RESULT'] == false ) {
-            $errors[] =$result['MESSAGE'];
+            $errors[] = $result['MESSAGE'];
         }
     }
 }
@@ -30,13 +30,15 @@ if ( count($_POST) > 0 ) {
 $allUsers = User::all();
 $users = array_diff($allUsers, $host->getUserUIDs());
 
-renderTwigTemplate('host/edit.html.twig', array(
-    'siteArea' => 'hosts',
-    'host' => $host,
-    'header' => 'Add User',
-    'inputs' => array(
-        array('attr' => 'username', 'name' => 'User', 'type' => 'select', 'options'=>$users),
-    ),
-    'button'=>array('color'=>'success', 'text'=>'Add'),
-    'errors' => $errors,
-));
+renderTwigTemplate(
+    'host/edit.html.twig',
+    array(
+        'siteArea' => 'hosts',
+        'host' => $host,
+        'header' => 'Add User',
+        'inputs' => array(
+            array('attr' => 'username', 'name' => 'User', 'type' => 'select', 'options' => $users),
+        ),
+        'button' => array('color' => 'success', 'text' => 'Add'),
+        'errors' => $errors,
+    ));

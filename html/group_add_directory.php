@@ -2,7 +2,7 @@
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
-$gid = requireGetKey('gid');
+$gid = requireGetKey('gid', 'Group');
 $group = new Group($gid);
 
 $errors = array();
@@ -27,17 +27,21 @@ if ( count($_POST) > 0 ) {
     }
 }
 $allHosts = Host::all();
-$allHosts = array_map(function (Host $v) {
-    return $v->getName();
-}, $allHosts);
+$allHosts = array_map(
+    function (Host $v) {
+        return $v->getName();
+    },
+    $allHosts);
 
-renderTwigTemplate('group/edit.html.twig', array(
-    'siteArea' => 'groups',
-    'group' => $group,
-    'header' => 'Add Managed Directory',
-    'inputs' => array(
-        array('attr' => 'host', 'name' => 'Host', 'type' => 'select', 'options' => $allHosts),
-        array('attr' => 'directory', 'name' => 'Directory', 'type' => 'text'),
-    ),
-    'errors' => $errors,
-));
+renderTwigTemplate(
+    'group/edit.html.twig',
+    array(
+        'siteArea' => 'groups',
+        'group' => $group,
+        'header' => 'Add Managed Directory',
+        'inputs' => array(
+            array('attr' => 'host', 'name' => 'Host', 'type' => 'select', 'options' => $allHosts),
+            array('attr' => 'directory', 'name' => 'Directory', 'type' => 'text'),
+        ),
+        'errors' => $errors,
+    ));

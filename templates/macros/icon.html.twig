@@ -1,28 +1,41 @@
-{% macro expiring(classes) %}<span class="far fa-clock text-warning {{ classes }}" title="User set to expire"></span>{% endmacro %}
+{% macro expiring(classes) %}
+	<span class="far fa-clock text-warning {{ classes }}" title="User set to expire"></span>{% endmacro %}
 
-{% macro expired(classes) %}<span class="far fa-clock text-danger {{ classes }}" title="User expired"></span>{% endmacro %}
+{% macro expired(classes) %}
+	<span class="far fa-clock text-danger {{ classes }}" title="User expired"></span>{% endmacro %}
 
-{% macro leftCampus(classes) %}<span class="fa fa-graduation-cap text-warning {{ classes }}" title="User left UIUC"></span>{% endmacro %}
+{% macro leftCampus(classes) %}
+	<span class="fa fa-graduation-cap text-warning {{ classes }}" title="User left UIUC"></span>{% endmacro %}
 
-{% macro nonCampus(classes) %}<span class="fa fa-graduation-cap text-info {{ classes }}" title="User not from UIUC"></span>{% endmacro %}
+{% macro nonCampus(classes) %}
+	<span class="fa fa-graduation-cap text-info {{ classes }}" title="User not from UIUC"></span>{% endmacro %}
 
-{% macro crashplan(classes) %}<span class="far fa-hdd text-success {{ classes }}" title="User has Crashplan"></span>{% endmacro %}
+{% macro crashplan(classes) %}
+	<span class="far fa-hdd text-success {{ classes }}" title="User has Crashplan"></span>{% endmacro %}
 
-{% macro biocluster(classes) %}<span class="fas fa-bold text-primary {{ classes }}" title="User has Biocluster access"></span>{% endmacro %}
+{% macro biocluster(classes) %}
+	<span class="fas fa-bold text-primary {{ classes }}" title="User has Biocluster access"></span>{% endmacro %}
 
-{% macro server(classes) %}<span class="fas fa-server text-secondary {{ classes }}" title="User has server access"></span>{% endmacro %}
+{% macro server(classes) %}
+	<span class="fas fa-server text-secondary {{ classes }}" title="User has server access"></span>{% endmacro %}
 
-{% macro passwordExpired(classes) %}<span class="fa fa-key text-danger {{ classes }}" title="Password expired"></span>{% endmacro %}
+{% macro passwordExpired(classes) %}
+	<span class="fa fa-key text-danger {{ classes }}" title="Password expired"></span>{% endmacro %}
 
-{% macro passwordExpiring(classes) %}<span class="fa fa-key text-warning {{ classes }}" title="Password expiring soon"></span>{% endmacro %}
+{% macro passwordExpiring(classes) %}
+	<span class="fa fa-key text-warning {{ classes }}" title="Password expiring soon"></span>{% endmacro %}
 
-{% macro classroom(classes) %}<span class="fa fa-book text-info {{ classes }}" title="Classroom user"></span>{% endmacro %}
+{% macro classroom(classes) %}
+	<span class="fa fa-book text-info {{ classes }}" title="Classroom user"></span>{% endmacro %}
 
-{% macro loggedInRecently(classes) %}<span class="fas fa-sign-in-alt text-success {{ classes }}" title="Logged in within past 30 days"></span>{% endmacro %}
+{% macro loggedInRecently(classes) %}
+	<span class="fas fa-sign-in-alt text-success {{ classes }}" title="Logged in within past 30 days"></span>{% endmacro %}
 
-{% macro neverLoggedIn(classes) %}<span class="fas fa-sign-in-alt text-danger {{ classes }}" title="Never logged in"></span>{% endmacro %}
+{% macro neverLoggedIn(classes) %}
+	<span class="fas fa-sign-in-alt text-danger {{ classes }}" title="Never logged in"></span>{% endmacro %}
 
-{% macro locked(classes) %}<span class="fas fa-lock text-danger {{ classes }}" title="Account Locked"></span>{% endmacro %}
+{% macro locked(classes) %}
+	<span class="fas fa-lock text-danger {{ classes }}" title="Account Locked"></span>{% endmacro %}
 
 {% macro userIcons(user,classes) %}
 	{% import _self as icon %}

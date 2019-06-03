@@ -13,19 +13,21 @@ if ( count($_POST) > 0 ) {
         if ( $result['RESULT'] == true ) {
             header("Location: group.php?gid=" . $result['gid']);
         } else if ( $result['RESULT'] == false ) {
-            $errors[] =$result['MESSAGE'];
+            $errors[] = $result['MESSAGE'];
         }
     }
 }
 
-renderTwigTemplate('edit.html.twig', array(
-    'siteArea' => 'groups',
-    'header' => 'Add Group',
-    'inputs' => array(
-        array('attr' => 'name', 'name' => 'Name', 'type' => 'text'),
-        array('attr' => 'description', 'name' => 'Description', 'type' => 'text'),
-    ),
-    'button' => array('color' => 'success', 'text' => 'Add group'),
-    'errors' => $errors,
-    'validation' => 'change_group_errors',
-));
+renderTwigTemplate(
+    'edit.html.twig',
+    array(
+        'siteArea' => 'groups',
+        'header' => 'Add Group',
+        'inputs' => array(
+            array('attr' => 'name', 'name' => 'Name', 'type' => 'text'),
+            array('attr' => 'description', 'name' => 'Description', 'type' => 'text'),
+        ),
+        'button' => array('color' => 'success', 'text' => 'Add group'),
+        'errors' => $errors,
+        'validation' => 'change_group_errors',
+    ));

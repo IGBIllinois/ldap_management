@@ -2,7 +2,7 @@
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
-$uid = requireGetKey('uid');
+$uid = requireGetKey('uid', 'User');
 $user = new User($uid);
 
 if ( count($_POST) > 0 ) {
@@ -12,11 +12,18 @@ if ( count($_POST) > 0 ) {
     }
 }
 
-renderTwigTemplate('user/edit.html.twig', array(
-    'siteArea' => 'users',
-    'user' => $user,
-    'header' => 'Edit Password Expiration',
-    'inputs' => array(
-        array('attr' => 'passwordExpiration', 'name' => 'Password Expiration', 'type' => 'date', 'value' => $user->getPasswordExpiration()),
-    ),
-));
+renderTwigTemplate(
+    'user/edit.html.twig',
+    array(
+        'siteArea' => 'users',
+        'user' => $user,
+        'header' => 'Edit Password Expiration',
+        'inputs' => array(
+            array(
+                'attr' => 'passwordExpiration',
+                'name' => 'Password Expiration',
+                'type' => 'date',
+                'value' => $user->getPasswordExpiration(),
+            ),
+        ),
+    ));

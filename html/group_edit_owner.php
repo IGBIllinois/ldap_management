@@ -2,7 +2,7 @@
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
-$gid = requireGetKey('gid');
+$gid = requireGetKey('gid', 'Group');
 $group = new Group($gid);
 
 $errors = array();
@@ -28,18 +28,20 @@ if ( count($_POST) > 0 ) {
 }
 $allUsers = User::all();
 
-renderTwigTemplate('group/edit.html.twig', array(
-    'siteArea' => 'groups',
-    'group' => $group,
-    'header' => 'Edit Owner',
-    'inputs' => array(
-        array(
-            'attr' => 'owner',
-            'name' => 'Owner',
-            'type' => 'select',
-            'value' => $group->getOwner(),
-            'options' => $allUsers,
+renderTwigTemplate(
+    'group/edit.html.twig',
+    array(
+        'siteArea' => 'groups',
+        'group' => $group,
+        'header' => 'Edit Owner',
+        'inputs' => array(
+            array(
+                'attr' => 'owner',
+                'name' => 'Owner',
+                'type' => 'select',
+                'value' => $group->getOwner(),
+                'options' => $allUsers,
+            ),
         ),
-    ),
-    'errors' => $errors,
-));
+        'errors' => $errors,
+    ));

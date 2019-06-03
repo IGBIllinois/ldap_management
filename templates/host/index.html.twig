@@ -5,26 +5,26 @@
 {% block jumbotron %}Hosts{% endblock %}
 
 {% block content %}
-<div class="content">
-	<table class="table table-sm table-striped table-responsive-md table-igb-bordered mb-0">
-		<thead>
-		<tr>
-			<th>Hostname</th>
-			<th>IP</th>
-			<th># of users</th>
-		</tr>
-		</thead>
-		<tbody>
-		{% for host in hosts %}
-		<tr>
-			<td><a href="host.php?hid={{ host.name }}">{{ host.name }}</a></td>
-			<td>{{ host.ip }}</td>
-			<td>{{ host.userUIDs|length }}</td>
-		</tr>
-		{% endfor %}
-		</tbody>
-	</table>
-</div>
+	<div class="content">
+		<table class="table table-sm table-striped table-responsive-md table-igb-bordered mb-0">
+			<thead>
+			<tr>
+				<th>Hostname</th>
+				<th>IP</th>
+				<th># of users</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for host in hosts %}
+				<tr>
+					<td><a href="host.php?hid={{ host.name }}">{{ host.name }}</a></td>
+					<td>{{ host.ip }}</td>
+					<td>{{ host.userUIDs|length }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
 {% endblock %}
 
 {% block scripts %}

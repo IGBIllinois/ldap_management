@@ -6,13 +6,13 @@ $errors = array();
 if ( count($_POST) > 0 ) {
     $_POST = array_map("trim", $_POST);
     if ( !isset($_POST['prefix']) ) {
-        $errors[] ="Please enter a username prefix.";
+        $errors[] = "Please enter a username prefix.";
     }
     if ( !isset($_POST['start']) || !is_numeric($_POST['start']) || $_POST['start'] < 1 ) {
-        $errors[] ="Please enter a valid start number.";
+        $errors[] = "Please enter a valid start number.";
     }
     if ( !isset($_POST['end']) || !is_numeric($_POST['end']) || $_POST['end'] < 1 ) {
-        $errors[] ="Please enter a valid end number.";
+        $errors[] = "Please enter a valid end number.";
     }
 
     if ( count($errors) == 0 ) {
@@ -35,16 +35,18 @@ if ( count($_POST) > 0 ) {
     }
 }
 
-renderTwigTemplate('edit.html.twig', array(
-    'siteArea' => 'users',
-    'header' => 'Remove Classroom Users',
-    'inputs' => array(
-        array('attr' => 'prefix', 'name' => 'Prefix', 'type' => 'text'),
-        array('attr' => 'start', 'name' => 'Range Start', 'type' => 'text'),
-        array('attr' => 'end', 'name' => 'Range End', 'type' => 'text'),
+renderTwigTemplate(
+    'edit.html.twig',
+    array(
+        'siteArea' => 'users',
+        'header' => 'Remove Classroom Users',
+        'inputs' => array(
+            array('attr' => 'prefix', 'name' => 'Prefix', 'type' => 'text'),
+            array('attr' => 'start', 'name' => 'Range Start', 'type' => 'text'),
+            array('attr' => 'end', 'name' => 'Range End', 'type' => 'text'),
 
-    ),
-    'button' => array('color' => 'danger', 'text' => 'Remove'),
-    'validation' => 'show_remove_classroom_text',
-    'errors' => $errors,
-));
+        ),
+        'button' => array('color' => 'danger', 'text' => 'Remove'),
+        'validation' => 'show_remove_classroom_text',
+        'errors' => $errors,
+    ));

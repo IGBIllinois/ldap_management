@@ -7,8 +7,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>{% block title %}{{ title }}{% endblock %}</title>
 	<link rel="stylesheet" href="includes/bootstrap.css" type="text/css"/>
-	<link rel="stylesheet" href="includes/select2/css/select2.css" type="text/css" />
-	<link rel="stylesheet" href="includes/font-awesome/css/all.css" type="text/css" />
+	<link rel="stylesheet" href="includes/select2/css/select2.css" type="text/css"/>
+	<link rel="stylesheet" href="includes/font-awesome/css/all.css" type="text/css"/>
 	<link rel="stylesheet" href="includes/igblam.css" type="text/css"/>
 	<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
 
@@ -16,81 +16,92 @@
 	<script src="includes/js.cookie.js"></script>
 </head>
 <body>
-	<nav class="navbar navbar-dark bg-primary navbar-expand-lg">
-		<div class="container">
-			<a class="navbar-brand" href="index.php">
-				{{ title }}
-			</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#igblam-nav-collapse" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
+<nav class="navbar navbar-dark bg-primary navbar-expand-lg">
+	<div class="container">
+		<a class="navbar-brand" href="index.php">
+			{{ title }}
+		</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#igblam-nav-collapse" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
 
-			<div class="collapse navbar-collapse" id="igblam-nav-collapse">
-				<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-					<li class="nav-item dropdown {% if siteArea is not empty and (siteArea == 'classroom' or siteArea == 'users') %}active{% endif %}">
-						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button">{{ icon.user() }} Users</a>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" href="list_users.php"><span class="fa fa-list"></span> List Users</a>
-							<a class="dropdown-item" href="user_add.php"><span class="fa fa-plus"></span> Add User</a>
-							<div class="dropdown-divider"></div>
-							<a class="dropdown-item" href="list_classroom_users.php"><span class="fa fa-list"></span> List Classroom Users</a>
-							<a class="dropdown-item" href="user_add_classroom.php"><span class="fa fa-plus"></span> Add Classroom Users</a>
-							<a class="dropdown-item" href="user_remove_classroom.php"><span class="fa fa-minus"></span> Remove Classroom Users</a>
-						</div>
-					</li>
-					<li class="nav-item dropdown {% if siteArea is not empty and siteArea == 'groups' %}active {% endif %}">
-						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button">{{ icon.group() }} Groups <span class="caret"></span></a>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" href="list_groups.php"><span class="fa fa-list"></span> List Groups</a>
-							<a class="dropdown-item" href="group_add.php"><span class="fa fa-plus"></span> Add Group</a>
-						</div>
-					</li>
-					<li class="nav-item dropdown {% if siteArea is not empty and siteArea == 'hosts' %}active {% endif %}">
-						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button">{{ icon.host }} Hosts <span class="caret"></span></a>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" href="list_hosts.php"><span class="fa fa-list"></span> List Hosts</a>
-							<a class="dropdown-item" href="host_add.php"><span class="fa fa-plus"></span> Add Host</a>
-						</div>
-					</li>
-					<li class="nav-item dropdown {% if siteArea is not empty and siteArea == 'domain' %}active {% endif %}">
-						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button">{{ icon.domain() }} Domain <span class="caret"></span></a>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" href="list_computers.php"><span class="fa fa-list"></span> List Domain Computers</a>
-							<a class="dropdown-item" href="computer_add.php"><span class="fa fa-plus"></span> Add Domain Computer</a>
-						</div>
-					</li>
-					<li class="nav-item {% if siteArea is not empty and siteArea == 'statistics' %}active {% endif %}"><a href="statistics.php" class="nav-link">{{ icon.statistics() }} Statistics</a></li>
-				</ul>
+		<div class="collapse navbar-collapse" id="igblam-nav-collapse">
+			<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+				<li class="nav-item dropdown {% if siteArea is not empty and (siteArea == 'classroom' or siteArea == 'users') %}active{% endif %}">
+					<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button">{{ icon.user() }}
+						Users</a>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="list_users.php"><span class="fa fa-list"></span> List Users</a>
+						<a class="dropdown-item" href="user_add.php"><span class="fa fa-plus"></span> Add User</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="list_classroom_users.php"><span class="fa fa-list"></span> List
+							Classroom Users</a>
+						<a class="dropdown-item" href="user_add_classroom.php"><span class="fa fa-plus"></span> Add
+							Classroom Users</a>
+						<a class="dropdown-item" href="user_remove_classroom.php"><span class="fa fa-minus"></span>
+							Remove Classroom Users</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown {% if siteArea is not empty and siteArea == 'groups' %}active {% endif %}">
+					<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button">{{ icon.group() }}
+						Groups <span class="caret"></span></a>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="list_groups.php"><span class="fa fa-list"></span> List Groups</a>
+						<a class="dropdown-item" href="group_add.php"><span class="fa fa-plus"></span> Add Group</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown {% if siteArea is not empty and siteArea == 'hosts' %}active {% endif %}">
+					<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button">{{ icon.host }}
+						Hosts <span class="caret"></span></a>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="list_hosts.php"><span class="fa fa-list"></span> List Hosts</a>
+						<a class="dropdown-item" href="host_add.php"><span class="fa fa-plus"></span> Add Host</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown {% if siteArea is not empty and siteArea == 'domain' %}active {% endif %}">
+					<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" role="button">{{ icon.domain() }}
+						Domain <span class="caret"></span></a>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="list_computers.php"><span class="fa fa-list"></span> List Domain
+							Computers</a>
+						<a class="dropdown-item" href="computer_add.php"><span class="fa fa-plus"></span> Add Domain
+							Computer</a>
+					</div>
+				</li>
+				<li class="nav-item {% if siteArea is not empty and siteArea == 'statistics' %}active {% endif %}">
+					<a href="statistics.php" class="nav-link">{{ icon.statistics() }} Statistics</a></li>
+			</ul>
 
-				<form class="form-inline mt-2 mt-lg-0 mb-0" id="searchbar-container">
-					<input type="search" class="form-control" name="searchbar" id="searchbar" placeholder="Search"/>
-					<div id="searchbar-results" class="dropdown-menu"></div>
-				</form>
-				<a class="btn btn-outline-light my-2 my-lg-0 ml-lg-1" style="margin-right:0" href="logout.php"><span class="fas fa-sign-out-alt"></span> Logout</a>
-			</div>
-		</div>
-	</nav>
-	<div class='{% if siteArea is empty %}jumbotron jumbotron-fluid mainjumbo{% else %}minijumbo{% endif %}'>
-		<div class="container">
-			{% block jumbotron %}
-			{% endblock %}
+			<form class="form-inline mt-2 mt-lg-0 mb-0" id="searchbar-container">
+				<input type="search" class="form-control" name="searchbar" id="searchbar" placeholder="Search"/>
+				<div id="searchbar-results" class="dropdown-menu"></div>
+			</form>
+			<a class="btn btn-outline-light my-2 my-lg-0 ml-lg-1" style="margin-right:0" href="logout.php"><span class="fas fa-sign-out-alt"></span>
+				Logout</a>
 		</div>
 	</div>
-	<div class="container main-container">
-		{% block content %}
+</nav>
+<div class='{% if siteArea is empty %}jumbotron jumbotron-fluid mainjumbo{% else %}minijumbo{% endif %}'>
+	<div class="container">
+		{% block jumbotron %}
 		{% endblock %}
 	</div>
-	<div class="copyright">
-		<div class="container">
-			<div class="row">
-				<div class='col-sm-12' style='text-align: center; padding: 15px 0'>
-					<em>&copy 2019 Institute for Genomic Biology</em>
-				</div>
+</div>
+<div class="container main-container">
+	{% block content %}
+	{% endblock %}
+</div>
+<div class="copyright">
+	<div class="container">
+		<div class="row">
+			<div class='col-sm-12' style='text-align: center; padding: 15px 0'>
+				<em>&copy 2019 Institute for Genomic Biology</em>
 			</div>
 		</div>
 	</div>
+</div>
 
-	{% block scripts %}
+{% block scripts %}
 	<!-- JQuery and Popper are prereqs for Bootstrap 4 -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 	<script src="includes/bootstrap.js"></script>
@@ -99,6 +110,6 @@
 	<script type="text/javascript" src="includes/select2/js/select2.full.js"></script>
 	<script type="text/javascript" src="includes/main.inc.js"></script>
 	<script type="text/javascript" src="includes/searchbar.js"></script>
-	{% endblock %}
+{% endblock %}
 </body>
 </html>

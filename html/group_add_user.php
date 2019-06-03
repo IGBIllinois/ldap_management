@@ -2,7 +2,7 @@
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
-$gid = requireGetKey('gid');
+$gid = requireGetKey('gid', 'Group');
 $group = new Group($gid);
 
 $errors = array();
@@ -30,13 +30,15 @@ $allUsers = User::all();
 $groupMembers = $group->getMemberUIDs();
 $users = array_diff($allUsers, $groupMembers);
 
-renderTwigTemplate('group/edit.html.twig', array(
-    'siteArea' => 'groups',
-    'group' => $group,
-    'header' => 'Add Group Member',
-    'inputs' => array(
-        array('attr' => 'username', 'name' => 'User', 'type' => 'select', 'options' => $users),
-    ),
-    'button' => array('color' => 'success', 'text' => 'Add'),
-    'errors' => $errors,
-));
+renderTwigTemplate(
+    'group/edit.html.twig',
+    array(
+        'siteArea' => 'groups',
+        'group' => $group,
+        'header' => 'Add Group Member',
+        'inputs' => array(
+            array('attr' => 'username', 'name' => 'User', 'type' => 'select', 'options' => $users),
+        ),
+        'button' => array('color' => 'success', 'text' => 'Add'),
+        'errors' => $errors,
+    ));

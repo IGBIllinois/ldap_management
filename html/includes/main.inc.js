@@ -85,7 +85,7 @@ function show_add_classroom_text() {
         error = "End must be greater than start";
     }
 
-    showValidateError('username',1, rule2 && rule3, error);
+    showValidateError('username', 1, rule2 && rule3, error);
     document.getElementById('submit').disabled = !(rule2 && rule3);
 }
 

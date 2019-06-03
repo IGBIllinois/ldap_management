@@ -4,24 +4,25 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
-ini_set('display_errors',1);
-set_include_path(get_include_path().":../libs:includes/PHPExcel_1.8.0/Classes");
+ini_set('display_errors', 1);
+set_include_path(get_include_path() . ":../libs:includes/PHPExcel_1.8.0/Classes");
 require_once('../conf/settings.inc.php');
 function my_autoloader($class_name) {
-	if(file_exists("../libs/" . $class_name . ".class.inc.php")) {
-		require_once $class_name . '.class.inc.php';
-	}
+    if ( file_exists("../libs/" . $class_name . ".class.inc.php") ) {
+        require_once $class_name . '.class.inc.php';
+    }
 }
 
 spl_autoload_register('my_autoloader');
 
 // TODO come up with a better location for this function
 /**
- * @param string $key
+ * @param string          $key
+ * @param LdapObject|null $class
  * @return mixed
  */
-function requireGetKey($key){
-    if(!isset($_GET[$key]) || $_GET[$key] == ""){
+function requireGetKey($key, $class = null) {
+    if ( (!isset($_GET[$key]) || $_GET[$key] == "") || ($class !== null && !$class::exists($_GET[$key])) ) {
         header('location: index.php');
         exit();
     }
@@ -31,9 +32,9 @@ function requireGetKey($key){
 // TODO and this one
 /**
  * @param string $template
- * @param array $context
+ * @param array  $context
  */
-function renderTwigTemplate($template, $context){
+function renderTwigTemplate($template, $context) {
     global $twig;
     try {
         $template = $twig->load($template);

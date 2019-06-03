@@ -12,16 +12,18 @@ if ( count($_POST) > 0 ) {
     if ( $result['RESULT'] == true ) {
         header("Location: computer.php?uid=" . $result['uid']);
     } else if ( $result['RESULT'] == false ) {
-        $errors[] =$result['MESSAGE'];
+        $errors[] = $result['MESSAGE'];
     }
 }
 
-renderTwigTemplate('edit.html.twig', array(
-    'siteArea' => 'domain',
-    'header' => 'Add Domain Computer',
-    'inputs' => array(
-        array('attr' => 'name', 'name' => 'Name', 'type' => 'text'),
-    ),
-    'button' => array('color' => 'success', 'text' => 'Add computer'),
-    'errors' => $errors,
-));
+renderTwigTemplate(
+    'edit.html.twig',
+    array(
+        'siteArea' => 'domain',
+        'header' => 'Add Domain Computer',
+        'inputs' => array(
+            array('attr' => 'name', 'name' => 'Name', 'type' => 'text'),
+        ),
+        'button' => array('color' => 'success', 'text' => 'Add computer'),
+        'errors' => $errors,
+    ));

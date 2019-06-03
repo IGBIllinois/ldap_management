@@ -2,7 +2,7 @@
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
-$uid = requireGetKey('uid');
+$uid = requireGetKey('uid', 'User');
 if ( $uid == "" ) {
     header('location: index.php');
 }

@@ -2,7 +2,7 @@
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
-$hid = requireGetKey('hid');
+$hid = requireGetKey('hid', 'Host');
 $host = new Host($hid);
 $ldapattributes = $host->getLdapAttributes();
 
@@ -12,9 +12,11 @@ for ( $i = 0; $i < $ldapattributes['count']; $i++ ) {
 }
 sort($attributes);
 
-renderTwigTemplate('host/view_advanced.html.twig', array(
-    'siteArea' => 'hosts',
-    'host' => $host,
-    'attributes' => $attributes,
-    'attributeValues' => $ldapattributes,
-));
+renderTwigTemplate(
+    'host/view_advanced.html.twig',
+    array(
+        'siteArea' => 'hosts',
+        'host' => $host,
+        'attributes' => $attributes,
+        'attributeValues' => $ldapattributes,
+    ));

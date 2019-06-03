@@ -7,13 +7,13 @@ $show_users = false;
 if ( count($_POST) > 0 ) {
     $_POST = array_map("trim", $_POST);
     if ( !isset($_POST['prefix']) ) {
-        $errors[] ="Please enter a username prefix.";
+        $errors[] = "Please enter a username prefix.";
     }
     if ( !isset($_POST['start']) || !is_numeric($_POST['start']) ) {
-        $errors[] ="Please enter a valid start.";
+        $errors[] = "Please enter a valid start.";
     }
     if ( !isset($_POST['end']) || !is_numeric($_POST['end']) ) {
-        $errors[] ="Please enter a valid end.";
+        $errors[] = "Please enter a valid end.";
     }
 
     if ( count($errors) == 0 ) {
@@ -94,7 +94,15 @@ if ( count($_POST) > 0 ) {
             }
         }
 
-        $subject = "IGB Classroom Users " . $_POST['prefix'] . str_pad($_POST['start'], $padLength, "0", STR_PAD_LEFT) . '-' . $_POST['prefix'] . str_pad($_POST['end'], $padLength, "0", STR_PAD_LEFT);
+        $subject = "IGB Classroom Users " . $_POST['prefix'] . str_pad(
+                $_POST['start'],
+                $padLength,
+                "0",
+                STR_PAD_LEFT) . '-' . $_POST['prefix'] . str_pad(
+                $_POST['end'],
+                $padLength,
+                "0",
+                STR_PAD_LEFT);
         $to = $login_user->getEmail();
         $boundary = uniqid('mp');
 
@@ -102,17 +110,19 @@ if ( count($_POST) > 0 ) {
         $emailMessage .= "Content-type: text/plain; charset=utf-8\r\n\r\n";
 
         $txtTemplate = $twig->load('email/add_classroom_users.txt.twig');
-        $emailMessage .= $txtTemplate->render(array(
-            'added_users' => $added_users,
-        ));
+        $emailMessage .= $txtTemplate->render(
+            array(
+                'added_users' => $added_users,
+            ));
 
         $emailMessage .= "\r\n\r\n--" . $boundary . "\r\n";
         $emailMessage .= "Content-type: text/html; charset=utf-8\r\n\r\n";
 
         $htmlTemplate = $twig->load('email/add_classroom_users.html.twig');
-        $emailMessage .= $htmlTemplate->render(array(
-            'added_users' => $added_users,
-        ));
+        $emailMessage .= $htmlTemplate->render(
+            array(
+                'added_users' => $added_users,
+            ));
 
         $emailMessage .= "\r\n\r\n--" . $boundary . "--";
 
@@ -122,10 +132,12 @@ if ( count($_POST) > 0 ) {
         // TODO this multipart email thing is confusing and should be broken out into its own function, or maybe use a library
         mail($to, $subject, $emailMessage, $headers, " -f " . __ADMIN_EMAIL__);
 
-        renderTwigTemplate('user/add_classroom.html.twig', array(
-            'siteArea' => 'users',
-            'added_users' => $added_users,
-        ));
+        renderTwigTemplate(
+            'user/add_classroom.html.twig',
+            array(
+                'siteArea' => 'users',
+                'added_users' => $added_users,
+            ));
         exit();
     }
 }
@@ -136,18 +148,26 @@ foreach ( $allGroups as $group ) {
     $groups[] = $group->getName();
 }
 
-renderTwigTemplate('edit.html.twig', array(
-    'siteArea' => 'users',
-    'header' => 'Add Classroom Users',
-    'inputs' => array(
-        array('attr' => 'prefix', 'name' => 'Prefix', 'type' => 'text'),
-        array('attr' => 'start', 'name' => 'Range Start', 'type' => 'text'),
-        array('attr' => 'end', 'name' => 'Range End', 'type' => 'text'),
-        array('attr' => 'desc', 'name' => 'Description', 'type' => 'text'),
-        array('attr' => 'exp', 'name' => 'Expiration', 'type' => 'date'),
-        array('attr' => 'group', 'name' => 'Group', 'type' => 'select', 'options' => $groups, 'blankOption' => true),
-    ),
-    'button' => array('color' => 'success', 'text' => 'Add classroom users'),
-    'errors' => $errors,
-    'validation' => 'show_add_classroom_text',
-));
+renderTwigTemplate(
+    'edit.html.twig',
+    array(
+        'siteArea' => 'users',
+        'header' => 'Add Classroom Users',
+        'inputs' => array(
+            array('attr' => 'prefix', 'name' => 'Prefix', 'type' => 'text'),
+            array('attr' => 'start', 'name' => 'Range Start', 'type' => 'text'),
+            array('attr' => 'end', 'name' => 'Range End', 'type' => 'text'),
+            array('attr' => 'desc', 'name' => 'Description', 'type' => 'text'),
+            array('attr' => 'exp', 'name' => 'Expiration', 'type' => 'date'),
+            array(
+                'attr' => 'group',
+                'name' => 'Group',
+                'type' => 'select',
+                'options' => $groups,
+                'blankOption' => true,
+            ),
+        ),
+        'button' => array('color' => 'success', 'text' => 'Add classroom users'),
+        'errors' => $errors,
+        'validation' => 'show_add_classroom_text',
+    ));

@@ -24,14 +24,21 @@ if ( count($_POST) > 0 ) {
     }
 }
 
-renderTwigTemplate('edit.html.twig', array(
-    'siteArea' => 'hosts',
-    'request' => $_POST,
-    'header' => 'Add Host',
-    'inputs' => array(
-        array('attr' => 'name', 'name' => 'Hostname', 'type' => 'text'),
-        array('attr' => 'ip', 'name' => 'IP', 'type' => 'text', 'placeholder' => 'Leave blank to set automatically'),
-    ),
-    'button' => array('color' => 'success', 'text' => 'Add host'),
-    'errors' => $errors,
-));
+renderTwigTemplate(
+    'edit.html.twig',
+    array(
+        'siteArea' => 'hosts',
+        'request' => $_POST,
+        'header' => 'Add Host',
+        'inputs' => array(
+            array('attr' => 'name', 'name' => 'Hostname', 'type' => 'text'),
+            array(
+                'attr' => 'ip',
+                'name' => 'IP',
+                'type' => 'text',
+                'placeholder' => 'Leave blank to set automatically',
+            ),
+        ),
+        'button' => array('color' => 'success', 'text' => 'Add host'),
+        'errors' => $errors,
+    ));

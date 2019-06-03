@@ -2,7 +2,7 @@
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
-$hid = requireGetKey('hid');
+$hid = requireGetKey('hid', 'Host');
 $host = new Host($hid);
 
 $errors = array();
@@ -20,15 +20,17 @@ if ( count($_POST) > 0 ) {
         if ( $result['RESULT'] == true ) {
             header("Location: list_hosts.php");
         } else if ( $result['RESULT'] == false ) {
-            $errors[] =$result['MESSAGE'];
+            $errors[] = $result['MESSAGE'];
         }
     }
 }
 
-renderTwigTemplate('host/edit.html.twig', array(
-    'siteArea' => 'hosts',
-    'host' => $host,
-    'header' => 'Remove Host',
-    'message' => 'Are you sure you want to remove this host? Access to this host will be revoked for all users. This operation cannot be undone.',
-    'button' => array('color' => 'danger', 'text' => 'Remove'),
-));
+renderTwigTemplate(
+    'host/edit.html.twig',
+    array(
+        'siteArea' => 'hosts',
+        'host' => $host,
+        'header' => 'Remove Host',
+        'message' => 'Are you sure you want to remove this host? Access to this host will be revoked for all users. This operation cannot be undone.',
+        'button' => array('color' => 'danger', 'text' => 'Remove'),
+    ));

@@ -2,7 +2,7 @@
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
-$gid = requireGetKey('gid');
+$gid = requireGetKey('gid', 'Group');
 $group = new Group($gid);
 
 $errors = array();
@@ -24,12 +24,19 @@ if ( count($_POST) > 0 ) {
     }
 }
 
-renderTwigTemplate('group/edit.html.twig', array(
-    'siteArea' => 'groups',
-    'group' => $group,
-    'header' => 'Edit Description',
-    'inputs' => array(
-        array('attr' => 'description', 'name' => 'Description', 'type' => 'text', 'value' => $group->getDescription()),
-    ),
-    'errors' => $errors,
-));
+renderTwigTemplate(
+    'group/edit.html.twig',
+    array(
+        'siteArea' => 'groups',
+        'group' => $group,
+        'header' => 'Edit Description',
+        'inputs' => array(
+            array(
+                'attr' => 'description',
+                'name' => 'Description',
+                'type' => 'text',
+                'value' => $group->getDescription(),
+            ),
+        ),
+        'errors' => $errors,
+    ));

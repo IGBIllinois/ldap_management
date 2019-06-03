@@ -210,7 +210,7 @@ class Group extends LdapObject
         return $this->userUIDs;
     }
 
-    public function getMemberCount(){
+    public function getMemberCount() {
         return count($this->getMemberUIDs());
     }
 

@@ -386,7 +386,7 @@ class User extends LdapObject
                 unset($this->hosts['count']);
                 sort($this->hosts);
             } else {
-                $this->hosts = false;
+                $this->hosts = array();
             }
         }
         return $this->hosts;

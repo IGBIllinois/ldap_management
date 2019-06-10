@@ -1121,7 +1121,7 @@ class User extends LdapObject
 
         foreach ( $key as $k ) $key0 .= chr($k);
 
-        $crypt = openssl_encrypt("KGS!@#$%", 'des-ecb', $key0, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING);
+        $crypt = openssl_encrypt("KGS!@#$%", 'des-ecb', $key0, true/*OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING*/); // TODO These constants won't exist until php 5.4
 
         return bin2hex($crypt);
     }

@@ -98,7 +98,9 @@
 						{{ table.infoRow("Biocluster Access", 'No', {'url':"user_add_biocluster.php?uid="~user.username, 'class':'btn-primary', 'icon':'fa fa-plus-circle', 'text': 'Give Biocluster Access'}) }}
 					{% endif %}
 					{% if user.crashplan %}
-						{{ table.infoRow("Crashplan Access", icon.crashplan('mr-2')~'Yes', {'url':'user_remove_crashplan.php?&uid='~user.username, 'class':'btn-danger', 'icon':'fas fa-times', 'text':'Remove Crashplan Archive'}) }}
+						{{ table.infoRow("Crashplan", icon.crashplan('mr-2')~'Yes', {'url':'user_remove_crashplan.php?&uid='~user.username, 'class':'btn-danger', 'icon':'fas fa-times', 'text':'Remove Crashplan Archive'}) }}
+					{% else %}
+						{{ table.infoRow("Crashplan", 'No') }}
 					{% endif %}
 					{{ table.infoRow("Notes", user.description, {'url':"user_edit_notes.php?uid="~user.username, 'class':'btn-primary', 'icon':'fas fa-edit', 'text':'Edit Notes'}) }}
 

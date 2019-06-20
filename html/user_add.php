@@ -86,5 +86,5 @@ renderTwigTemplate(
         'button' => array('color' => 'success', 'text' => 'Add user'),
         'errors' => $errors,
         'validation' => 'add_user_errors',
-        'readyScripts' => "$('#password-button').on('click',function(){generate_password();change_password_errors();});",
+        'readyScripts' => "$('#password-button').on('click',function(){generate_password();add_user_errors();});",
     ));

@@ -1,6 +1,6 @@
 // Load visualization API
 // google.load('visualization', '1.0', {'packages':['corechart']});
-google.charts.load("current", {packages: ["calendar"]});
+google.charts.load("current", {packages: ["calendar", "line"]});
 
 function chartHeight(years) {
     // Magic formula I calculated
@@ -77,4 +77,30 @@ function drawPasswordSetChart() {
             console.log(data);
         }
     });
+}
+
+function drawUsersOverTimeChart(){
+    const element = 'users-chart';
+    $.ajax('graph.php', {
+        data: {
+            'graph': 'userline'
+        },
+        dataType: 'json',
+        success: function(data){
+            const dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('datetime', 'Date');
+            dataTable.addColumn('number', 'Users');
+            dataTable.addRows(data.map(x => [new Date(x[0]), x[1]]));
+            const options = {
+                title: 'Users',
+                height: 300
+            };
+            const chart = new google.charts.Line(document.getElementById(element));
+
+            chart.draw(dataTable, google.charts.Line.convertOptions(options));
+        },
+        error: function (data) {
+            console.log(data);
+        }
+    })
 }

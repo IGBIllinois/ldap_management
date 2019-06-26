@@ -25,6 +25,11 @@
 				</table>
 			</div>
 
+			<div class="content p-2 mb-3">
+				<div id="users-chart">
+
+				</div>
+			</div>
 			<div class="content py-2">
 				<div id="created-chart">
 					<div class="spinner-border"></div>
@@ -52,6 +57,7 @@
         $(document).ready(function () {
             google.charts.setOnLoadCallback(drawCreatedUserChart);
             google.charts.setOnLoadCallback(drawPasswordSetChart);
+            google.charts.setOnLoadCallback(drawUsersOverTimeChart);
         });
 	</script>
 	<script src="https://d3js.org/d3.v5.js"></script>

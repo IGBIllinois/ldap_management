@@ -79,21 +79,24 @@ function drawPasswordSetChart() {
     });
 }
 
-function drawUsersOverTimeChart(){
+function drawUsersOverTimeChart() {
     const element = 'users-chart';
     $.ajax('graph.php', {
         data: {
             'graph': 'userline'
         },
         dataType: 'json',
-        success: function(data){
+        success: function (data) {
             const dataTable = new google.visualization.DataTable();
-            dataTable.addColumn('datetime', 'Date');
+            dataTable.addColumn('date', 'Date');
             dataTable.addColumn('number', 'Users');
             dataTable.addRows(data.map(x => [new Date(x[0]), x[1]]));
             const options = {
                 title: 'Users',
-                height: 300
+                height: 300,
+                legend: {position: 'none'},
+                vAxis: {gridlines: {count: 5, color: '#ddd'},
+                minorGridlines: {count: 1, color: '#EEE'}}
             };
             const chart = new google.charts.Line(document.getElementById(element));
 
@@ -103,4 +106,36 @@ function drawUsersOverTimeChart(){
             console.log(data);
         }
     })
+}
+
+function drawMembersOverTimeChart(group) {
+    return function () {
+        const element = 'members-chart';
+        $.ajax('graph.php', {
+            data: {
+                'graph': 'memberline',
+                'group': group
+            },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+                const dataTable = new google.visualization.DataTable();
+                dataTable.addColumn('date', 'Date');
+                dataTable.addColumn('number', 'Members');
+                dataTable.addRows(data.map(x => [new Date(x[0]), x[1]]));
+                const options = {
+                    title: 'Members',
+                    height: 200,
+                    legend: {position: 'none'},
+                    vAxis: {gridlines: {count: 5}}
+                };
+                const chart = new google.charts.Line(document.getElementById(element));
+
+                chart.draw(dataTable, google.charts.Line.convertOptions(options));
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }
 }

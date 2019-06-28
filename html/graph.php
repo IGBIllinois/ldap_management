@@ -66,6 +66,9 @@ if ( $_REQUEST['graph'] == "passcal" ) {
 if($_REQUEST['graph'] == 'userline'){
     echo json_encode(Statistics::usersOverTime());
 }
+if($_REQUEST['graph'] == 'memberline'){
+    echo json_encode(Statistics::membersOverTime($_REQUEST['group']));
+}
 if ( $_REQUEST['graph'] == "d3passcal" ) {
     Ldap::getInstance()->set_bind_user(__LDAP_BIND_USER__);
     Ldap::getInstance()->set_bind_pass(__LDAP_BIND_PASS__);

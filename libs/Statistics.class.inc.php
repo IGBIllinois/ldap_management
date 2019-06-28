@@ -96,30 +96,42 @@ class Statistics
         return $result['count'];
     }
 
-    public static function usersOverTime() {
-        MySQL::init(__LOG_DB_HOST__, __LOG_DB_NAME__, __LOG_DB_USER__, __LOG_DB_PASS__);
-        $sql = sprintf('select * from logs where event_id=%d or event_id=%d order by logtime desc',Log::USER_ADD, Log::USER_REMOVE);
-        $events = MySQL::getInstance()->select($sql);
+    private static function changeOverTime($events, $up_event, $down_event, $initial){
         $deltas = array();
         foreach ($events as $event){
             $date = strftime('%Y-%m-%d',strtotime($event['logtime']));
             if(!isset($deltas[$date])){
                 $deltas[$date] = 0;
             }
-            if($event['event_id'] == Log::USER_ADD){
+            if($event['event_id'] == $up_event){
                 $deltas[$date] += 1;
             }
-            if($event['event_id'] == Log::USER_REMOVE){
+            if($event['event_id'] == $down_event){
                 $deltas[$date] -= 1;
             }
         }
-        $totalUsersNow = self::users();
-        $usersOverTime = array( array(strftime('%Y-%m-%d'), $totalUsersNow) );
+        $totalNow = $initial;
+        $totalOverTime = array( array(strftime('%Y-%m-%d'), $totalNow) );
         foreach($deltas as $date=>$delta){
             $dayBefore = strftime('%Y-%m-%d', strtotime($date)-(60*60*24));
-            $totalUsersNow -= $delta;
-            $usersOverTime[] = array($dayBefore, $totalUsersNow);
+            $totalNow -= $delta;
+            $totalOverTime[] = array($dayBefore, $totalNow);
         }
-        return $usersOverTime;
+        return $totalOverTime;
+    }
+
+    public static function usersOverTime() {
+        MySQL::init(__LOG_DB_HOST__, __LOG_DB_NAME__, __LOG_DB_USER__, __LOG_DB_PASS__);
+        $sql = sprintf('select * from logs where event_id=%d or event_id=%d order by logtime desc',Log::USER_ADD, Log::USER_REMOVE);
+        $events = MySQL::getInstance()->select($sql);
+        return self::changeOverTime($events, Log::USER_ADD, Log::USER_REMOVE,self::users());
+    }
+
+    public static function membersOverTime($groupName){
+        $group = new Group($groupName);
+        MySQL::init(__LOG_DB_HOST__, __LOG_DB_NAME__, __LOG_DB_USER__, __LOG_DB_PASS__);
+        $sql = sprintf("select logs.* from logs join objects on objects.id=logs.object_id where objects.name=:group and objects.type='%s' and (event_id=%d or event_id=%d) order by logtime desc", Log::TYPE_GROUP, Log::GROUP_ADD_USER, Log::GROUP_REMOVE_USER);
+        $events = MySQL::getInstance()->select($sql, array(':group'=>$groupName));
+        return self::changeOverTime($events, Log::GROUP_ADD_USER, Log::GROUP_REMOVE_USER, count($group->getMemberUIDs()));
     }
 }

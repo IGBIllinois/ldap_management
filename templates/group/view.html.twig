@@ -93,6 +93,11 @@
 						</button>
 					</div>
 				</div>
+				<div class="p-3">
+					<div id="members-chart">
+
+					</div>
+				</div>
 				<textarea class="d-none copy-text">
 					{%- for user in group.memberUIDs -%}
 						{{- user~"\n" -}}
@@ -115,4 +120,11 @@
 
 {% block scripts %}
 	{{ parent() }}
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript" src="includes/graph.js"></script>
+	<script type="text/javascript">
+        $(document).ready(function () {
+            google.charts.setOnLoadCallback(drawMembersOverTimeChart('{{ group.name }}'));
+        });
+	</script>
 {% endblock %}

@@ -113,6 +113,10 @@ class Statistics
         $totalNow = $initial;
         $totalOverTime = array( array(strftime('%Y-%m-%d'), $totalNow) );
         foreach($deltas as $date=>$delta){
+            if(!isset($delta[$date])){
+                // If there's not already a data point for this date, add one
+                $totalOverTime[] = array($date, $totalNow);
+            }
             $dayBefore = strftime('%Y-%m-%d', strtotime($date)-(60*60*24));
             $totalNow -= $delta;
             $totalOverTime[] = array($dayBefore, $totalNow);

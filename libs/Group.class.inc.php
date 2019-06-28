@@ -81,11 +81,12 @@ class Group extends LdapObject
             $dn = "cn=" . $name . "," . static::$ou;
             $data = array(
                 "cn" => $name,
-                "objectClass" => array('posixGroup', 'sambaGroupMapping'),
+                "objectClass" => array('posixGroup', 'sambaGroupMapping', 'groupOfNames'),
                 "gidNumber" => $gidnumber,
                 "description" => $description,
                 'sambaGroupType' => 2,
                 'sambaSID' => __SAMBA_ID__ . "-" . $gidnumber,
+                'member'=>'',
             );
             Ldap::getInstance()->add($dn, $data);
 

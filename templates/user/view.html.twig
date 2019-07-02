@@ -151,6 +151,11 @@
 				</textarea>
 				{# TODO show owned groups #}
 				<table class="table table-striped mb-0">
+					{% if user.groups|length > 16 %}
+					<tr>
+						<td colspan="2" class="table-warning border-bottom border-warning"><span class="fa fa-exclamation-triangle"> </span> User is a member of >16 groups. This may cause issues with NFS.</td>
+					</tr>
+					{% endif %}
 					{% for group in user.groups %}
 						{{ table.headlessRow('<a href="group.php?gid='~group~'">'~group~'</a>', {'url':'user_remove_group.php?'~{'uid':user.username, 'gid':group}|url_encode, 'class':'btn-danger', 'icon':'fa fa-times', 'text':'Remove from group'}) }}
 					{% else %}

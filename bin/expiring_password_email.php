@@ -96,7 +96,7 @@ if ( $sapi_type != 'cli' ) {
         echo "\nNo users expiring in one month.\n";
     }
 
-    if ( false and count($oneweek) > 0 ) {
+    if ( count($oneweek) > 0 ) {
         echo "\n==== Expiring in One Week ====\n";
         foreach ( $oneweek as $user ) {
             echo date(

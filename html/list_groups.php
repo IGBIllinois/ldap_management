@@ -33,14 +33,25 @@ $showUsers = false;
 if ( $filter == 'showUsers' ) {
     $showUsers = true;
 }
-$all_groups = Group::search($search, $start, $count, $sort, $asc, $showUsers);
+
+$empty = false;
+if ( $filter == 'empty' ) {
+    $empty = true;
+    $showUsers = true;
+}
+$all_groups = Group::search($search, $start, $count, $sort, $asc, $showUsers, $empty);
 $num_groups = Group::lastSearchCount();
 
 renderTwigTemplate(
-    'group/index.html.twig',
-    array(
-        'siteArea' => 'groups',
-        'groups' => $all_groups,
-        'search' => array('search' => $search, 'sort' => $sort, 'asc' => $asc, 'filter' => $filter, 'start' => $start),
-        'totalGroups' => $num_groups,
-    ));
+    'group/index.html.twig', array(
+                               'siteArea' => 'groups',
+                               'groups' => $all_groups,
+                               'search' => array(
+                                   'search' => $search,
+                                   'sort' => $sort,
+                                   'asc' => $asc,
+                                   'filter' => $filter,
+                                   'start' => $start,
+                               ),
+                               'totalGroups' => $num_groups,
+                           ));

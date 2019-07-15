@@ -443,7 +443,8 @@ class Group extends LdapObject
         $count = -1,
         $sort = "name",
         $asc = true,
-        $showUsers = false
+        $showUsers = false,
+        $empty = false
     ) {
         if ( $search == "" ) {
             $filter = "(cn=*)";
@@ -467,7 +468,7 @@ class Group extends LdapObject
             $group = new Group();
             $group->load_from_result($result[$i]);
 
-            if ( $showUsers || !in_array($group->getName(), $users) ) {
+            if ( (!$empty || $group->getMemberCount()==0) && ($showUsers || !in_array($group->getName(), $users)) ) {
                 $groups[] = $group;
             }
         }

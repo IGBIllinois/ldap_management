@@ -18,11 +18,14 @@
 				<div class="ml-3 mr-auto text-muted">
 					Showing {{ search.start+1 }}-{{ search.start+groups|length }} of {{ totalGroups }} groups
 				</div>
-				<div class="btn-group">
-					<button type="button" class="btn {% if search.filter=='showUsers' %}btn-primary{% else %}btn-light{% endif %}" id="showUsers-button" onclick="filter_table('showUsers')">
-						<span class="fa fa-user"></span> Show User Groups
-					</button>
-				</div>
+
+				<button type="button" class="btn mr-1 {% if search.filter=='showUsers' %}btn-primary{% else %}btn-light{% endif %}" id="showUsers-button" onclick="filter_table('showUsers')">
+					<span class="fa fa-user"></span> Show User Groups
+				</button>
+				<button type="button" class="btn {% if search.filter=='empty' %}btn-secondary{% else %}btn-light{% endif %}" id="empty-button" onclick="filter_table('empty')">
+					<span class="fas fa-users"></span> Empty Groups
+				</button>
+
 				<input type="hidden" name="sort" value="{{ search.sort }}"/>
 				<input type="hidden" name="asc" value="{{ search.asc }}"/>
 			</form>
@@ -62,6 +65,10 @@
         $('#showUsers-button').on('click', function () {
             const $this = $(this);
             toggleClasses($this, 'btn-light', 'btn-primary active');
+        });
+        $('#empty-button').on('click', function () {
+            const $this = $(this);
+            toggleClasses($this, 'btn-light', 'btn-secondary active');
         });
 	</script>
 {% endblock %}

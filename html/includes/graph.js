@@ -93,7 +93,7 @@ function drawUsersOverTimeChart() {
             dataTable.addRows(data.map(x => [new Date(x[0]), x[1]]));
             const options = {
                 title: 'Users',
-                height: 300,
+                height: 400,
                 legend: {position: 'none'},
                 vAxis: {gridlines: {count: 5, color: '#ddd'},
                 minorGridlines: {count: 1, color: '#EEE'}}

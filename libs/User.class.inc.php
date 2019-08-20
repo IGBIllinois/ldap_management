@@ -1,5 +1,7 @@
 <?php
 
+use Hackzilla\PasswordGenerator\Generator\HumanPasswordGenerator;
+
 class User extends LdapObject
 {
     protected static $ou = __LDAP_PEOPLE_OU__;
@@ -807,12 +809,36 @@ class User extends LdapObject
         }
     }
 
+    public static function generatePassword($length = 8) {
+        $generator = new HumanPasswordGenerator();
+        try {
+            $generator->setWordList('../conf/google-10000-english/google-10000-english-no-swears.txt')
+                      ->setWordCount(4)
+                      ->setWordSeparator('-')
+                      ->setOptionValue(HumanPasswordGenerator::OPTION_MIN_WORD_LENGTH, 4)
+                      ->setOptionValue(HumanPasswordGenerator::OPTION_MAX_WORD_LENGTH, 8);
+        } catch (\Hackzilla\PasswordGenerator\Exception\FileNotFoundException $e) {
+            // Fall back to random password
+            return static::randomPassword();
+        }
+
+        try {
+            return $generator->generatePassword();
+        } catch (\Hackzilla\PasswordGenerator\Exception\ImpossiblePasswordLengthException $e) {
+            // Fall back to random password
+            return static::randomPassword();
+        } catch (\Hackzilla\PasswordGenerator\Exception\WordsNotFoundException $e) {
+            // Fall back to random password
+            return static::randomPassword();
+        }
+    }
+
     public static function randomPassword($length = 8) {
-        $passwordchars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@$%&';
+        $passwordChars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@$%&';
         do {
             $password = "";
             for ( $i = 0; $i < $length; $i++ ) {
-                $password .= $passwordchars{self::openssl_rand(0, strlen($passwordchars) - 1)};
+                $password .= $passwordChars{self::openssl_rand(0, strlen($passwordChars) - 1)};
             }
         } while ( !(preg_match("/[A-Z]/u", $password) && preg_match("/[a-z]/u", $password) && preg_match(
                 "/[^A-Za-z]/u",

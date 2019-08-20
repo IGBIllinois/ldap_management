@@ -356,12 +356,21 @@ function random_password(length) {
 }
 
 function generate_password() {
-    do {
-        const password = random_password(8);
-        $('#password-text').html(password);
-        $('#password_input').val(password);
-        $('#confirmPassword_input').val(password);
-    } while (!check_passwords());
+    // do {
+    let password = null;
+
+    $.ajax('api.php?task=password', {
+        async: false,
+        contentType: 'text/json',
+        success: function(data){
+            password = data['password'];
+        }
+    });
+
+    $('#password-text').html(password);
+    $('#password_input').val(password);
+    $('#confirmPassword_input').val(password);
+    // } while (!check_passwords());
 }
 
 function isInt(value) {

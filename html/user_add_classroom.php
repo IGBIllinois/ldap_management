@@ -32,7 +32,7 @@ if ( count($_POST) > 0 ) {
         for ( $i = $_POST['start']; $i <= $_POST['end']; $i++ ) {
             $paddednum = str_pad($i, $padLength, "0", STR_PAD_LEFT);
             $username = $_POST['prefix'] . $paddednum;
-            $password = User::randomPassword();
+            $password = User::generatePassword();
             $added_users[] = array('username' => $username, 'password' => $password);
             $user = new User($username);
 

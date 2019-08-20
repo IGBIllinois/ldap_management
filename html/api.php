@@ -27,6 +27,16 @@ if ( isset($_REQUEST['task']) ) {
             exit();
         }
     }
+    if($_REQUEST['task'] == 'password'){
+        echo json_encode(
+            array(
+                'code' => 200,
+                'msg' => 'OK',
+                'password' => User::generatePassword()
+            )
+        );
+        exit();
+    }
     if ( $_REQUEST['task'] == 'user' && isset($_REQUEST['uid']) ) {
         $user = new User($_REQUEST['uid']);
         if ( $user->getUsername() == null ) {

@@ -8,6 +8,7 @@ ini_set('display_errors', 1);
 set_include_path(get_include_path() . ":../libs");
 require_once('../conf/settings.inc.php');
 function my_autoloader($class_name) {
+    $class_name = str_replace('\\', '/', $class_name);
     if ( file_exists("../libs/" . $class_name . ".class.inc.php") ) {
         require_once $class_name . '.class.inc.php';
     }

@@ -1,5 +1,6 @@
 <?php
 
+use Hackzilla\PasswordGenerator\Generator\ExtendedHumanPasswordGenerator;
 use Hackzilla\PasswordGenerator\Generator\HumanPasswordGenerator;
 
 class User extends LdapObject
@@ -810,19 +811,21 @@ class User extends LdapObject
     }
 
     public static function generatePassword($length = 8) {
-        $generator = new HumanPasswordGenerator();
+        $generator = new ExtendedHumanPasswordGenerator();
         try {
             $generator->setWordList('../conf/google-10000-english/google-10000-english-no-swears.txt')
                       ->setWordCount(4)
                       ->setWordSeparator('-')
                       ->setOptionValue(HumanPasswordGenerator::OPTION_MIN_WORD_LENGTH, 4)
-                      ->setOptionValue(HumanPasswordGenerator::OPTION_MAX_WORD_LENGTH, 8);
+                      ->setOptionValue(HumanPasswordGenerator::OPTION_MAX_WORD_LENGTH, 8)
+                      ->setOptionValue(ExtendedHumanPasswordGenerator::OPTION_REQUIRE_UPPERCASE, true);
         } catch (\Hackzilla\PasswordGenerator\Exception\FileNotFoundException $e) {
             // Fall back to random password
             return static::randomPassword();
         }
 
         try {
+
             return $generator->generatePassword();
         } catch (\Hackzilla\PasswordGenerator\Exception\ImpossiblePasswordLengthException $e) {
             // Fall back to random password

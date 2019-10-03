@@ -28,6 +28,7 @@ renderTwigTemplate(
                     "/usr/libexec/openssh/sftp-server",
                     "/bin/bash",
                     "/usr/local/bin/system-specific",
+                    "/sbin/nologin",
                 ),
             ),
         ),

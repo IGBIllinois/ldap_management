@@ -1,14 +1,15 @@
-@import "functions";
-@import "variables";
-@import "mixins/breakpoints";
+@import "../bootstrap/functions";
+@import "../bootstrap/variables";
+@import "../bootstrap/mixins";
 
 .mainjumbo {
   background-image: url('../images/CheersTitle.png');
   background-size: cover;
+  background-repeat: no-repeat;
   background-blend-mode: overlay; /*TODO blend mode doesnt work on ios? */
-  background-color: #e9ecef;
+  background-color: $gray-200;
   padding-top: 5rem;
-  box-shadow: 3px 3px 8px #eee;
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
 
   h1 {
     @include media-breakpoint-down(xs) {
@@ -21,7 +22,8 @@
   background-image: url('../images/CheersTitle.png');
   background-size: cover;
   background-blend-mode: overlay;
-  background-color: #e9ecef;
+  background-repeat: no-repeat;
+  background-color: $gray-200;
   background-position-y: -150px;
   padding-top: 2.5rem;
   padding-bottom: 1.5rem;
@@ -48,7 +50,7 @@
 }
 
 body {
-  background-color: #f6f6f6;
+  background-color: $gray-100;
 }
 
 .main-container {
@@ -98,8 +100,8 @@ body {
 
 /* Custom table styles */
 .table-igb-bordered {
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+  border-top: 1px solid $gray-300;
+  border-bottom: 1px solid $gray-300;
 }
 
 .content > .table-igb-bordered:first-child {
@@ -107,7 +109,7 @@ body {
 }
 
 .table-igb-bordered td, .table-igb-bordered th {
-  border: 1px solid #ddd;
+  border: 1px solid $gray-300;
   border-top-width: 0px;
   border-bottom-width: 0px;
   vertical-align: middle;
@@ -133,8 +135,8 @@ td.td-btn-sm {
 }
 
 tr.table-header td {
-  background-color: #96a1a6;
-  color: #fff;
+  background-color: $gray-500;
+  color: $gray-100;
   font-size: 0.75rem;
   padding: 0.5rem;
 }
@@ -192,3 +194,5 @@ a.searchbar-result.selected {
   top: 10px;
   left: 0;
 }
+
+@import "dark";

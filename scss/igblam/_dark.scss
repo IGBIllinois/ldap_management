@@ -1,0 +1,174 @@
+@media (prefers-color-scheme: dark) {
+  $color_darken: 10%;
+  $theme-colors: (
+          "primary": darken($primary, $color_darken),
+          "secondary": darken($secondary, $color_darken),
+          "success": darken($success, $color_darken),
+          "info": darken($info, $color_darken),
+          "warning": darken($warning, $color_darken),
+          "danger": darken($danger, $color_darken),
+          "light": $gray-500,
+          "dark": $gray-900
+  );
+
+  $table-bg-level: 9;
+  $table-border-level: 6;
+
+  body {
+    background-color: $gray-900;
+    color: $gray-200;
+  }
+
+  a {
+    color: map-get($theme-colors,'primary');
+    @include hover {
+      color: darken(map-get($theme-colors,'primary'), 15%);
+    }
+  }
+
+  .mainjumbo, .minijumbo {
+    background-color: $gray-700;
+    color: $gray-200;
+    background-blend-mode: multiply;
+  }
+  .minijumbo {
+    text-shadow: none;
+  }
+
+  .card {
+    background-color: $gray-800;
+  }
+  .copyright {
+    background-color: $gray-800;
+  }
+
+  .dropdown-menu {
+    background-color: $gray-800;
+    color: $gray-200;
+  }
+  .dropdown-item {
+    color: $gray-200;
+
+    &:hover {
+      background-color: $gray-700;
+      color: $gray-200;
+    }
+  }
+  .dropdown-divider {
+    border-color: $gray-700;
+  }
+
+  .content {
+    background-color: $gray-800;
+    border-color: $gray-700;
+  }
+  .table {
+    color: $gray-200;
+    thead th, th, td {
+      border-color: $gray-700;
+    }
+  }
+  .table-igb-bordered {
+    border-color: $gray-800;
+    color: $gray-200;
+
+    td, th {
+      border-color: $gray-700;
+    }
+    tr.table-header td {
+      background-color: $gray-600;
+      color: $gray-200;
+    }
+  }
+
+  .form-control {
+    background-color: $gray-900;
+    color: $gray-300;
+    border-color: $gray-600;
+
+    &:focus {
+      color: $gray-200;
+      background-color: darken($gray-900, 5%);
+    }
+  }
+
+  //  Darken colors
+  .bg-primary {
+    background-color: map-get($theme-colors,'primary') !important;
+  }
+
+  // Buttons
+  @each $color, $value in $theme-colors {
+    .btn-#{$color} {
+      @include button-variant($value, $value);
+    }
+  }
+  @each $color, $value in $theme-colors {
+    .btn-outline-#{$color} {
+      @include button-outline-variant($value);
+    }
+  }
+
+  // Text colors
+  @each $color, $value in $theme-colors {
+    @include text-emphasis-variant(".text-#{$color}", $value);
+  }
+
+  // Borders
+  @each $color, $value in $theme-colors {
+    .border-#{$color} {
+      border-color: $value !important;
+    }
+  }
+
+  // Dark Table backgrounds
+  @each $color, $value in $theme-colors {
+    @include table-row-variant($color, theme-color-level($color, $table-bg-level), theme-color-level($color, $table-border-level));
+  }
+
+  // Pagination
+  .page-item {
+    &.disabled {
+      .page-link {
+        background-color: $gray-800;
+      }
+    }
+    &.active {
+      .page-link {
+        background-color: map_get($theme-colors, "primary");
+        border-color: map_get($theme-colors, "primary");
+      }
+    }
+    .page-link {
+      background-color: $gray-800;
+      color: map_get($theme-colors, "primary");
+    }
+  }
+
+  // Input groups
+  .input-group-text {
+    background-color: $gray-900;
+    border-color: $gray-600;
+    color: $gray-200;
+  }
+
+
+  // Select2
+  .select2-container--default {
+    .select2-selection--single {
+      background-color: $gray-900;
+      border-color: $gray-600;
+      .select2-selection__rendered {
+        color: $gray-200;
+      }
+    }
+    .select2-results__option {
+      &[aria-selected="true"] {
+        background-color: $gray-600;
+      }
+    }
+  }
+  .select2-dropdown {
+    background-color: $gray-900;
+  }
+}

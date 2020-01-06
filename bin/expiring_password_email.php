@@ -1,33 +1,64 @@
 <?php
 ini_set("display_errors", 1);
 chdir(dirname(__FILE__));
-set_include_path(get_include_path() . ':../libs');
-function __autoload($class_name) {
+set_include_path(get_include_path() . ":../libs");
+require_once('../conf/settings.inc.php');
+function my_autoloader($class_name) {
+    $class_name = str_replace('\\', '/', $class_name);
     if ( file_exists("../libs/" . $class_name . ".class.inc.php") ) {
         require_once $class_name . '.class.inc.php';
     }
 }
 
-require_once '../conf/settings.inc.php';
+spl_autoload_register('my_autoloader');
 
 /**
  * @param User   $user
  * @param string $subject
  * @param string $duration
+ * @throws \Twig\Error\LoaderError
+ * @throws \Twig\Error\RuntimeError
+ * @throws \Twig\Error\SyntaxError
  */
 function emailmessage($user, $subject, $duration) {
-    $to = $user->getEmail();
-    // TODO use a twig template
-    $emailmessage = $user->getName() . ",<br><br>You are receiving this email because your IGB account password will expire in $duration (" . date(
-            'F j, Y',
-            $user->getPasswordExpiration()) . "). This will not affect your University of Illinois account password.<br><br> To change your password, go to https://illinoisauth.igb.illinois.edu/password/ and log in with either your current IGB password or your University of Illinois AD password. <br><br>If you do not change your password before " . date(
-            'F j, Y',
-            $user->getPasswordExpiration()) . ", you will not be able to log into IGB services such as IGB Wi-Fi, the IGB file-server, and the Biocluster. <br/><br/>If you have any questions, please contact us at help@igb.illinois.edu. <br/><br/>Computer and Network Resource Group<br/>Carl R. Woese Institute for Genomic Biology<br/>help@igb.illinois.edu";
+    // Initialize Twig
+    require_once '../vendor/autoload.php';
+    $loader = new Twig_Loader_Filesystem('../templates');
+    $twig = new Twig_Environment($loader, array());
 
-    $headers = "From: do-not-reply@igb.illinois.edu\r\n";
-    $headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";
-    $headers .= "Reply-To: help@igb.illinois.edu\r\n";
-    mail($to, $subject, $emailmessage, $headers, " -f " . __ADMIN_EMAIL__);
+    $to = $user->getEmail();
+    $boundary = uniqid('mp');
+
+    $emailMessage = "\r\n\r\n--" . $boundary . "\r\n";
+    $emailMessage .= "Content-type: text/plain; charset=utf-8\r\n\r\n";
+
+    $txtTemplate = $twig->load('email/expiring_password.txt.twig');
+    $emailMessage .= $txtTemplate->render(
+        array(
+            'name' => $user->getName(),
+            'duration' => $duration,
+            'expiration' => $user->getPasswordExpiration()
+        ));
+
+    $emailMessage .= "\r\n\r\n--" . $boundary . "\r\n";
+    $emailMessage .= "Content-type: text/html; charset=utf-8\r\n\r\n";
+
+    $htmlTemplate = $twig->load('email/expiring_password.html.twig');
+    $emailMessage .= $htmlTemplate->render(
+        array(
+            'name' => $user->getName(),
+            'duration' => $duration,
+            'expiration' => $user->getPasswordExpiration()
+        ));
+
+    $emailMessage .= "\r\n\r\n--" . $boundary . "--";
+
+    $headers = "MIME-Version: 1.0\r\n";
+    $headers .= "From: do-not-reply@igb.illinois.edu\r\n";
+    $headers .= "Content-Type: multipart/alternative;boundary=" . $boundary . "\r\n";
+    // TODO this multipart email thing is confusing and should be broken out into its own function, or maybe use a library
+    mail($to, $subject, $emailMessage, $headers, " -f do-not-reply@igb.illinois.edu");
+
     Log::info(
         "Expiration email sent to " . $user->getUsername() . ".",
         Log::EXP_EMAIL_SENT,

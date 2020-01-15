@@ -1014,8 +1014,8 @@ class User extends LdapObject
         }
     }
 
-    public function serializable() { // TODO what *is* this?
-        $data = array(
+    public function serializable() {
+        return array(
             'username' => $this->username,
             'name' => $this->name,
             'homeDirectory' => $this->homeDirectory,
@@ -1024,7 +1024,6 @@ class User extends LdapObject
             'givenName' => $this->givenName,
             'sn' => $this->sn,
         );
-        return $data;
     }
 
 //////////////////Private Functions//////////

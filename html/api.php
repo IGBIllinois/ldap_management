@@ -27,6 +27,40 @@ if ( isset($_REQUEST['task']) ) {
             exit();
         }
     }
+    if($_REQUEST['task'] == 'member_of'){
+        if ( !isset($_REQUEST['gid']) || !isset($_REQUEST['uid']) ) {
+            echo json_encode(
+                array(
+                    'code' => 400,
+                    'msg' => 'Invalid parameters',
+                ));
+            exit();
+        }
+        $filter = "(cn=" . $_REQUEST['gid'] . ")";
+        $attributes = array('cn', 'memberUID');
+        $groupinfo = Ldap::getInstance()->search($filter, __LDAP_GROUP_OU__, $attributes);
+        if($groupinfo['count'] > 0 && isset($groupinfo[0]['memberuid'])) {
+            for ( $i = 0; $i < $groupinfo[0]['memberuid']['count']; $i++ ) {
+                if ( $groupinfo[0]['memberuid'][$i] == $_REQUEST['uid'] ) {
+                    echo json_encode(
+                        array(
+                            'code' => 200,
+                            'msg' => 'OK',
+                            'memberOf' => true
+                        ));
+                    exit();
+                }
+            }
+        }
+        echo json_encode(
+            array(
+                'code' => 200,
+                'msg' => 'OK',
+                'memberOf' => false
+            )
+        );
+        exit();
+    }
     if($_REQUEST['task'] == 'password'){
         echo json_encode(
             array(
@@ -55,7 +89,80 @@ if ( isset($_REQUEST['task']) ) {
         }
         exit();
     }
+    if ( $_REQUEST['task'] == 'group' && isset($_REQUEST['gid']) ) {
+        $group = new Group($_REQUEST['gid']);
+        if ( $group->getName() == null ) {
+            echo json_encode(
+                array(
+                    'code' => 404,
+                    'msg' => 'No such group',
+                ));
+        } else {
+            echo json_encode(
+                array(
+                    'code' => 200,
+                    'msg' => 'OK',
+                    'group' => $group->serializable(),
+                ));
+        }
+        exit();
+    }
 
+    if($_REQUEST['task'] == 'add_group'){
+        if ( !isset($_REQUEST['username']) || !isset($_REQUEST['password']) ) {
+            echo json_encode(
+                array(
+                    'code' => 401,
+                    'msg' => 'Username/password required',
+                ));
+            exit();
+        } else if ( !Ldap::getInstance()->bind(
+            'uid=' . $_REQUEST['username'] . ',' . __LDAP_PEOPLE_OU__,
+            $_REQUEST['password']) ) {
+            echo json_encode(
+                array(
+                    'code' => 401,
+                    'msg' => 'Invalid username/password',
+                ));
+            exit();
+        } else {
+            Ldap::getInstance()->set_bind_user('uid=' . $_REQUEST['username'] . ',' . __LDAP_PEOPLE_OU__);
+            Ldap::getInstance()->set_bind_pass($_REQUEST['password']);
+
+            if(!isset($_REQUEST['gid'])){
+                echo json_encode(
+                    array(
+                        'code' => 400,
+                        'msg' => 'Invalid parameters',
+                    )
+                );
+            }
+            if(!isset($_REQUEST['description'])){
+                $description = $_REQUEST['gid'];
+            } else {
+                $description = $_REQUEST['description'];
+            }
+            $filter = "(cn=" . $_REQUEST['gid'] . ")";
+            $attributes = array('cn', 'memberUID');
+            $groupinfo = Ldap::getInstance()->search($filter, __LDAP_GROUP_OU__, $attributes);
+            if($groupinfo['count'] !== 0){
+                echo json_encode(array(
+                                     'code' => 400,
+                                     'msg' => 'Invalid parameters',
+                                 ));
+            } else {
+                $group = new Group();
+                $group->create($_REQUEST['gid'],$description);
+                echo json_encode(
+                    array(
+                        'code' => 200,
+                        'msg' => 'Group added'
+                    )
+                );
+                exit();
+            }
+        }
+    }
     if ( $_REQUEST['task'] == 'add_to_group' ) {
         if ( !isset($_REQUEST['username']) || !isset($_REQUEST['password']) ) {
             echo json_encode(

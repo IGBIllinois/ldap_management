@@ -500,6 +500,13 @@ class Group extends LdapObject
         return $groups_array;
     }
 
+    public function serializable(){
+        return array(
+            'name'=>$this->getName(),
+            'description'=>$this->getDescription()
+        );
+    }
+
 
     //////////////////Private Functions//////////
 

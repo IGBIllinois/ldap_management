@@ -12,6 +12,8 @@ function my_autoloader($class_name) {
 
 spl_autoload_register('my_autoloader');
 
+require_once '../vendor/autoload.php';
+
 /**
  * @param User   $user
  * @param string $subject
@@ -37,7 +39,7 @@ function emailmessage($user, $subject, $duration) {
         array(
             'name' => $user->getName(),
             'duration' => $duration,
-            'expiration' => $user->getPasswordExpiration()
+            'expiration' => $user->getPasswordExpiration(),
         ));
 
     $emailMessage .= "\r\n\r\n--" . $boundary . "\r\n";
@@ -48,7 +50,7 @@ function emailmessage($user, $subject, $duration) {
         array(
             'name' => $user->getName(),
             'duration' => $duration,
-            'expiration' => $user->getPasswordExpiration()
+            'expiration' => $user->getPasswordExpiration(),
         ));
 
     $emailMessage .= "\r\n\r\n--" . $boundary . "--";
@@ -56,13 +58,10 @@ function emailmessage($user, $subject, $duration) {
     $headers = "MIME-Version: 1.0\r\n";
     $headers .= "From: do-not-reply@igb.illinois.edu\r\n";
     $headers .= "Content-Type: multipart/alternative;boundary=" . $boundary . "\r\n";
-    // TODO this multipart email thing is confusing and should be broken out into its own function, or maybe use a library
     mail($to, $subject, $emailMessage, $headers, " -f do-not-reply@igb.illinois.edu");
 
     Log::info(
-        "Expiration email sent to " . $user->getUsername() . ".",
-        Log::EXP_EMAIL_SENT,
-        $user);
+        "Expiration email sent to " . $user->getUsername() . ".", Log::EXP_EMAIL_SENT, $user);
 }
 
 $sapi_type = php_sapi_name();
@@ -73,18 +72,13 @@ if ( $sapi_type != 'cli' ) {
     echo "Analyzing users...";
     // Connect to ldap
     Ldap::init(__LDAP_HOST__, __LDAP_SSL__, __LDAP_PORT__, __LDAP_BASE_DN__);
-    Ldap::getInstance()->set_bind_user(__LDAP_BIND_USER__);
-    Ldap::getInstance()->set_bind_pass(__LDAP_BIND_PASS__);
+    Ldap::getInstance()
+        ->set_bind_user(__LDAP_BIND_USER__);
+    Ldap::getInstance()
+        ->set_bind_pass(__LDAP_BIND_PASS__);
     $users = User::all();
-    /** @var User[] $onemonth */
-    $onemonth = array();
-    /** @var User[] $oneweek */
-    $oneweek = array();
-    /** @var User[] $emailtoday */
-    $emailtoday = array();
-    $digestmonth = "";
-    $digestweek = "";
-    $digestexpired = "";
+    /** @var User[] $emailToday */
+    $emailToday = array();
     $userexpdate = date_format(date_add(date_create(), new DateInterval('P6M')), 'U');
     $userexpreason = "Password expired";
     foreach ( $users as $uid ) {
@@ -93,12 +87,8 @@ if ( $sapi_type != 'cli' ) {
             $expiration = $user->getPasswordExpiration();
             $timetoexp = intval(($expiration - time()) / (60 * 60 * 24));
 
-            if ( $timetoexp == 6 ) {
-                $oneweek[] = $user;
-                $emailtoday[] = $user;
-            } else if ( $timetoexp == 29 ) {
-                $onemonth[] = $user;
-                $emailtoday[] = $user;
+            if ( $timetoexp < 30 && $timetoexp % 7 == 6 ) {
+                $emailToday[] = $user;
             }
 
         }
@@ -111,49 +101,37 @@ if ( $sapi_type != 'cli' ) {
         }
     }
 
-    if ( count($onemonth) > 0 ) {
-        echo "\n==== Expiring in One Month ====\n";
-        foreach ( $onemonth as $user ) {
+    if ( count($emailToday) > 0 ) {
+        echo "\n==== Expiring users ====\n";
+        foreach ( $emailToday as $user ) {
+            $weeks = intval(($user->getPasswordExpiration() - time()) / (60 * 60 * 24 * 7)) + 1;
+            $duration = sprintf("%d week%s", $weeks, $weeks == 1 ? '' : 's');
             echo date(
                     'Y-m-d',
-                    $user->getPasswordExpiration()) . "\t" . $user->getUsername() . "  \t" . $user->getName() . "\n";
+                    $user->getPasswordExpiration()) . "\t" . $user->getUsername() . "  \t" . $user->getName() . "\t" . $duration . "\n";
         }
-        echo "Sending mail...";
-        foreach ( $onemonth as $user ) {
-            $digestmonth .= $user->getUsername() . "<br>";
-            emailmessage($user, "IGB Password Expiration", "one month");
-        }
-    } else {
-        echo "\nNo users expiring in one month.\n";
-    }
-
-    if ( count($oneweek) > 0 ) {
-        echo "\n==== Expiring in One Week ====\n";
-        foreach ( $oneweek as $user ) {
-            echo date(
-                    'Y-m-d',
-                    $user->getPasswordExpiration()) . "\t" . $user->getUsername() . "  \t" . $user->getName() . "\n";
-        }
-        echo "Sending mail...";
-        foreach ( $oneweek as $user ) {
-            $digestweek .= $user->getUsername() . "<br>";
-            emailmessage($user, "IGB Password Expiration Final Notice", "one week");
+        echo "Sending mail...\n";
+        foreach ( $emailToday as $user ) {
+            $weeks = intval(($user->getPasswordExpiration() - time()) / (60 * 60 * 24 * 7)) + 1;
+            $duration = sprintf("%d week%s", $weeks, $weeks == 1 ? '' : 's');
+            emailmessage($user, "IGB Password Expiration", $duration);
         }
     } else {
-        echo "\nNo users expiring in one week.\n";
+        echo "\nNo users expiring within one month.\n";
     }
 
-    if ( count($emailtoday) > 0 ) {
+    if ( count($emailToday) > 0 ) {
         // Email joe secretly who's going to be emailed today
         $subject = "IGB Password Expiration Notices Pending";
         $to = "jleigh@illinois.edu";
-        $emailmessage = "The following users will be emailed password expiration notices today:<br><pre>";
-        for ( $i = 0; $i < count($emailtoday); $i++ ) {
-            $emailmessage .= $emailtoday[$i]->getUsername() . "\t" . date(
-                    'F j, Y',
-                    $emailtoday[$i]->getPasswordExpiration()) . "\n";
-        }
-        $emailmessage .= "</pre><br><br>--IGBLAM";
+
+        $loader = new Twig_Loader_Filesystem('../templates');
+        $twig = new Twig_Environment($loader, array());
+        $htmlTemplate = $twig->load('email/expiring_password_digest.html.twig');
+        $emailmessage = $htmlTemplate->render(
+            array(
+                'users' => $emailToday,
+            ));
 
         $headers = "From: do-not-reply@igb.illinois.edu\r\n";
         $headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";

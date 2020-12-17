@@ -1,14 +1,9 @@
 <?php
 ini_set("display_errors", 1);
 chdir(dirname(__FILE__));
-set_include_path(get_include_path() . ':../libs');
-function __autoload($class_name) {
-    if ( file_exists("../libs/" . $class_name . ".class.inc.php") ) {
-        require_once $class_name . '.class.inc.php';
-    }
-}
 
 require_once '../conf/settings.inc.php';
+require_once '../vendor/autoload.php';
 
 function has_crashplan($uid) {
     $ch = curl_init(__CRASHPLAN_URL__ . "/api/User?username=$uid");

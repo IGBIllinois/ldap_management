@@ -1,6 +1,5 @@
 <?php
 
-
 class LdapStatus
 {
     /** @var boolean status */
@@ -12,11 +11,13 @@ class LdapStatus
 
     /**
      * LdapStatus constructor.
+     *
      * @param boolean         $status
      * @param string          $message
      * @param LdapObject|null $object
      */
-    public function __construct($status, $message, $object = null) {
+    public function __construct($status, $message, $object = null)
+    {
         $this->status = $status;
         $this->message = $message;
         $this->object = $object;
@@ -26,42 +27,48 @@ class LdapStatus
     /**
      * @return boolean
      */
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
     /**
      * @param boolean $status
      */
-    public function setStatus($status) {
+    public function setStatus($status)
+    {
         $this->status = $status;
     }
 
     /**
      * @return string
      */
-    public function getMessage() {
+    public function getMessage()
+    {
         return $this->message;
     }
 
     /**
      * @param string $message
      */
-    public function setMessage($message) {
+    public function setMessage($message)
+    {
         $this->message = $message;
     }
 
     /**
      * @return LdapObject|null
      */
-    public function getObject() {
+    public function getObject()
+    {
         return $this->object;
     }
 
     /**
      * @param LdapObject|null $object
      */
-    public function setObject($object) {
+    public function setObject($object)
+    {
         $this->object = $object;
     }
 

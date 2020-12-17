@@ -1,4 +1,5 @@
 <?php
+
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
@@ -7,7 +8,8 @@ $user = new User($username);
 
 renderTwigTemplate(
     'user/view.html.twig',
-    array(
+    [
         'siteArea' => 'users',
         'user' => $user,
-    ));
+    ]
+);

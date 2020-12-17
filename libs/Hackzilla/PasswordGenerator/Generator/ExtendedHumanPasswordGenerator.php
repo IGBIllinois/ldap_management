@@ -21,7 +21,7 @@ class ExtendedHumanPasswordGenerator extends HumanPasswordGenerator
 
     function __construct() {
         parent::__construct();
-        $this->setOption(self::OPTION_REQUIRE_UPPERCASE, array('type'=>Option::TYPE_BOOLEAN, 'default'=>false));
+        $this->setOption(self::OPTION_REQUIRE_UPPERCASE, ['type'=>Option::TYPE_BOOLEAN, 'default'=>false]);
     }
 
     /**
@@ -38,7 +38,7 @@ class ExtendedHumanPasswordGenerator extends HumanPasswordGenerator
         $wordList = $this->generateWordList();
         $hasUpperCase = false;
 
-        $words = \count($wordList);
+        $words = count($wordList);
 
         if (!$words) {
             throw new WordsNotFoundException('No words selected.');

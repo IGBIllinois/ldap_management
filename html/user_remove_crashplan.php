@@ -1,13 +1,14 @@
 <?php
+
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
 $uid = requireGetKey('uid', 'User');
 $user = new User($uid);
 
-if ( count($_POST) > 0 ) {
-    if ( isset($_POST['uid']) ) {
-        if ( __RUN_SHELL_SCRIPTS__ ) {
+if (count($_POST) > 0) {
+    if (isset($_POST['uid'])) {
+        if (__RUN_SHELL_SCRIPTS__) {
             $safeusername = escapeshellarg($uid);
             exec("sudo ../bin/remove_crashplan.pl $safeusername");
         }
@@ -20,14 +21,15 @@ if ( count($_POST) > 0 ) {
 
 renderTwigTemplate(
     'user/edit.html.twig',
-    array(
+    [
         'siteArea' => 'users',
         'user' => $user,
         'header' => 'Remove Crashplan Archives',
-        'inputs' => array(),
+        'inputs' => [],
         'message' => "This will remove the user's backups from crashplan and free up their license. This operation <em>can</em> be undone.",
-        'button' => array(
+        'button' => [
             'text' => 'Remove Archives',
             'color' => 'danger',
-        ),
-    ));
+        ],
+    ]
+);

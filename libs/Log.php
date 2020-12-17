@@ -52,7 +52,7 @@ class Log
     const TYPE_DOMAIN = 'domain';
 
     // TODO in php7 this can be a const
-    static $EVENT_OBJECT_TYPE = array(
+    static $EVENT_OBJECT_TYPE = [
         self::DOMAIN_ADD => self::TYPE_DOMAIN,
         self::DOMAIN_REMOVE => self::TYPE_DOMAIN,  // DOMAIN_REMOVE
         self::GROUP_ADD => self::TYPE_GROUP,  // GROUP_ADD
@@ -95,19 +95,19 @@ class Log
         self::EXP_EMAIL_SENT => self::TYPE_USER,  // EXP_EMAIL_SENT
         self::USER_SET_BIOCLUSTER => self::TYPE_USER,  // USER_SET_BIOCLUSTER
         self::USER_REMOVE_CRASHPLAN => self::TYPE_USER,  // USER_REMOVE_CRASHPLAN
-    );
-    static $EVENT_RELATED_TYPE = array(
+    ];
+    static $EVENT_RELATED_TYPE = [
         self::GROUP_ADD_USER => self::TYPE_USER,
         self::GROUP_REMOVE_USER => self::TYPE_USER,
         self::GROUP_SET_OWNER => self::TYPE_USER,
         self::USER_ADD_HOST => self::TYPE_HOST,
         self::USER_REMOVE_HOST => self::TYPE_HOST,
-    );
-    static $EVENT_UPDATE_NAME = array(
+    ];
+    static $EVENT_UPDATE_NAME = [
         self::GROUP_SET_NAME => true,
         self::HOST_SET_NAME => true,
         self::USER_SET_USERNAME => true,
-    );
+    ];
 
     // Records the given message in the log file. $quiet logs in log file but not to screen
     public static function info(
@@ -120,14 +120,14 @@ class Log
         $oldId = null
     ) {
         global $login_user;
-        if ( isset($login_user) ) {
+        if (isset($login_user)) {
             $user_str = $login_user->getUsername();
         } else {
             $user_str = "guest";
         }
         $current_time = date('Y-m-d H:i:s');
         $full_msg = $current_time . " $user_str: " . $message . "\n";
-        if ( __ENABLE_LOG__ ) {
+        if (__ENABLE_LOG__) {
             $fh = fopen(self::logFile(), 'a');
             fwrite($fh, $full_msg);
             fclose($fh);
@@ -140,7 +140,8 @@ class Log
                 $related,
                 $value,
                 $time,
-                $oldId);
+                $oldId
+            );
         }
     }
 
@@ -167,17 +168,21 @@ class Log
         $time = null,
         $oldId = null
     ) {
-        if ( MySQL::init(__LOG_DB_HOST__, __LOG_DB_NAME__, __LOG_DB_USER__, __LOG_DB_PASS__) ) {
+        if (MySQL::init(__LOG_DB_HOST__, __LOG_DB_NAME__, __LOG_DB_USER__, __LOG_DB_PASS__)) {
             // First get user
-            if ( $user !== null ) {
+            if ($user !== null) {
                 $userObj = MySQL::getInstance()->select(
                     "select * from objects where name=:name and type=:type",
-                    array(':name' => $user->getId(), ':type' => self::TYPE_USER));
-                if ( !$userObj ) {
+                    [':name' => $user->getId(), ':type' => self::TYPE_USER]
+                )
+                ;
+                if (!$userObj) {
                     // Doesn't exist, insert
                     $userId = MySQL::getInstance()->insert(
                         "insert into objects (name, type) values (:name, :type)",
-                        array(":name" => $user->getId(), ':type' => "user"));
+                        [":name" => $user->getId(), ':type' => "user"]
+                    )
+                    ;
                 } else {
                     $userId = $userObj[0]['id'];
                 }
@@ -187,55 +192,65 @@ class Log
 
             // Next, get object/related ids
             $objectId = null;
-            if ( $eventId !== null && isset(self::$EVENT_OBJECT_TYPE[$eventId]) ) {
+            if ($eventId !== null && isset(self::$EVENT_OBJECT_TYPE[$eventId])) {
                 // Check if this is a name update
-                if ( isset(self::$EVENT_UPDATE_NAME[$eventId]) ) {
+                if (isset(self::$EVENT_UPDATE_NAME[$eventId])) {
                     // TODO there's a potential issue if you delete an object, then rename another object to its name
                     MySQL::getInstance()->query(
                         "update objects set name=:newname where name=:oldname and type=:type limit 1",
-                        array(
+                        [
                             ':newname' => $object->getId(),
                             ':oldname' => $oldId,
                             ':type' => self::$EVENT_OBJECT_TYPE[$eventId],
-                        ));
+                        ]
+                    )
+                    ;
                 }
 
                 $objectObj = MySQL::getInstance()->select(
                     "select * from objects where name=:name and type=:type",
-                    array(
+                    [
                         ':name' => $object->getId(),
                         ':type' => self::$EVENT_OBJECT_TYPE[$eventId],
-                    ));
-                if ( $objectObj ) {
+                    ]
+                )
+                ;
+                if ($objectObj) {
                     $objectId = $objectObj[0]['id'];
                 } else {
                     // Doesn't exist, insert
                     $objectId = MySQL::getInstance()->insert(
                         "insert into objects (name, type) values (:name, :type)",
-                        array(":name" => $object->getId(), ':type' => self::$EVENT_OBJECT_TYPE[$eventId]));
+                        [":name" => $object->getId(), ':type' => self::$EVENT_OBJECT_TYPE[$eventId]]
+                    )
+                    ;
                 }
             }
             $relatedId = null;
-            if ( $eventId !== null && isset(self::$EVENT_RELATED_TYPE[$eventId]) ) {
+            if ($eventId !== null && isset(self::$EVENT_RELATED_TYPE[$eventId])) {
                 $relatedObj = MySQL::getInstance()->select(
                     "select * from objects where name=:name and type=:type",
-                    array(
+                    [
                         ':name' => $related->getId(),
                         ':type' => self::$EVENT_RELATED_TYPE[$eventId],
-                    ));
-                if ( $relatedObj ) {
+                    ]
+                )
+                ;
+                if ($relatedObj) {
                     $relatedId = $relatedObj[0]['id'];
                 } else {
                     // Doesn't exist, insert
                     $relatedId = MySQL::getInstance()->insert(
                         "insert into objects (name, type) values (:name, :type)",
-                        array(":name" => $related->getId(), ':type' => self::$EVENT_RELATED_TYPE[$eventId]));
+                        [":name" => $related->getId(), ':type' => self::$EVENT_RELATED_TYPE[$eventId]]
+                    )
+                    ;
                 }
             }
 
             return MySQL::getInstance()->insert(
                 'insert into logs (logtime,user,object_id,message,related_id,event_id,value,time) values (:logtime,:user,:object_id,:message,:related_id,:event_id,:value,:time)',
-                array(
+                [
                     ':logtime' => $logtime,
                     ':user' => $userId,
                     ':object_id' => $objectId,
@@ -244,29 +259,33 @@ class Log
                     ':event_id' => $eventId,
                     ':value' => $value,
                     ':time' => $time,
-                ));
+                ]
+            )
+                ;
         }
         return false;
-
     }
 
     // Makes sure the log file exists and return its location
-    public static function logFile() {
-        if ( !file_exists(__LOG_FILE__) ) {
+    public static function logFile()
+    {
+        if (!file_exists(__LOG_FILE__)) {
             touch(__LOG_FILE__);
         }
         return __LOG_FILE__;
     }
 
-    public static function getLogs($id, $type) {
-        if ( MySQL::init(__LOG_DB_HOST__, __LOG_DB_NAME__, __LOG_DB_USER__, __LOG_DB_PASS__) ) {
-            $logs = MySQL::getInstance()->select(
+    public static function getLogs($id, $type)
+    {
+        if (MySQL::init(__LOG_DB_HOST__, __LOG_DB_NAME__, __LOG_DB_USER__, __LOG_DB_PASS__)) {
+            return MySQL::getInstance()->select(
                 "select l.*, u.name as creator from logs l join objects o on o.id=l.object_id left join objects r on r.id=l.related_id left join objects u on u.id=l.user where ((o.name=:name and o.type=:type) or (r.name=:name and r.type=:type)) order by l.logtime",
-                array(':name' => $id, ':type' => $type));
-            return $logs;
+                [':name' => $id, ':type' => $type]
+            )
+                ;
         }
-        return array();
+        return [];
     }
 }
 
-?>
+

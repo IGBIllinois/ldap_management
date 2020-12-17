@@ -1,4 +1,5 @@
 <?php
+
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
@@ -7,7 +8,8 @@ $host = new Host($hid);
 
 renderTwigTemplate(
     'host/view.html.twig',
-    array(
+    [
         'siteArea' => 'hosts',
         'host' => $host,
-    ));
+    ]
+);

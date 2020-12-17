@@ -1,14 +1,8 @@
 <?php
 ini_set("display_errors", 1);
 chdir(dirname(__FILE__));
-set_include_path(get_include_path() . ':../libs');
-function __autoload($class_name) {
-    if ( file_exists("../libs/" . $class_name . ".class.inc.php") ) {
-        require_once $class_name . '.class.inc.php';
-    }
-}
-
 require_once '../conf/settings.inc.php';
+require_once '../vendor/autoload.php';
 $sapi_type = php_sapi_name();
 // If run from command line
 if ( $sapi_type != 'cli' ) {
@@ -24,10 +18,10 @@ if ( $sapi_type != 'cli' ) {
     $related = new Dummy(null);
 
     $log_dir = dirname(__LOG_FILE__);
-    $log_lines = array();
+    $log_lines = [];
     $logs = scandir($log_dir);
     // Put logs in proper order
-    $sortedLogs = array();
+    $sortedLogs = [];
     $currentLog = null;
     foreach ( $logs as $log ) {
         if ( preg_match('/^' . basename(__LOG_FILE__) . '.+$/u', $log) ) {
@@ -538,7 +532,7 @@ if ( $sapi_type != 'cli' ) {
     $select_user = "select * from logs join objects on logs.object_id=objects.id where objects.type='user' and logs.event_id=16 and objects.name=:name";
     $missed = 0;
     foreach ( $all_users as $uid ) {
-        $userObj = MySQL::getInstance()->selectOne($select_user, array(':name' => $uid));
+        $userObj = MySQL::getInstance()->selectOne($select_user, [':name' => $uid]);
         if ( !$userObj ) {
             // User not in database, add their creation date
             $user = new User($uid);

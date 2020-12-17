@@ -1,32 +1,28 @@
 <?php
+
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Twig\Loader\FilesystemLoader;
+
 ini_set("display_errors", 1);
 chdir(dirname(__FILE__));
-set_include_path(get_include_path() . ":../libs");
-require_once('../conf/settings.inc.php');
-function my_autoloader($class_name) {
-    $class_name = str_replace('\\', '/', $class_name);
-    if ( file_exists("../libs/" . $class_name . ".class.inc.php") ) {
-        require_once $class_name . '.class.inc.php';
-    }
-}
-
-spl_autoload_register('my_autoloader');
-
 require_once '../vendor/autoload.php';
 
 /**
  * @param User   $user
  * @param string $subject
  * @param string $duration
- * @throws \Twig\Error\LoaderError
- * @throws \Twig\Error\RuntimeError
- * @throws \Twig\Error\SyntaxError
+ * @throws LoaderError
+ * @throws RuntimeError
+ * @throws SyntaxError
  */
 function emailmessage($user, $subject, $duration) {
     // Initialize Twig
     require_once '../vendor/autoload.php';
-    $loader = new Twig_Loader_Filesystem('../templates');
-    $twig = new Twig_Environment($loader, array());
+    $loader = new FilesystemLoader('../templates');
+    $twig = new Environment($loader, []);
 
     $to = $user->getEmail();
     $boundary = uniqid('mp');
@@ -36,22 +32,24 @@ function emailmessage($user, $subject, $duration) {
 
     $txtTemplate = $twig->load('email/expiring_password.txt.twig');
     $emailMessage .= $txtTemplate->render(
-        array(
+        [
             'name' => $user->getName(),
             'duration' => $duration,
             'expiration' => $user->getPasswordExpiration(),
-        ));
+        ]
+    );
 
     $emailMessage .= "\r\n\r\n--" . $boundary . "\r\n";
     $emailMessage .= "Content-type: text/html; charset=utf-8\r\n\r\n";
 
     $htmlTemplate = $twig->load('email/expiring_password.html.twig');
     $emailMessage .= $htmlTemplate->render(
-        array(
+        [
             'name' => $user->getName(),
             'duration' => $duration,
             'expiration' => $user->getPasswordExpiration(),
-        ));
+        ]
+    );
 
     $emailMessage .= "\r\n\r\n--" . $boundary . "--";
 
@@ -78,7 +76,7 @@ if ( $sapi_type != 'cli' ) {
         ->set_bind_pass(__LDAP_BIND_PASS__);
     $users = User::all();
     /** @var User[] $emailToday */
-    $emailToday = array();
+    $emailToday = [];
     $userexpdate = date_format(date_add(date_create(), new DateInterval('P6M')), 'U');
     $userexpreason = "Password expired";
     foreach ( $users as $uid ) {
@@ -125,13 +123,14 @@ if ( $sapi_type != 'cli' ) {
         $subject = "IGB Password Expiration Notices Pending";
         $to = "jleigh@illinois.edu";
 
-        $loader = new Twig_Loader_Filesystem('../templates');
-        $twig = new Twig_Environment($loader, array());
+        $loader = new FilesystemLoader('../templates');
+        $twig = new Environment($loader, []);
         $htmlTemplate = $twig->load('email/expiring_password_digest.html.twig');
         $emailmessage = $htmlTemplate->render(
-            array(
+            [
                 'users' => $emailToday,
-            ));
+            ]
+        );
 
         $headers = "From: do-not-reply@igb.illinois.edu\r\n";
         $headers .= "Content-Type: text/html; charset=iso-8859-1" . "\r\n";

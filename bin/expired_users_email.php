@@ -1,14 +1,8 @@
 <?php
 ini_set("display_errors", 1);
 chdir(dirname(__FILE__));
-set_include_path(get_include_path() . ':../libs');
-function __autoload($class_name) {
-    if ( file_exists("../libs/" . $class_name . ".class.inc.php") ) {
-        require_once $class_name . '.class.inc.php';
-    }
-}
-
 require_once '../conf/settings.inc.php';
+require_once '../vendor/autoload.php';
 
 $sapi_type = php_sapi_name();
 // If run from command line

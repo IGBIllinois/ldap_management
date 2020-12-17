@@ -1,4 +1,5 @@
 <?php
+
 require_once('includes/main.inc.php');
 require_once('includes/session.inc.php');
 
@@ -11,8 +12,9 @@ usort($users, "LdapObject::username_cmp");
 
 renderTwigTemplate(
     'group/view.html.twig',
-    array(
+    [
         'siteArea' => 'groups',
         'group' => $group,
         'editable' => !$isUserGroup,
-    ));
+    ]
+);

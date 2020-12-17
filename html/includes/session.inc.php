@@ -16,21 +16,21 @@ $session = new session(__SESSION_NAME__);
 $login_user = null;
 
 //If not logged in
-if ( !($session->get_var('login')) ) {
+if (!($session->get_var('login'))) {
     $webpage = $_SERVER['PHP_SELF'];
-    if ( $_SERVER['QUERY_STRING'] != "" ) {
+    if ($_SERVER['QUERY_STRING'] != "") {
         $webpage .= "?" . $_SERVER['QUERY_STRING'];
     }
     $session->set_session_var('webpage', $webpage);
 
     header('Location: login.php');
     die();
-} //If session timeout is reach
-else if ( time() > $session->get_var('timeout') + __SESSION_TIMEOUT__ ) {
+} //If session timeout is reached
+elseif (time() > $session->get_var('timeout') + __SESSION_TIMEOUT__) {
     header('Location: logout.php');
     die();
 } //If IP address is different
-else if ( $_SERVER['REMOTE_ADDR'] != $session->get_var('ipaddress') ) {
+elseif ($_SERVER['REMOTE_ADDR'] != $session->get_var('ipaddress')) {
     header('Location: logout.php');
     die();
 } else {
@@ -38,7 +38,7 @@ else if ( $_SERVER['REMOTE_ADDR'] != $session->get_var('ipaddress') ) {
     Ldap::getInstance()->set_bind_user($login_user->getRDN());
     Ldap::getInstance()->set_bind_pass($session->get_var('password'));
     //Reset Timeout
-    $session_vars = array('timeout' => time());
+    $session_vars = ['timeout' => time()];
     $session->set_session($session_vars);
 }
-?>
+

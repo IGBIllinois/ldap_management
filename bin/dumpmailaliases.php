@@ -1,14 +1,8 @@
 <?php
 ini_set("display_errors", 1);
 chdir(dirname(__FILE__));
-set_include_path(get_include_path() . ':../libs');
-function __autoload($class_name) {
-    if ( file_exists("../libs/" . $class_name . ".class.inc.php") ) {
-        require_once $class_name . '.class.inc.php';
-    }
-}
-
 require_once '../conf/settings.inc.php';
+require_once '../vendor/autoload.php';
 
 function cmp($a, $b) {
     if ( isset($a['uid'][0]) && isset($b['uid'][0]) ) {
@@ -30,7 +24,7 @@ if ( $sapi_type != 'cli' ) {
 
     $filter = "(postalAddress=*)";
     $ou = __LDAP_PEOPLE_OU__;
-    $attributes = array('uid', 'postalAddress');
+    $attributes = ['uid', 'postalAddress'];
     $results = Ldap::getInstance()->search($filter, $ou, $attributes);
     unset($results['count']);
     usort($results, "cmp");

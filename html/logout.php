@@ -15,4 +15,4 @@ $session = new session(__SESSION_NAME__);
 $session->destroy_session();
 header("Location: login.php")
 
-?>
+

@@ -1,14 +1,8 @@
 <?php
 ini_set("display_errors", 1);
 chdir(dirname(__FILE__));
-set_include_path(get_include_path() . ':../libs');
-function __autoload($class_name) {
-    if ( file_exists("../libs/" . $class_name . ".class.inc.php") ) {
-        require_once $class_name . '.class.inc.php';
-    }
-}
-
 require_once '../conf/settings.inc.php';
+require_once '../vendor/autoload.php';
 
 $sapi_type = php_sapi_name();
 // If run from command line
@@ -30,7 +24,7 @@ if ( $sapi_type != 'cli' ) {
     echo "Fetching IGB Users...\n";
     $users_group = new Group('igb_users');
     $igb_users = $users_group->getMemberUIDs();
-    $users = array();
+    $users = [];
     foreach ( $igb_users as $igb_user ) {
         $users[$igb_user] = false;
     }
@@ -42,14 +36,14 @@ if ( $sapi_type != 'cli' ) {
     $range = 1500;
     while ( $moreADUsers ) {
         $attr = 'member;range=' . $start . '-' . ($start + $range - 1);
-        $ad_attributes = array($attr);
+        $ad_attributes = [$attr];
         $campus_members = $adldap->search("(cn=UIUC Campus Accounts)", __AD_LDAP_GROUP_OU__, $ad_attributes);
 
         $member_attr = $campus_members[0][0];
 //        echo $member_attr."\n";
 
         for ( $i = 0; $i < $campus_members[0][$member_attr]['count']; $i++ ) {
-            $matches = array();
+            $matches = [];
             preg_match('/^CN=([a-zA-Z0-9\\-_\\.]+),/u', $campus_members[0][$member_attr][$i], $matches);
             if ( !isset($matches[1]) ) {
                 echo $campus_members[0][$member_attr][$i] . "\n";

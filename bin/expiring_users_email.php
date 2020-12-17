@@ -1,14 +1,8 @@
 <?php
 ini_set("display_errors", 1);
 chdir(dirname(__FILE__));
-set_include_path(get_include_path() . ':../libs');
-function __autoload($class_name) {
-    if ( file_exists("../libs/" . $class_name . ".class.inc.php") ) {
-        require_once $class_name . '.class.inc.php';
-    }
-}
-
 require_once '../conf/settings.inc.php';
+require_once '../vendor/autoload.php';
 
 /**
  * @param User   $user
@@ -39,11 +33,11 @@ if ( $sapi_type != 'cli' ) {
     Ldap::init(__LDAP_HOST__, __LDAP_SSL__, __LDAP_PORT__, __LDAP_BASE_DN__);
     $users = User::all();
     /** @var User[] $onemonth */
-    $onemonth = array();
+    $onemonth = [];
     /** @var User[] $oneweek */
-    $oneweek = array();
+    $oneweek = [];
     /** @var User[] $emailtomorrow */
-    $emailtomorrow = array();
+    $emailtomorrow = [];
     $digestmonth = "";
     $digestweek = "";
     foreach ( $users as $uid ) {

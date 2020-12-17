@@ -98,12 +98,17 @@
 
 					</div>
 				</div>
+				<div class="p-3">
+					<button type="button" class="btn btn-outline-danger memfil" id="memfil-expired"><span class="fas fa-clock"></span> Expired</button>
+					<button type="button" class="btn btn-outline-warning memfil" id="memfil-expiring"><span class="fas fa-clock"></span> Expiring</button>
+					<button type="button" class="btn btn-outline-danger memfil" id="memfil-password"><span class="fas fa-key"></span> Password Expired</button>
+				</div>
 				<textarea class="d-none copy-text">
 					{%- for user in group.memberUIDs -%}
 						{{- user~"\n" -}}
 					{%- endfor -%}
 				</textarea>
-				<table class="table table-striped table-igb-bordered table-responsive-md mb-0">
+				<table class="table table-striped table-igb-bordered table-responsive-md mb-0" id="group-members">
 					{% for user in group.members %}
 						{{ table.headlessRow(igblam.userLink(user), {'url':'group_remove_user.php?gid='~group.name~'&uid='~user.username, 'class':'btn-danger', 'icon': 'fa fa-times', 'text': 'Remove member'}) }}
 					{% else %}
@@ -126,5 +131,34 @@
         $(document).ready(function () {
             google.charts.setOnLoadCallback(drawMembersOverTimeChart('{{ group.name }}'));
         });
+
+        $('.memfil').on('click', function(event){
+        	// Update the state of the clicked button
+			if($(this).hasClass('btn-outline-warning')){
+				$(this).removeClass('btn-outline-warning').addClass('btn-warning');
+			} else if ($(this).hasClass('btn-warning')){
+				$(this).removeClass('btn-warning').addClass('btn-outline-warning');
+			}
+			if($(this).hasClass('btn-outline-danger')){
+				$(this).removeClass('btn-outline-danger').addClass('btn-danger');
+			} else if ($(this).hasClass('btn-danger')){
+				$(this).removeClass('btn-danger').addClass('btn-outline-danger');
+			}
+        	// Get the state of each memfil button
+			const expiring = $('#memfil-expiring').hasClass('btn-warning');
+			const expired = $('#memfil-expired').hasClass('btn-danger');
+			const password = $('#memfil-password').hasClass('btn-danger');
+			// set the visibility of the table rows based on the existence of the corresponding icons
+			$('#group-members tr').each(function(){
+				$(this).removeClass('d-none');
+				if(
+						(expiring && $(this).find('.fa-clock.text-warning').length===0)
+						||(expired && $(this).find('.fa-clock.text-danger').length===0)
+						||(password && $(this).find('.fa-key.text-danger').length===0)
+				){
+					$(this).addClass('d-none');
+				}
+			})
+		});
 	</script>
 {% endblock %}

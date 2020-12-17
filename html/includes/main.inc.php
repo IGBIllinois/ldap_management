@@ -1,8 +1,10 @@
 <?php
 
+use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use Twig\Loader\FilesystemLoader;
 
 ini_set('display_errors', 1);
 set_include_path(get_include_path() . ":../libs");
@@ -51,8 +53,8 @@ function renderTwigTemplate($template, $context) {
 
 // Initialize Twig
 require_once '../vendor/autoload.php';
-$loader = new Twig_Loader_Filesystem('../templates');
-$twig = new Twig_Environment($loader, array());
+$loader = new FilesystemLoader('../templates');
+$twig = new Environment($loader, array());
 $twig->addGlobal('title', __TITLE__);
 
 Ldap::init(__LDAP_HOST__, __LDAP_SSL__, __LDAP_PORT__, __LDAP_BASE_DN__);

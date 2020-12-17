@@ -1,5 +1,8 @@
 <?php
 
+use Hackzilla\PasswordGenerator\Exception\FileNotFoundException;
+use Hackzilla\PasswordGenerator\Exception\ImpossiblePasswordLengthException;
+use Hackzilla\PasswordGenerator\Exception\WordsNotFoundException;
 use Hackzilla\PasswordGenerator\Generator\ExtendedHumanPasswordGenerator;
 use Hackzilla\PasswordGenerator\Generator\HumanPasswordGenerator;
 
@@ -819,7 +822,7 @@ class User extends LdapObject
                       ->setOptionValue(HumanPasswordGenerator::OPTION_MIN_WORD_LENGTH, 4)
                       ->setOptionValue(HumanPasswordGenerator::OPTION_MAX_WORD_LENGTH, 8)
                       ->setOptionValue(ExtendedHumanPasswordGenerator::OPTION_REQUIRE_UPPERCASE, true);
-        } catch (\Hackzilla\PasswordGenerator\Exception\FileNotFoundException $e) {
+        } catch (FileNotFoundException $e) {
             // Fall back to random password
             return static::randomPassword();
         }
@@ -827,10 +830,10 @@ class User extends LdapObject
         try {
 
             return $generator->generatePassword();
-        } catch (\Hackzilla\PasswordGenerator\Exception\ImpossiblePasswordLengthException $e) {
+        } catch (ImpossiblePasswordLengthException $e) {
             // Fall back to random password
             return static::randomPassword();
-        } catch (\Hackzilla\PasswordGenerator\Exception\WordsNotFoundException $e) {
+        } catch (WordsNotFoundException $e) {
             // Fall back to random password
             return static::randomPassword();
         }
@@ -841,7 +844,7 @@ class User extends LdapObject
         do {
             $password = "";
             for ( $i = 0; $i < $length; $i++ ) {
-                $password .= $passwordChars{self::openssl_rand(0, strlen($passwordChars) - 1)};
+                $password .= $passwordChars[self::openssl_rand(0, strlen($passwordChars) - 1)];
             }
         } while ( !(preg_match("/[A-Z]/u", $password) && preg_match("/[a-z]/u", $password) && preg_match(
                 "/[^A-Za-z]/u",

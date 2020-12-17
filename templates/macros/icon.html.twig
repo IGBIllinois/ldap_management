@@ -49,8 +49,6 @@
 	{% if user.passwordExpired %}{{ icon.passwordExpired(classes) }}
 	{% elseif user.passwordExpiration is not null and date(user.passwordExpiration) < date('30 days') %}{{ icon.passwordExpiring(classes) }}{% endif %}
 	{% if user.classroom %}{{ icon.classroom(classes) }}{% endif %}
-	{% if user.lastlogin is not null and date(user.lastLogin) >= date('-30 days') %}{{ icon.loggedInRecently(classes) }}{% endif %}
-	{% if user.lastLogin is null %}{{ icon.neverLoggedIn(classes) }}{% endif %}
 	{% if user.locked %}{{ icon.locked(classes) }}{% endif %}
 {% endmacro %}
 

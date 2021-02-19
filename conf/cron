@@ -1,0 +1,11 @@
+# Email users about their accounts expiring
+0 7 * * * root php /var/www/accounts/bin/expiring_users_email.php 2>&1
+# Email users about their passwords expiring
+15 7 * * * root php /var/www/accounts/bin/expiring_password_email.php 2>&1
+# Email help about expired users
+30 7 * * 1 root php /var/www/accounts/bin/expired_users_email.php 2>&1
+
+# Check for users who are no longer on campus
+0 3 * * * root php /var/www/accounts/bin/leftcampus_users_check.php 2>&1
+# Check for users who have crashplan accounts
+20 3 * * * root php /var/www/accounts/bin/crashplan_users_check.php 2>&1

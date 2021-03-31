@@ -948,6 +948,16 @@ class User extends LdapObject
         return $users_array;
     }
 
+    /**
+     * @param string $search
+     * @param int    $start
+     * @param int    $count
+     * @param string $sort
+     * @param bool   $asc
+     * @param string $userfilter
+     * @param null   $passwordSet
+     * @return User[]
+     */
     public static function search(
         $search,
         $start = 0,

@@ -17,10 +17,6 @@ if (scalar(@ARGV) >= 1 and not $ARGV[0] eq "") {
     }
 
     if (not $classroomUser) {
-        # Creating mail directory
-        ssh('root@mail.igb.illinois.edu', "mkdir -p /home/$homesub/$netid/mail");
-        ssh('root@mail.igb.illinois.edu', "chown -R $netid.$netid /home/$homesub/$netid");
-
         # Subscribing user to everyone@igb.illinois.edu
         ssh('root@mail.igb.illinois.edu', "echo \"$netid\@igb.uiuc.edu\" | /usr/lib/mailman/bin/add_members -r - everyone");
     }

@@ -1,9 +1,6 @@
 <?php
 
-use Hackzilla\PasswordGenerator\Exception\FileNotFoundException;
-use Hackzilla\PasswordGenerator\Exception\WordsNotFoundException;
-use Hackzilla\PasswordGenerator\Generator\ExtendedHumanPasswordGenerator;
-use Hackzilla\PasswordGenerator\Generator\HumanPasswordGenerator;
+use Hackzilla\PasswordGenerator\Generator\DicewarePasswordGenerator;
 
 class User extends LdapObject
 {
@@ -146,7 +143,6 @@ class User extends LdapObject
             }
 
             $ntpasswd = self::NTLMHash($password);
-            $lmpasswd = self::LMHash($password);
 
             if ($username < 'n') {
                 $homesub = 'a-m';
@@ -177,7 +173,6 @@ class User extends LdapObject
                 'initials' => $homesub,
                 'gecos' => $name,
                 'sambaSID' => __SAMBA_ID__ . "-" . $uidnumber,
-                'sambaLMPassword' => $lmpasswd,
                 'sambaNTPassword' => $ntpasswd,
                 'SambaPwdLastSet' => time(),
                 'facsimiletelephonenumber' => time() + 60*60*24*365,
@@ -592,12 +587,10 @@ class User extends LdapObject
         }
 
         $ntpasswd = self::NTLMHash($password);
-        $lmpasswd = self::LMHash($password);
 
         $dn = $this->getRDN();
         $data = [
             'userPassword' => $passwd,
-            'sambaLMPassword' => $lmpasswd,
             'sambaNTPassword' => $ntpasswd,
             'sambaPwdLastSet' => time(),
         ];
@@ -897,24 +890,16 @@ class User extends LdapObject
 
     public static function generatePassword()
     {
-        $generator = new ExtendedHumanPasswordGenerator();
         try {
-            $generator->setWordList('../conf/google-10000-english/google-10000-english-no-swears.txt')
+            $generator = (new DicewarePasswordGenerator())
+                ->setWordList('../conf/eff_large_wordlist.txt')
+                ->setDice(5)
                 ->setWordCount(4)
                 ->setWordSeparator('-')
-                ->setOptionValue(HumanPasswordGenerator::OPTION_MIN_WORD_LENGTH, 4)
-                ->setOptionValue(HumanPasswordGenerator::OPTION_MAX_WORD_LENGTH, 8)
-                ->setOptionValue(ExtendedHumanPasswordGenerator::OPTION_REQUIRE_UPPERCASE, true)
+                ->setRequireUppercase(true)
             ;
-        } catch (FileNotFoundException $e) {
-            // Fall back to random password
-            return static::randomPassword();
-        }
-
-        try {
             return $generator->generatePassword();
-        } catch (Exception | WordsNotFoundException $e) {
-            // Fall back to random password
+        } catch (Exception $e) {
             return static::randomPassword();
         }
     }
@@ -1243,50 +1228,4 @@ class User extends LdapObject
         $MD4Hash = hash('md4', $cleartext);
         return strtoupper($MD4Hash);
     }
-
-    private static function LMhash($string)
-    {
-        $string = strtoupper(substr($string, 0, 14));
-
-        $p1 = self::LMhash_DESencrypt(substr($string, 0, 7));
-        $p2 = self::LMhash_DESencrypt(substr($string, 7, 7));
-
-        return strtoupper($p1 . $p2);
-    }
-
-    private static function LMhash_DESencrypt($string)
-    {
-        $key = [];
-        $tmp = [];
-        $len = strlen($string);
-
-        for ($i = 0; $i < 7; ++$i) {
-            $tmp[] = $i < $len ? ord($string[$i]) : 0;
-        }
-
-        $key[] = $tmp[0] & 254;
-        $key[] = ($tmp[0] << 7) | ($tmp[1] >> 1);
-        $key[] = ($tmp[1] << 6) | ($tmp[2] >> 2);
-        $key[] = ($tmp[2] << 5) | ($tmp[3] >> 3);
-        $key[] = ($tmp[3] << 4) | ($tmp[4] >> 4);
-        $key[] = ($tmp[4] << 3) | ($tmp[5] >> 5);
-        $key[] = ($tmp[5] << 2) | ($tmp[6] >> 6);
-        $key[] = $tmp[6] << 1;
-
-        $key0 = "";
-
-        foreach ($key as $k) {
-            $key0 .= chr($k);
-        }
-
-        $crypt = openssl_encrypt(
-            "KGS!@#$%",
-            'des-ecb',
-            $key0,
-            true/*OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING*/
-        ); // TODO These constants won't exist until php 5.4
-
-        return bin2hex($crypt);
-    }
-
 }

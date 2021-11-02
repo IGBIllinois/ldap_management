@@ -8,6 +8,7 @@ use Twig\Loader\FilesystemLoader;
 
 ini_set("display_errors", 1);
 chdir(dirname(__FILE__));
+require_once '../conf/settings.inc.php';
 require_once '../vendor/autoload.php';
 
 /**

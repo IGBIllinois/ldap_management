@@ -3,7 +3,7 @@
 require_once 'includes/main.inc.php';
 
 $session = new session(__SESSION_NAME__);
-$errors = "";
+$errors = [];
 $webpage = $dir = dirname($_SERVER['PHP_SELF']) . "/index.php";
 if ($session->get_var('webpage') != "") {
     $webpage = $session->get_var('webpage');

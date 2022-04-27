@@ -35,7 +35,7 @@ abstract class LdapObject
     {
         $filter = static::idFilter($id);
         $result = Ldap::getInstance()->search($filter, static::$ou, static::$fullAttributes);
-        if ($result['count'] > 0) {
+        if ($result && $result['count'] > 0) {
             $this->load_from_result($result[0]);
         }
     }

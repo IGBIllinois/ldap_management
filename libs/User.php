@@ -883,7 +883,6 @@ class User extends LdapObject
                 return 2;
             }
         } else {
-// 			echo Ldap::getInstance()->get_error();
             return 1;
         }
     }

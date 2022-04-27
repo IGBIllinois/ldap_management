@@ -31,6 +31,10 @@ if ( $sapi_type != 'cli' ) {
     echo "Analyzing users...";
     // Connect to ldap
     Ldap::init(__LDAP_HOST__, __LDAP_SSL__, __LDAP_PORT__, __LDAP_BASE_DN__);
+    Ldap::getInstance()
+        ->set_bind_user(__LDAP_BIND_USER__);
+    Ldap::getInstance()
+        ->set_bind_pass(__LDAP_BIND_PASS__);
     $users = User::all();
     /** @var User[] $onemonth */
     $onemonth = [];

@@ -10,9 +10,6 @@
 {% macro nonCampus(classes) %}
 	<span class="fa fa-graduation-cap text-info {{ classes }}" title="User not from UIUC"></span>{% endmacro %}
 
-{% macro crashplan(classes) %}
-	<span class="far fa-hdd text-success {{ classes }}" title="User has Crashplan"></span>{% endmacro %}
-
 {% macro biocluster(classes) %}
 	<span class="fas fa-bold text-primary {{ classes }}" title="User has Biocluster access"></span>{% endmacro %}
 
@@ -43,7 +40,6 @@
 	{% elseif user.expiring %}{{ icon.expiring(classes) }}{% endif %}
 	{% if user.leftCampus %}{{ icon.leftCampus(classes) }}{% endif %}
 	{% if user.nonCampus %}{{ icon.nonCampus(classes) }}{% endif %}
-	{% if user.crashplan %}{{ icon.crashplan(classes) }}{% endif %}
 	{% if 'biocluster2.igb.illinois.edu' in user.hosts %}{{ icon.biocluster(classes) }}{% endif %}
 	{% if user.hosts is not empty %}{{ icon.server(classes) }}{% endif %}
 	{% if user.passwordExpired %}{{ icon.passwordExpired(classes) }}

@@ -108,8 +108,7 @@ class User extends LdapObject
                     'uidnumber',
                     'gidnumber',
                 ]
-            )
-            ;
+            );
             $uidnumbers = [];
             $gidnumbers = [];
             for ($i = 0; $i < $users['count']; $i++) {
@@ -175,7 +174,7 @@ class User extends LdapObject
                 'sambaSID' => __SAMBA_ID__ . "-" . $uidnumber,
                 'sambaNTPassword' => $ntpasswd,
                 'SambaPwdLastSet' => time(),
-                'facsimiletelephonenumber' => time() + 60*60*24*365,
+                'facsimiletelephonenumber' => time() + 60 * 60 * 24 * 365,
             ];
             if (!Ldap::getInstance()->add($dn, $data)) {
                 return new LdapStatus(false, 'LDAP error when adding user: ' . Ldap::getInstance()->get_error());
@@ -596,7 +595,7 @@ class User extends LdapObject
         ];
         if ($this->getPasswordExpiration() != null) {
             // If user is not exempt, set password expiration date to one year hence
-            $data['facsimiletelephonenumber'] = time() + 60*60*24*365;
+            $data['facsimiletelephonenumber'] = time() + 60 * 60 * 24 * 365;
         }
         if (Ldap::getInstance()->modify($dn, $data)) {
             Log::info(
@@ -613,13 +612,12 @@ class User extends LdapObject
     public function lock()
     {
         $filter = "(uid=" . $this->getUsername() . ")";
-        $attributes = ["userPassword", "sambaLMPassword", "sambaNTPassword"];
+        $attributes = ["userPassword", "sambaNTPassword"];
         $result = Ldap::getInstance()->search($filter, static::$ou, $attributes);
         if ($result['count'] > 0) {
             $dn = $this->getRDN();
             $data = [
                 'userPassword' => '!' . $result[0]['userpassword'][0],
-                'sambaLMPassword' => '!' . $result[0]['sambalmpassword'][0],
                 'sambaNTPassword' => '!' . $result[0]['sambantpassword'][0],
             ];
             if (Ldap::getInstance()->modify($dn, $data)) {
@@ -637,41 +635,22 @@ class User extends LdapObject
     public function unlock()
     {
         $filter = "(uid=" . $this->getUsername() . ")";
-        $attributes = ["userPassword", "sambaLMPassword", "sambaNTPassword"];
+        $attributes = ["userPassword", "sambaNTPassword"];
         $result = Ldap::getInstance()->search($filter, static::$ou, $attributes);
         if ($result['count'] > 0) {
             if (substr($result[0]['userpassword'][0], 0, 1) == '!') {
-                if (substr(
-                        $result[0]['sambalmpassword'][0],
-                        0,
-                        1
-                    )
-                    == '!') { // If the user was locked before this change, their samba password won't have been locked
-                    $dn = $this->getRDN();
-                    $data = [
-                        'userPassword' => substr($result[0]['userpassword'][0], 1),
-                        'sambaLMPassword' => substr($result[0]['sambalmpassword'][0], 1),
-                        'sambaNTPassword' => substr($result[0]['sambantpassword'][0], 1),
-                    ];
-                    if (Ldap::getInstance()->modify($dn, $data)) {
-                        Log::info(
-                            "User " . $this->getUsername() . " unlocked",
-                            Log::USER_UNLOCK,
-                            $this
-                        );
-                        return ['RESULT' => true, 'MESSAGE' => 'User unlocked.', 'uid' => $this->getUsername()];
-                    }
-                } else {
-                    $dn = $this->getRDN();
-                    $data = ['userPassword' => substr($result[0]['userpassword'][0], 1)];
-                    if (Ldap::getInstance()->modify($dn, $data)) {
-                        Log::info(
-                            "User " . $this->getUsername() . " unlocked",
-                            Log::USER_UNLOCK,
-                            $this
-                        );
-                        return ['RESULT' => true, 'MESSAGE' => 'User unlocked.', 'uid' => $this->getUsername()];
-                    }
+                $dn = $this->getRDN();
+                $data = [
+                    'userPassword' => substr($result[0]['userpassword'][0], 1),
+                    'sambaNTPassword' => substr($result[0]['sambantpassword'][0], 1),
+                ];
+                if (Ldap::getInstance()->modify($dn, $data)) {
+                    Log::info(
+                        "User " . $this->getUsername() . " unlocked",
+                        Log::USER_UNLOCK,
+                        $this
+                    );
+                    return ['RESULT' => true, 'MESSAGE' => 'User unlocked.', 'uid' => $this->getUsername()];
                 }
             }
         }
@@ -872,8 +851,7 @@ class User extends LdapObject
                 $in_admin_group = Ldap::getInstance()->search(
                     "(memberuid=" . $this->username . ")",
                     __LDAP_ADMIN_GROUP__
-                )
-                ;
+                );
                 if ($in_admin_group['count'] > 0) {
                     return 0;
                 } else {
@@ -895,8 +873,7 @@ class User extends LdapObject
                 ->setDice(5)
                 ->setWordCount(4)
                 ->setWordSeparator('-')
-                ->setRequireUppercase(true)
-            ;
+                ->setRequireUppercase(true);
             return $generator->generatePassword();
         } catch (Exception $e) {
             return static::randomPassword();
@@ -934,12 +911,12 @@ class User extends LdapObject
 
     /**
      * @param string $search
-     * @param int    $start
-     * @param int    $count
+     * @param int $start
+     * @param int $count
      * @param string $sort
-     * @param bool   $asc
+     * @param bool $asc
      * @param string $userfilter
-     * @param null   $passwordSet
+     * @param null $passwordSet
      * @return User[]
      */
     public static function search(
@@ -1205,8 +1182,8 @@ class User extends LdapObject
         }
         $ary = unpack("Nint", $bytes);
         $val = $ary['int'] & 0x7FFFFFFF;   // 32-bit safe
-        $fp = (float)$val/2147483647.0; // convert to [0,1]
-        return intval(round($fp*$diff) + $min);
+        $fp = (float)$val / 2147483647.0; // convert to [0,1]
+        return intval(round($fp * $diff) + $min);
     }
 
     private static function SSHAHash($password)

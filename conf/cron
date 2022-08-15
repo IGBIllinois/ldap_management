@@ -7,5 +7,3 @@
 
 # Check for users who are no longer on campus
 0 3 * * * root php /var/www/accounts/bin/leftcampus_users_check.php 2>&1
-# Check for users who have crashplan accounts
-20 3 * * * root php /var/www/accounts/bin/crashplan_users_check.php 2>&1

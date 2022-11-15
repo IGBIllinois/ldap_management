@@ -49,6 +49,9 @@ if (count($_POST) > 0) {
                 // Set the password
                 $user->setPassword($password);
 
+                // Reset forwarding email
+                $user->setForwardingEmail('/dev/null');
+
                 // Clear out any extraneous groups the user is in
                 $groups = $user->getGroups();
                 $grouptoremove = new Group();
@@ -61,6 +64,7 @@ if (count($_POST) > 0) {
             } else {
                 // Create user with random password
                 $user->create($username, $username, $username, $password);
+                $user->setForwardingEmail('/dev/null');
                 // Run script to add user to file-server
                 if (__RUN_SHELL_SCRIPTS__) {
                     $safeusername = escapeshellarg($username);

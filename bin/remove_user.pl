@@ -22,6 +22,6 @@ if (scalar(@ARGV) == 1) {
     # 	ssh('root@mail.igb.illinois.edu',"/usr/local/sbin/remove_alias.pl $netid");
 
     # Remove user from file-server
-    ssh('root@file-server.igb.illinois.edu', "mv -f /file-server/home/$homesub/$netid /file-server/home/$homesub/oldusers/$netid-$datestr");
+    ssh('root@file-server.igb.illinois.edu', "mv -f /file-server/home/$homesub/$netid /file-server/home/$homesub/oldusers/no_backup/$netid-$datestr");
 
 }

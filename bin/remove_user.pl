@@ -14,14 +14,9 @@ if (scalar(@ARGV) == 1) {
     }
     my $datestr = strftime "%Y%m%d%H%M", localtime;
 
-    # Remove user from mail
-    ssh('root@mail.igb.illinois.edu', "mv -f /home/$homesub/$netid /home/oldusers/$homesub/");
     # Remove user from everyone, igb-facilities-announce, igb-master mailing lists
-    ssh('root@mail.igb.illinois.edu', "/usr/local/bin/unsubscribe.sh \"$netid\@igb.uiuc.edu\"");
-    # Remove mail alias
-    # 	ssh('root@mail.igb.illinois.edu',"/usr/local/sbin/remove_alias.pl $netid");
+    ssh('mail.igb.illinois.edu', "/usr/local/bin/unsubscribe.sh \"$netid\@igb.uiuc.edu\"");
 
     # Remove user from file-server
-    ssh('root@file-server.igb.illinois.edu', "mv -f /file-server/home/$homesub/$netid /file-server/home/$homesub/oldusers/no_backup/$netid-$datestr");
-
+    ssh('file-server.igb.illinois.edu', "sudo mv -f /file-server/home/$homesub/$netid /file-server/home/$homesub/oldusers/no_backup/$netid-$datestr");
 }

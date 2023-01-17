@@ -21,12 +21,10 @@ if (scalar(@ARGV) == 2) {
         $newhomesub = "n-z";
     }
 
-    # Moving mail directory
-    ssh('root@mail.igb.illinois.edu', "mv /home/$homesub/$netid /home/$newhomesub/$newnetid");
     # Changing subscription to everyone mailing list
-    ssh('root@mail.igb.illinois.edu', "/usr/lib/mailman/bin/remove_members everyone \"$netid\@igb.uiuc.edu\"");
-    ssh('root@mail.igb.illinois.edu', "echo \"$newnetid\@igb.uiuc.edu\" | /usr/lib/mailman/bin/add_members -r - everyone");
+    ssh('mail.igb.illinois.edu', "/usr/lib/mailman/bin/remove_members everyone \"$netid\@igb.uiuc.edu\"");
+    ssh('mail.igb.illinois.edu', "echo \"$newnetid\@igb.uiuc.edu\" | /usr/lib/mailman/bin/add_members -r - everyone");
 
     # Move file-server directory
-    ssh('root@file-server.igb.illinois.edu', "mv /file-server/home/$homesub/$netid /file-server/home/$newhomesub/$newnetid");
+    ssh('file-server.igb.illinois.edu', "mv /file-server/home/$homesub/$netid /file-server/home/$newhomesub/$newnetid");
 }

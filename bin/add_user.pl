@@ -8,22 +8,13 @@ if (scalar(@ARGV) >= 1 and not $ARGV[0] eq "") {
     if (scalar(@ARGV) >= 2 and $ARGV[1] eq '--classroom') {
         $classroomUser = 1;
     }
-    my $homesub;
-    if ($netid =~ /^([a-m])/) {
-        $homesub = "a-m";
-    }
-    elsif ($netid =~ /^([n-z])/) {
-        $homesub = "n-z";
-    }
 
     if (not $classroomUser) {
         # Subscribing user to everyone@igb.illinois.edu
-        ssh('root@mail.igb.illinois.edu', "echo \"$netid\@igb.illinois.edu\" | /usr/lib/mailman/bin/add_members -r - everyone");
+        ssh('mail.igb.illinois.edu', "echo \"$netid\@igb.illinois.edu\" | /usr/lib/mailman/bin/add_members -r - everyone");
         # Creating file-server directory
-        ssh('root@file-server.igb.illinois.edu', "mkdir /file-server/home/$homesub/$netid");
-        ssh('root@file-server.igb.illinois.edu', "chown $netid.$netid /file-server/home/$homesub/$netid");
-        ssh('root@file-server.igb.illinois.edu', "chmod 2770 /file-server/home/$homesub/$netid");
-        ssh('root@file-server.igb.illinois.edu', "/usr/local/sbin/dropbox.pl $netid");
+        ssh('file-server.igb.illinois.edu', "sudo /usr/local/sbin/home_dir.sh $netid");
+        ssh('file-server.igb.illinois.edu', "sudo /usr/local/sbin/dropbox.pl $netid");
     }
 
 }

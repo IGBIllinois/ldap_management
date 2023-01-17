@@ -10,7 +10,7 @@ if (count($_POST) > 0) {
     if (isset($_POST['uid'])) {
         $result = $user->setLoginShell('/usr/local/bin/system-specific');
         if ($result['RESULT']) {
-            $result = $user->addHost("biocluster2.igb.illinois.edu");
+            $result = $user->addHost("biocluster.igb.illinois.edu");
         }
         if ($result['RESULT']) {
             $queuegroup = new Group('biocluster_queue');

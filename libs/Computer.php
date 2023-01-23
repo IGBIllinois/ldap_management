@@ -55,19 +55,16 @@ class Computer extends LdapObject
         } //Everything looks good, add computer
         else {
             // Find first unused uidNumber,gidNumber
-            $uidnumber = 10000;
-            $uidnumbers = Ldap::getInstance()->search("(uid=*)", static::$ou, ['uidnumber']);
-            $cleanpass = 1;
+            $uidnumbermin = 10000;
+            $users = Ldap::getInstance()->search("(uid=*)", static::$ou, ['uidnumber']);
 
-            while ($cleanpass) {
-                $cleanpass = 0;
-                for ($i = 0; $i < $uidnumbers['count']; $i++) {
-                    if ($uidnumbers[$i]['count'] != 0 && $uidnumbers[$i]['uidnumber'][0] == $uidnumber) {
-                        $cleanpass++;
-                        $uidnumber++;
-                    }
+            $uidnumbers = [];
+            for ($i = 0; $i < $users['count']; $i++) {
+                if (isset($users[$i]['uidnumber'])) {
+                    $uidnumbers[] = $users[$i]['uidnumber'][0];
                 }
             }
+            $uidnumber = max($uidnumbermin, max($uidnumbers))+1;
 
             $gidnumber = '515';
 

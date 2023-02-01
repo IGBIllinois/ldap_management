@@ -92,8 +92,10 @@
 					{{ table.infoRow("Password Expiration", icon.userPasswordExpirationIcons(user,'mr-2')~(user.passwordExpiration is null?"None":user.passwordExpiration|date("n/j/Y")), {'url':"user_edit_passwordExpiration.php?uid="~user.username, 'class':'btn-warning', 'icon':'fas fa-key', 'text': 'Set Password Expiration'}) }}
 
 					{{ table.sectionHead("Miscellaneous") }}
-					{% if 'biocluster2.igb.illinois.edu' in user.hosts %}
-						{{ table.infoRow("Biocluster Access", icon.biocluster('mr-2')~'Yes', null) }}
+					{% if 'biocluster.igb.illinois.edu' in user.hosts %}
+						{{ table.infoRow("Biocluster Access", icon.biocluster('mr-2')~'Yes (biocluster3)', null) }}
+					{% elseif 'biocluster2.igb.illinois.edu' in user.hosts %}
+						{{ table.infoRow("Biocluster Access", icon.biocluster('mr-2')~'Yes (biocluster2)', null) }}
 					{% else %}
 						{{ table.infoRow("Biocluster Access", 'No', {'url':"user_add_biocluster.php?uid="~user.username, 'class':'btn-primary', 'icon':'fa fa-plus-circle', 'text': 'Give Biocluster Access'}) }}
 					{% endif %}

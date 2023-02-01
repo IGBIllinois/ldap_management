@@ -40,7 +40,7 @@
 	{% elseif user.expiring %}{{ icon.expiring(classes) }}{% endif %}
 	{% if user.leftCampus %}{{ icon.leftCampus(classes) }}{% endif %}
 	{% if user.nonCampus %}{{ icon.nonCampus(classes) }}{% endif %}
-	{% if 'biocluster2.igb.illinois.edu' in user.hosts %}{{ icon.biocluster(classes) }}{% endif %}
+	{% if 'biocluster.igb.illinois.edu' in user.hosts or 'biocluster2.igb.illinois.edu' in user.hosts %}{{ icon.biocluster(classes) }}{% endif %}
 	{% if user.hosts is not empty %}{{ icon.server(classes) }}{% endif %}
 	{% if user.passwordExpired %}{{ icon.passwordExpired(classes) }}
 	{% elseif user.passwordExpiration is not null and date(user.passwordExpiration) < date('30 days') %}{{ icon.passwordExpiring(classes) }}{% endif %}

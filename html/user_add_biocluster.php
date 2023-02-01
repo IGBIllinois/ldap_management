@@ -23,7 +23,7 @@ if (count($_POST) > 0) {
             exec("sudo ../bin/setup_biocluster.pl $safeusername");
         }
         if ($result['RESULT']) {
-            Log::info('Biocluster2 access given to user ' . $uid, Log::USER_SET_BIOCLUSTER, $user);
+            Log::info('Biocluster3 access given to user ' . $uid, Log::USER_SET_BIOCLUSTER, $user);
         }
         header('location: user.php?uid=' . $user->getUsername());
     }

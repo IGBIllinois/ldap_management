@@ -40,12 +40,8 @@ if (count($_POST) > 0) {
             if (User::exists($username)) {
                 // User already exists, clean it out
                 // clear out the biocluster/file-server home folder, if it exists
-                if (__RUN_SHELL_SCRIPTS__) {
-                    $safeusername = escapeshellarg($username);
-                    exec("sudo ../bin/classroom_cleanup.pl $safeusername 2>&1", $output);
-                    Log::info("sudo ../bin/classroom_cleanup.pl $safeusername 2>&1");
-                    Log::info("Cleaned up file-server and biocluster directories for $username");
-                }
+                Command::execute("classroom_cleanup.pl", [$username]);
+
                 // Set the password
                 $user->setPassword($password);
 
@@ -66,10 +62,7 @@ if (count($_POST) > 0) {
                 $user->create($username, $username, $username, $password);
                 $user->setForwardingEmail('/dev/null');
                 // Run script to add user to file-server
-                if (__RUN_SHELL_SCRIPTS__) {
-                    $safeusername = escapeshellarg($username);
-                    exec("sudo ../bin/add_user.pl $safeusername --classroom", $shellout);
-                }
+                Command::execute("add_user.pl", [$username, '--classroom']);
             }
             // Give user biocluster access
             $user->setLoginShell('/usr/local/bin/system-specific');

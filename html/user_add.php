@@ -29,10 +29,7 @@ if (count($_POST) > 0) {
 
         if ($result->getStatus() == true) {
             // Run script to add user to file-server, mail
-            if (__RUN_SHELL_SCRIPTS__) {
-                $safeUsername = escapeshellarg($_POST['username']);
-                exec("sudo ../bin/add_user.pl $safeUsername", $shellOut);
-            }
+            Command::execute("add_user.pl", [$_POST['username']]);
             header("Location: user.php?uid=" . $result->getObject()->getId());
         } else {
             $errors[] = $result->getMessage();

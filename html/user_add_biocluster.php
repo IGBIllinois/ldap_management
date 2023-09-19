@@ -18,10 +18,8 @@ if (count($_POST) > 0) {
                 $result = $queuegroup->addUser($uid);
             }
         }
-        if (__RUN_SHELL_SCRIPTS__) {
-            $safeusername = escapeshellarg($uid);
-            exec("sudo ../bin/setup_biocluster.pl $safeusername");
-        }
+
+        Command::execute("setup_biocluster.pl", [$uid]);
         if ($result['RESULT']) {
             Log::info('Biocluster3 access given to user ' . $uid, Log::USER_SET_BIOCLUSTER, $user);
         }

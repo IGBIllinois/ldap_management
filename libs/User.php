@@ -198,10 +198,7 @@ class User extends LdapObject
     {
         $dn = $this->getRDN();
         if (Ldap::getInstance()->remove($dn)) {
-            if (__RUN_SHELL_SCRIPTS__) {
-                $safeusername = escapeshellarg($this->getUsername());
-                exec("sudo ../bin/remove_user.pl $safeusername");
-            }
+            Command::execute('remove_user.pl', [$this->getUsername()]);
             // remove user group
             $group = new Group($this->getUsername());
             $group->remove();
@@ -568,11 +565,7 @@ class User extends LdapObject
         $group->setDescription($username);
 
         // Change username on file-server, mail
-        if (__RUN_SHELL_SCRIPTS__) {
-            $safeusername = escapeshellarg($old_username);
-            $safenewusername = escapeshellarg($username);
-            exec("sudo ../bin/change_username.pl $safeusername $safenewusername");
-        }
+        Command::execute('change_username.pl', [$username, $old_username]);
 
         return ['RESULT' => true, 'MESSAGE' => 'Username changed.', 'uid' => $username];
     }

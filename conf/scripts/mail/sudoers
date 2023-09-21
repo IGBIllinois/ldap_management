@@ -1,0 +1,1 @@
+ldap_accounts ALL=(ALL) NOPASSWD: /usr/lib/mailman/bin/add_members, /usr/local/bin/unsubscribe.sh

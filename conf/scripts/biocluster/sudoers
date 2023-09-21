@@ -1,0 +1,1 @@
+ldap_accounts ALL=(ALL) NOPASSWD: /usr/local/sbin/create_home_dir.pl, /usr/local/sbin/remove_home_dir.pl

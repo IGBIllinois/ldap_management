@@ -29,6 +29,7 @@ if (count($_POST) > 0) {
             if (User::exists($username)) {
                 // Create user with random password
                 $user->remove();
+                Command::execute("classroom_cleanup.pl", [$username]);
             }
         }
 

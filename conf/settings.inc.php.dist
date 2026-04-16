@@ -56,6 +56,9 @@ define("__SESSION_TIMEOUT__",36000);
 define("__RUN_SHELL_SCRIPTS",false);
 define("__SHELL_USER__", "");
 
+define("__MIN_USER_UID__", 1000);
+define("__MIN_COMPUTER_UID__", 20000);
+
 define("__LOG_FILE__","");
 define("__ENABLE_LOG__",true);
 define("__LOG_DB_HOST__", "");

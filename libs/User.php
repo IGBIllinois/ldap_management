@@ -126,7 +126,7 @@ class User extends LdapObject
                 }
             }
             // Find the max uidnumber already in use (at least 1000)
-            $uidstart = 1000;
+            $uidstart = __MIN_USER_UID__;
             $uidnumber = max($uidstart, max($uidnumbers), max($gidnumbers)) + 1;
             // Now start there and look for an empty slot in gidnumbers (which will probably be right away)
             while (in_array($uidnumber, $groupgidnumbers)) {

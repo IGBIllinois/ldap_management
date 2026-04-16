@@ -55,7 +55,7 @@ class Computer extends LdapObject
         } //Everything looks good, add computer
         else {
             // Find first unused uidNumber,gidNumber
-            $uidnumbermin = 10000;
+            $uidnumbermin = __MIN_COMPUTER_UID__;
             $users = Ldap::getInstance()->search("(uid=*)", static::$ou, ['uidnumber']);
 
             $uidnumbers = [];

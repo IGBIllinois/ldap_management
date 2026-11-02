@@ -66,7 +66,7 @@ if (count($_POST) > 0) {
             }
             // Give user biocluster access
             $user->setLoginShell('/usr/local/bin/system-specific');
-            $user->addHost('biocluster.igb.illinois.edu');
+            $user->addHost('biocluster4.igb.illinois.edu');
 
             // Add user to classroom queue
             $classroom_queue->addUser($username);

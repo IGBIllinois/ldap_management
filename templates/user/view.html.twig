@@ -99,6 +99,11 @@
 					{% else %}
 						{{ table.infoRow("Biocluster Access", 'No', {'url':"user_add_biocluster.php?uid="~user.username, 'class':'btn-primary', 'icon':'fa fa-plus-circle', 'text': 'Give Biocluster Access'}) }}
 					{% endif %}
+                    {% if 'biocluster4.igb.illinois.edu' in user.hosts %}
+                        {{ table.infoRow("Biocluster 4 Access", icon.biocluster('mr-2')~'Yes', null) }}
+                    {% else %}
+                        {{ table.infoRow("Biocluster 4 Access", 'No', {'url':"user_add_biocluster4.php?uid="~user.username, 'class':'btn-primary', 'icon':'fa fa-plus-circle', 'text': 'Give Biocluster 4 Access'}) }}
+                    {% endif %}
 					{{ table.infoRow("Notes", user.description, {'url':"user_edit_notes.php?uid="~user.username, 'class':'btn-primary', 'icon':'fas fa-edit', 'text':'Edit Notes'}) }}
 
 					{{ table.sectionHead("Updates") }}
